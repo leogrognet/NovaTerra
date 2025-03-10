@@ -11,6 +11,8 @@
 using namespace sf;
 using namespace std;
 
+// Class Map avec comme exemple pour le moment un map avec vu du dessus, class normalement modulable pour le side-scrolling
+
 class Map {
 private:
     //Calques de la carte
