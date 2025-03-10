@@ -1,6 +1,8 @@
-#include <iostream>
+#include "include/Game.h"
 
 int main() {
-	std::cout << " le caca de thomas ";
-	std::cout << "aaa";
+	Game* game = new Game();
+	game->run();
+	delete game;
+	return 0;
 }
