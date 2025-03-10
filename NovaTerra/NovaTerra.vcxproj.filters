@@ -19,6 +19,12 @@
     <Filter Include="TextureLoader">
       <UniqueIdentifier>{3ccf0a3e-8931-4137-b8a7-a3dda9073f21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemy">
+      <UniqueIdentifier>{3139a88f-a69a-461b-ae65-7528a61604fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{b1906c7f-03b3-4aa0-81bc-a6c75c3da1fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -27,6 +33,12 @@
     <ClInclude Include="TextureLoader.h">
       <Filter>TextureLoader</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp">
@@ -34,6 +46,12 @@
     </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
       <Filter>TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
