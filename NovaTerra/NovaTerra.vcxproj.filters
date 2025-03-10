@@ -25,6 +25,9 @@
     <Filter Include="Entity">
       <UniqueIdentifier>{b1906c7f-03b3-4aa0-81bc-a6c75c3da1fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RigidBody">
+      <UniqueIdentifier>{5368f5a5-2597-4801-a053-e16bcc6ed5c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -39,6 +42,9 @@
     <ClInclude Include="Entity.h">
       <Filter>Entity</Filter>
     </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>RigidBody</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp">
@@ -52,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>RigidBody</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,4 +18,6 @@ public:
 
 	Sprite& getSprite();
 
+	bool collision(FloatRect& collidedEntity);
+
 };

@@ -31,10 +31,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
