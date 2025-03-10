@@ -9,24 +9,28 @@ using namespace sf;
 class Player {
 public:
 	
-	enum class State{ JUMPING, DOUBLEJUMP, DASHING, IDLE, MOVING };
+	enum class State { JUMPING, DOUBLEJUMP, DASHING, IDLE, MOVING, MIDAIR };
+	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
 	Player();
 
 	void update(float deltatime);
 	void draw(RenderWindow& window);
-	void handleInput(float deltatime);
-	void jump(float deltatime);
-	void dash(float deltatime);
+	void handleInput();
+	void jump();
+	void dash();
 
 	void coutState();
 
 private:
 
+	const float dashspeed = 150.f;
+
 	float speed;
 	float jumpspeed;
 	float gravity;
 
+	float dtime = 0;
 	float time = 0;
 
 	int hp;
@@ -34,7 +38,6 @@ private:
 	RectangleShape playershape;
 	Clock cd;
 
-	char lastKey;
-
 	State state;
+	Direction direction;
 };
