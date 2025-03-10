@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <SFML/Window/Joystick.hpp>
+
 
 using namespace std;
 using namespace sf;
