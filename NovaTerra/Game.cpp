@@ -18,5 +18,8 @@ void Game::run() {
                 window.close();
             }
         }
+        window.clear();
+
+        window.display();
     }
 }
