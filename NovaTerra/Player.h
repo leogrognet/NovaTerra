@@ -8,6 +8,8 @@ using namespace sf;
 
 class Player {
 public:
+	
+	enum class State{ JUMPING, DOUBLEJUMP, DASHING, IDLE, MOVING };
 
 	Player();
 
@@ -17,6 +19,8 @@ public:
 	void jump(float deltatime);
 	void dash(float deltatime);
 
+	void coutState();
+
 private:
 
 	float speed;
@@ -25,13 +29,12 @@ private:
 
 	float time = 0;
 
-	bool isJumping = false;
-	bool isDashing = false;
-
 	int hp;
 
 	RectangleShape playershape;
 	Clock cd;
 
 	char lastKey;
+
+	State state;
 };
