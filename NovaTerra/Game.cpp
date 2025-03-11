@@ -1,13 +1,16 @@
 #include "Game.h"
 #include"Map.h"
+
 Game::Game()
-    : window(sf::VideoMode(1200, 900), "Test") {
+    : window(VideoMode(1929, 1080), "NovaTerra"), menu(window), isRunning(true) {
     window.setFramerateLimit(60);
-    window.setVerticalSyncEnabled(true);
+    window.setVerticalSyncEnabled(true);   
+    map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
 }
 
 Game::~Game() {
-    std::cout << "Le jeu est détruit\n";
+    delete map;
+    cout << "Le jeu est détruit\n";
 }
 
 void Game::run() {

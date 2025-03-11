@@ -3,13 +3,22 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "Menu.h"
+#include "Map.h"
 
 class Game {
 private:
-    sf::RenderWindow window;
+    RenderWindow window;
+	Menu menu;
+    Map* map;
+    bool isPlaying;
+
 public:
     Game();
     ~Game();
     void run();
+    void handleEvents();
+    void update();
+    void render();
 };
 #endif
