@@ -187,9 +187,6 @@ void Map::generateTiles() {
     }
 }
 
-
-
-
 // COLLISIONS
 
 bool Map::isWalkable(Vector2f position, Vector2f playerSize, FloatRect hitboxBounds) {
