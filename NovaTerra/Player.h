@@ -10,16 +10,20 @@ using namespace sf;
 
 class Player {
 public:
-    enum class State { JUMPING, DASHING, IDLE, MOVING, MIDAIR };
-    enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
+	
+	enum class State { JUMPING, IDLE, MIDAIR };
+	enum class Action { DASHING, HOOK, NONE };
+	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
     Player();
 
-    void update(float deltatime);
-    void draw(RenderWindow& window);
-    void handleInput();
-    void jump();
-    void dash();
+	void update(float deltatime);
+	void draw(RenderWindow& window);
+	void handleInput();
+
+	void jump();
+	void dash();
+	void grapplinshoot();
 
     void coutState();
 
@@ -35,9 +39,15 @@ private:
 
     int hp;
 
-    RectangleShape playershape;
-    Clock cd;
+	RectangleShape playershape;
+	RectangleShape hook;
+	float hookSize = 0;
 
+	Clock cd;
+
+	State state;
+	Direction direction;
+	Action action;
     State state;
     Direction direction;
 
