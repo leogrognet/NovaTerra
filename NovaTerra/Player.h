@@ -21,11 +21,9 @@ public:
 
 	void update(float deltatime, vector<RectangleShape>& shape);
 
-	void update(float deltatime);
 	void draw(RenderWindow& window);
 	void handleInput();
 
-	void jump();
 	void dash();
 	void grapplinshoot();
 
