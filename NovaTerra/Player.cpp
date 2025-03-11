@@ -20,12 +20,18 @@ void Player::update(float deltatime, vector<RectangleShape>& shape)
 	body.groundCollision(shape, playershape.getGlobalBounds());
 
 	playershape.setPosition(body.position);
+	grapplinshoot();
 
-
-
+	hook.setPosition(playershape.getPosition().x, playershape.getPosition().y);
 }
 
-void Player::draw(RenderWindow& window) { window.draw(playershape); }
+void Player::draw(RenderWindow& window) 
+{ 
+	window.draw(playershape); 
+	if (action == Action::HOOK){ 
+		window.draw(hook); 
+	} 
+}
 
 void Player::handleInput()
 {
@@ -49,9 +55,14 @@ void Player::handleInput()
 		body.velocity.y = -500;
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::LShift) && cd.getElapsedTime().asSeconds() > 1) {
+	if (Keyboard::isKeyPressed(Keyboard::F)) { 
+		action = Action::HOOK;
+		hookSize = 0; 
+	}
+
+	if (Keyboard::isKeyPressed(Keyboard::LShift) && cd.getElapsedTime().asSeconds() > 1 && action != Action::HOOK) {
 		cd.restart();
-		state = State::DASHING;
+		action = Action::DASHING;
 	}
 
 	// Joystick input
@@ -82,15 +93,14 @@ void Player::handleInput()
 
 		if (Joystick::isButtonPressed(0, 1) && cd.getElapsedTime().asSeconds() > 1) { // Assuming button 1 is the dash button
 			cd.restart();
-			state = State::DASHING;
+			action = Action::DASHING;
 		}
 	}
 }
 
-
 void Player::dash()
 {
-	if (state == State::DASHING) {
+	if (action == Action::DASHING) {
 		switch (direction) {
 		case Direction::RIGHT: playershape.move(dashspeed * dtime * 15, 0); break;
 		case Direction::LEFT: playershape.move(-dashspeed * dtime * 15, 0); break;
@@ -98,7 +108,7 @@ void Player::dash()
 		case Direction::UPRIGHT: playershape.move(dashspeed * dtime * 15, -dashspeed * dtime * 15); break;
 		case Direction::UPLEFT: playershape.move(-dashspeed * dtime * 15, -dashspeed * dtime * 15); break;
 
-			// Pour le moment le dash vers le bas est mis de côté. A revoir plus tard après collisions créés.
+			// Pour le moment le dash vers le bas est mis de cÃ´tÃ©. A revoir plus tard aprÃ¨s collisions crÃ©Ã©s.
 
 			/*case Direction::DOWN:
 				cout << "Dash down" << endl;
@@ -120,7 +130,24 @@ void Player::dash()
 		}
 
 		if (cd.getElapsedTime().asSeconds() > 0.1f) {
-			state = State::IDLE;
+			action = Action::NONE;
+		}
+	}
+}
+
+void Player::grapplinshoot()
+{
+	if (action == Action::HOOK) {
+		hookSize += dtime * 170;
+		if (direction == Direction::RIGHT || direction == Direction::UPRIGHT) {
+			hook.setScale({ hookSize,2.5f });
+		}
+		else {
+			hook.setScale({ -hookSize,2.5f });
+		}
+		
+		if (hookSize >= 100) {
+			action = Action::NONE;
 		}
 	}
 }
@@ -133,9 +160,6 @@ void Player::coutState()
 		break;
 	case State::JUMPING:
 		cout << "State : Jumping" << endl;
-		break;
-	case State::DOUBLEJUMP:
-		cout << "State : DoubleJump" << endl;
 		break;
 	case State::DASHING:
 		cout << "State : Dashing" << endl;

@@ -19,7 +19,6 @@ Map::Map(const string& filename, const string& tilesetPath, int tileSize, vector
     //generateItems();
 }
 
-
 // CHARGEMENT DU FICHIER DE LA CARTE
 
 void Map::loadFromFile(const string& filename) {
@@ -28,7 +27,6 @@ void Map::loadFromFile(const string& filename) {
         cerr << "Erreur d'ouverture du fichier de la carte" << endl;
         return;
     }
-
 
     string line;
     int layer = 0;  // 0 = Ground Layer, 1 = Items Layer, 2 = Entity Layer
@@ -186,9 +184,6 @@ void Map::generateTiles() {
         }
     }
 }
-
-
-
 
 // COLLISIONS
 

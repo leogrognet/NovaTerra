@@ -6,7 +6,7 @@ Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
-    bg.setSize({ 2000, 2000 });
+    bg.setSize({ 1000000, 2000 });
     bg.setFillColor(sf::Color::Cyan);
 }
 
@@ -16,7 +16,6 @@ Game::~Game() {
 
 void Game::run() {
     Clock clock;
-
     RectangleShape rectangle({ 500,50 });
     rectangle.setFillColor(Color::Black);
     rectangle.setPosition(100, 800);
@@ -27,8 +26,6 @@ void Game::run() {
     vec.push_back(rectangle);
     vec.push_back(rectangle1);
 
-
-
     Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
     Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
@@ -37,7 +34,7 @@ void Game::run() {
             if (event.type == Event::Closed)
                 window.close();
         }
-        scroll->move(2.f, 0.f);
+        scroll->move(1.f, 0.f);
         scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
 
