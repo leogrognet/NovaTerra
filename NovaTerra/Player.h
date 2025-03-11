@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <SFML/Window/Joystick.hpp>
+#include "RigidBody.h"
 
 
 using namespace std;
@@ -11,6 +12,7 @@ using namespace sf;
 class Player {
 public:
 	
+	RigidBody moncorps;
 	enum class State { JUMPING, DOUBLEJUMP, DASHING, IDLE, MOVING, MIDAIR };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
