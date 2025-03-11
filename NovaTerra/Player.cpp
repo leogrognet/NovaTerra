@@ -7,12 +7,17 @@ Player::Player() : hp(5), speed(50), state(State::IDLE), direction(Direction::RI
 	playershape.setSize({ 25,25 });
 	//playershape.setOrigin(12.5, 12.5);
 	playershape.setPosition(100, 700);
+
+	hook.setSize({ 2.5f,2.5f });
+	hook.setFillColor(Color::White);
+	hook.setOrigin(0, 1.75f);
 }
 
 void Player::update(float deltatime, vector<RectangleShape>& shape)
 {
 	dtime = deltatime;
 
+	//Cout du state si besoin de debug
 	//coutState();
 	handleInput();
 	dash();
@@ -20,15 +25,17 @@ void Player::update(float deltatime, vector<RectangleShape>& shape)
 	body.groundCollision(shape, playershape.getGlobalBounds());
 
 	playershape.setPosition(body.position);
-	grapplinshoot();
+	grapplinshoot(shape);
 
+	//Cout du player pos si besoin de debug
+	cout << playershape.getPosition().x << " " << playershape.getPosition().y << endl;
 	hook.setPosition(playershape.getPosition().x, playershape.getPosition().y);
 }
 
 void Player::draw(RenderWindow& window) 
 { 
 	window.draw(playershape); 
-	if (action == Action::HOOK){ 
+	if (action == Action::HOOK || action == Action::GRABING){ 
 		window.draw(hook); 
 	} 
 }
@@ -60,7 +67,7 @@ void Player::handleInput()
 		hookSize = 0; 
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::LShift) && cd.getElapsedTime().asSeconds() > 1 && action != Action::HOOK) {
+	if (Keyboard::isKeyPressed(Keyboard::LShift) && cd.getElapsedTime().asSeconds() > 1 && action != Action::GRABING) {
 		cd.restart();
 		action = Action::DASHING;
 	}
@@ -92,17 +99,21 @@ void Player::handleInput()
 			state = State::DASHING;
 		}
 	}
+
+	if (action == Action::GRABING) {
+		body.velocity = { 0, 0 };
+	}
 }
 
 void Player::dash()
 {
 	if (action == Action::DASHING) {
 		switch (direction) {
-		case Direction::RIGHT: body.velocity.x = 1000; break;
-		case Direction::LEFT: body.velocity.x = -1000; break;
-		case Direction::UP: body.velocity.y = -1000; break;
-		case Direction::UPRIGHT: body.velocity.x = 1000; body.velocity.y = -1000; break;
-		case Direction::UPLEFT: body.velocity.x = -1000; body.velocity.y = -1000; break;
+		case Direction::RIGHT: body.velocity.x = 1300; break;
+		case Direction::LEFT: body.velocity.x = -1300; break;
+		case Direction::UP: body.velocity.y = -500; break;
+		case Direction::UPRIGHT: body.velocity.x = 500; body.velocity.y = -500; break;
+		case Direction::UPLEFT: body.velocity.x = -500; body.velocity.y = -500; break;
 		}
 
 		if (cd.getElapsedTime().asSeconds() > 0.1f) {
@@ -111,20 +122,27 @@ void Player::dash()
 	}
 }
 
-void Player::grapplinshoot()
+void Player::grapplinshoot(vector<RectangleShape>& shape)
 {
 	if (action == Action::HOOK) {
 		hookSize += dtime * 170;
-		if (direction == Direction::RIGHT || direction == Direction::UPRIGHT) {
-			hook.setScale({ hookSize,2.5f });
-		}
-		else {
-			hook.setScale({ -hookSize,2.5f });
-		}
-		
-		if (hookSize >= 100) {
-			action = Action::NONE;
-		}
+		for (auto& vec : shape) {
+			if (hook.getGlobalBounds().intersects(vec.getGlobalBounds(), intersection)) {
+				playershape.setPosition(intersection.left + intersection.width - 10, intersection.top + intersection.height);
+				action = Action::GRABING;
+			}
+			if (direction == Direction::RIGHT || direction == Direction::UPRIGHT) {
+				hook.setScale({ hookSize,2.5f });
+			} else {
+				hook.setScale({ -hookSize,2.5f });
+			}
+			if (hookSize >= 100) {
+				action = Action::NONE;
+			}
+		}		
+	}
+	if (action == Action::GRABING) {
+
 	}
 }
 

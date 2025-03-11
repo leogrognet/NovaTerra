@@ -14,7 +14,7 @@ public:
 
 	RigidBody body;
 	enum class State { JUMPING, IDLE, MIDAIR, DASHING };
-	enum class Action { DASHING, HOOK, NONE };
+	enum class Action { DASHING, HOOK, GRABING, NONE };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
     Player();
@@ -25,7 +25,8 @@ public:
 	void handleInput();
 
 	void dash();
-	void grapplinshoot();
+	void grapplinshoot(vector<RectangleShape>& shape);
+	void stopgrab();
 
     void coutState();
 
@@ -48,6 +49,8 @@ private:
 	State state;
 	Direction direction;
 	Action action;
+
+	FloatRect intersection;
 
 	bool jumpButtonPressed = false;
 	bool canJump = false;
