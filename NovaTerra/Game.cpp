@@ -25,7 +25,7 @@ void Game::run() {
             if (event.type == Event::Closed)
                 window.close();
         }
-        scroll->move(2.f, 0.f);
+        scroll->move(1.f, 0.f);
         scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
         window.clear();

@@ -11,7 +11,7 @@ using namespace sf;
 class Player {
 public:
 	
-	enum class State { JUMPING, IDLE, MIDAIR };
+	enum class State { JUMPING, IDLE, MIDAIR, DASHING };
 	enum class Action { DASHING, HOOK, NONE };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
@@ -48,8 +48,6 @@ private:
 	State state;
 	Direction direction;
 	Action action;
-    State state;
-    Direction direction;
 
     bool jumpButtonPressed;
     bool canJump;
