@@ -10,12 +10,15 @@ using namespace sf;
 
 class Player {
 public:
-	
+
+	RigidBody body;
 	enum class State { JUMPING, IDLE, MIDAIR, DASHING };
 	enum class Action { DASHING, HOOK, NONE };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
     Player();
+
+	void update(float deltatime, vector<RectangleShape>& shape);
 
 	void update(float deltatime);
 	void draw(RenderWindow& window);
