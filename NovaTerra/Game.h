@@ -3,10 +3,11 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "Player.h"
 
 class Game {
 private:
-    sf::RenderWindow window;
+    RenderWindow window;
 public:
     Game();
     ~Game();
