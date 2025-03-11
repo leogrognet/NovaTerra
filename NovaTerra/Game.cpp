@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include"Map.h"
 Game::Game()
     : window(sf::VideoMode(1200, 900), "Test") {
     window.setFramerateLimit(60);
@@ -11,6 +11,7 @@ Game::~Game() {
 }
 
 void Game::run() {
+    Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -18,5 +19,8 @@ void Game::run() {
                 window.close();
             }
         }
+        window.clear();
+        map->draw(window);
+        window.display();
     }
 }
