@@ -33,8 +33,6 @@ private:
     const float dashspeed = 150.f;
 
     float speed;
-    float jumpspeed;
-    float gravity;
 
     float dtime = 0;
     float time = 0;
@@ -51,7 +49,7 @@ private:
 	Direction direction;
 	Action action;
 
-    bool jumpButtonPressed;
-    bool canJump;
+	bool jumpButtonPressed = false;
+	bool canJump = false;
     bool jumpKeyPressed = false; 
 };
