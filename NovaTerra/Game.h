@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Player.h"
+#include "Map.h"
 
 class Game {
 private:

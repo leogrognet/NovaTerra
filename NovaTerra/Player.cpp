@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <SFML/Window/Joystick.hpp>
 
-Player::Player() : hp(5), speed(50), gravity(9.81), jumpspeed(15), state(State::IDLE), direction(Direction::RIGHT)
+Player::Player() : hp(5), speed(50), gravity(9.81), jumpspeed(20), state(State::IDLE), direction(Direction::RIGHT)
 {
 	playershape.setFillColor(Color::Cyan);
 	playershape.setSize({ 25,25 });
@@ -92,7 +92,7 @@ void Player::jump()
 		playershape.move(0, -jumpspeed * dtime * 60);
 		if (jumpspeed <= 0) {
 			state = State::IDLE;
-			jumpspeed = 35;
+			jumpspeed = 20;
 		}
 	}
 	else if (state != State::DASHING) {
@@ -151,9 +151,6 @@ void Player::coutState()
 		break;
 	case State::JUMPING:
 		cout << "State : Jumping" << endl;
-		break;
-	case State::DOUBLEJUMP:
-		cout << "State : DoubleJump" << endl;
 		break;
 	case State::DASHING:
 		cout << "State : Dashing" << endl;
