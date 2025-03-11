@@ -1,17 +1,20 @@
-#pragma once
-#include <SFML/Graphics.hpp>
+#ifndef RIGIDBODY_H
+#define RIGIDBODY_H
 
+#include <SFML/Graphics.hpp>
+#include <vector>
 
 using namespace sf;
-using namespace std;
+
 class RigidBody {
 public:
-	Vector2f position;
-	Vector2f velocity;
-	bool isGrounded;
+    Vector2f position;
+    Vector2f velocity;
+    bool isGrounded;
 
-	void groundCollision(vector<RectangleShape>& grounds, const FloatRect& selfShape);
-
-	RigidBody(Vector2f pos);
-
+    RigidBody(Vector2f pos);
+    void groundCollision(const std::vector<RectangleShape>& colliders, const FloatRect& selfShape);
+    void update(float deltaTime);
 };
+
+#endif

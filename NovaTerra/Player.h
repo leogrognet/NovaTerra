@@ -11,12 +11,14 @@ using namespace sf;
 
 class Player {
 public:
-	
-	RigidBody moncorps;
+
+	RigidBody body;
 	enum class State { JUMPING, DOUBLEJUMP, DASHING, IDLE, MOVING, MIDAIR };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
 	Player();
+
+	void update(float deltatime, vector<RectangleShape>& shape);
 
 	void update(float deltatime);
 	void draw(RenderWindow& window);

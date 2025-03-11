@@ -1,22 +1,28 @@
 #include "Player.h"
 #include <SFML/Window/Joystick.hpp>
 
-Player::Player() : hp(5), speed(50), gravity(9.81), jumpspeed(15), state(State::IDLE), direction(Direction::RIGHT)
+Player::Player() : hp(5), speed(50), gravity(9.81), jumpspeed(15), state(State::IDLE), direction(Direction::RIGHT), body({100,700})
 {
 	playershape.setFillColor(Color::Red);
 	playershape.setSize({ 25,25 });
-	playershape.setOrigin(12.5, 12.5);
-	playershape.setPosition(100, 100);
+	//playershape.setOrigin(12.5, 12.5);
+	playershape.setPosition(100, 700);
 }
 
-void Player::update(float deltatime)
+void Player::update(float deltatime, vector<RectangleShape>& shape)
 {
 	dtime = deltatime;
 
 	//coutState();
 	handleInput();
-	jump();
 	dash();
+	body.update(deltatime);
+	body.groundCollision(shape, playershape.getGlobalBounds());
+
+	playershape.setPosition(body.position);
+
+
+
 }
 
 void Player::draw(RenderWindow& window) { window.draw(playershape); }
@@ -24,8 +30,9 @@ void Player::draw(RenderWindow& window) { window.draw(playershape); }
 void Player::handleInput()
 {
 	// Keyboard input
-	if (Keyboard::isKeyPressed(Keyboard::Q)) { direction = Direction::LEFT; playershape.move(-speed * dtime * 10, 0); }
-	if (Keyboard::isKeyPressed(Keyboard::D)) { direction = Direction::RIGHT; playershape.move(speed * dtime * 10, 0); }
+	if (Keyboard::isKeyPressed(Keyboard::Q)) { direction = Direction::LEFT;  body.velocity.x = -500; }
+	else if (Keyboard::isKeyPressed(Keyboard::D)) { direction = Direction::RIGHT; body.velocity.x = 500;}
+	else { body.velocity.x = 0; }
 
 	if (Keyboard::isKeyPressed(Keyboard::Z)) { direction = Direction::UP; }
 	if (Keyboard::isKeyPressed(Keyboard::S)) { direction = Direction::DOWN; }
@@ -38,11 +45,8 @@ void Player::handleInput()
 	if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::D)) { direction = Direction::DOWNRIGHT; }
 	if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { direction = Direction::DOWNLEFT; }
 
-	if (Keyboard::isKeyPressed(Keyboard::Space)) {
-		if (playershape.getPosition().y >= 800 && state != State::JUMPING) {
-			state = State::JUMPING;
-			time = 0;
-		}
+	if (Keyboard::isKeyPressed(Keyboard::Space) && body.isGrounded) {
+		body.velocity.y = -500;
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::LShift) && cd.getElapsedTime().asSeconds() > 1) {
@@ -83,28 +87,6 @@ void Player::handleInput()
 	}
 }
 
-void Player::jump()
-{
-	time += dtime;
-
-	if (state == State::JUMPING) {
-		jumpspeed -= dtime * 80;
-		playershape.move(0, -jumpspeed * dtime * 60);
-		if (jumpspeed <= 0) {
-			state = State::IDLE;
-			jumpspeed = 35;
-		}
-	}
-	else if (state != State::DASHING) {
-		if (playershape.getPosition().y <= 800) {
-			state = State::MIDAIR;
-			playershape.setPosition(playershape.getPosition().x, playershape.getPosition().y + gravity * dtime * 70);
-		}
-		else {
-			state = State::IDLE;
-		}
-	}
-}
 
 void Player::dash()
 {
