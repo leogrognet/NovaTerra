@@ -10,12 +10,12 @@ using namespace sf;
 
 class Player {
 public:
-	
-	enum class State { JUMPING, IDLE, MIDAIR };
+
+	enum class State { JUMPING, IDLE, MIDAIR, DASHING }; // Ajout de DASHING
 	enum class Action { DASHING, HOOK, NONE };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
-    Player();
+	Player();
 
 	void update(float deltatime);
 	void draw(RenderWindow& window);
@@ -25,19 +25,19 @@ public:
 	void dash();
 	void grapplinshoot();
 
-    void coutState();
+	void coutState();
 
 private:
-    const float dashspeed = 150.f;
+	const float dashspeed = 150.f;
 
-    float speed;
-    float jumpspeed;
-    float gravity;
+	float speed;
+	float jumpspeed;
+	float gravity;
 
-    float dtime = 0;
-    float time = 0;
+	float dtime = 0;
+	float time = 0;
 
-    int hp;
+	int hp;
 
 	RectangleShape playershape;
 	RectangleShape hook;
@@ -48,10 +48,6 @@ private:
 	State state;
 	Direction direction;
 	Action action;
-    State state;
-    Direction direction;
 
-    bool jumpButtonPressed;
-    bool canJump;
-    bool jumpKeyPressed = false; 
+	bool jumpKeyPressed = false;
 };
