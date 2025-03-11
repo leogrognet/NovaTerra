@@ -2,27 +2,17 @@
 #include <cmath>
 #include <iostream>
 
-void RigidBody::applyForce(Vector2f force) {
-    acceleration += force / mass;
-}
-
-void RigidBody::update(float deltaTime) {
-    velocity += acceleration * deltaTime;
-    position += velocity * deltaTime;
-    acceleration = Vector2f(0, 0); // Reset acceleration after applying it
-}
-
-void RigidBody::groundCollision(std::vector<RectangleShape>& colliders, const FloatRect& selfShape) {
+void RigidBody::groundCollision(vector<RectangleShape>& colliders, const FloatRect& selfShape) {
     isGrounded = false;
 
     for (auto& collider : colliders) {
         FloatRect colliderBounds = collider.getGlobalBounds();
 
         if (colliderBounds.intersects(selfShape)) {
-            float overlapX = std::min(selfShape.left + selfShape.width, colliderBounds.left + colliderBounds.width) -
-                std::max(selfShape.left, colliderBounds.left);
-            float overlapY = std::min(selfShape.top + selfShape.height, colliderBounds.top + colliderBounds.height) -
-                std::max(selfShape.top, colliderBounds.top);
+            float overlapX = min(selfShape.left + selfShape.width, colliderBounds.left + colliderBounds.width) -
+                max(selfShape.left, colliderBounds.left);
+            float overlapY = min(selfShape.top + selfShape.height, colliderBounds.top + colliderBounds.height) -
+                max(selfShape.top, colliderBounds.top);
 
             if (overlapX < overlapY) {
                 if (selfShape.left < colliderBounds.left) {
@@ -31,10 +21,10 @@ void RigidBody::groundCollision(std::vector<RectangleShape>& colliders, const Fl
                 else {
                     position.x = colliderBounds.left + colliderBounds.width;
                 }
-                velocity.x = 0; // Stopper le mouvement horizontal
+                velocity.x = 0; 
             }
             else {
-                // Collision verticale
+
                 if (selfShape.top < colliderBounds.top) {
                     position.y = colliderBounds.top - selfShape.height;
                     isGrounded = true;
@@ -42,8 +32,14 @@ void RigidBody::groundCollision(std::vector<RectangleShape>& colliders, const Fl
                 else {
                     position.y = colliderBounds.top + colliderBounds.height;
                 }
-                velocity.y = 0; // Stopper le mouvement vertical
+                velocity.y = 0; 
             }
         }
     }
+}
+
+RigidBody::RigidBody(Vector2f pos) : isGrounded(false)
+{
+    velocity = { 0,0 };
+    pos = position;
 }
