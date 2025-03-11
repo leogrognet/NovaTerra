@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SFML/Window/Joystick.hpp>
 #include <vector>
+#include "RigidBody.h"
 
 using namespace std;
 using namespace sf;
