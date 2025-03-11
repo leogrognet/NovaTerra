@@ -42,4 +42,9 @@ private:
 
 	State state;
 	Direction direction;
+	Action action;
+    State state;
+    Direction direction;
+
+    bool jumpKeyPressed = false; 
 };
