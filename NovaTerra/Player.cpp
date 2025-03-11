@@ -3,7 +3,7 @@
 
 Player::Player() : hp(5), speed(50), gravity(9.81), jumpspeed(15), state(State::IDLE), direction(Direction::RIGHT), action(Action::NONE)
 {
-	playershape.setFillColor(Color::Cyan);
+	playershape.setFillColor(Color::Red);
 	playershape.setSize({ 25,25 });
 	playershape.setOrigin(12.5, 12.5);
 	playershape.setPosition(100, 100);

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <SFML/Window/Joystick.hpp>
+#include "RigidBody.h"
 
 
 using namespace std;
