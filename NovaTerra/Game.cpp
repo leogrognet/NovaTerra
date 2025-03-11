@@ -26,9 +26,10 @@ void Game::run() {
 
         float deltatime = clock.restart().asSeconds();
         window.clear();
+        map->draw(window);
         player.update(deltatime);
         player.draw(window);
-        //map->draw(window);
+        
         window.display();
     }
 }

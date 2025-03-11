@@ -1,12 +1,16 @@
 #include "Player.h"
 #include <SFML/Window/Joystick.hpp>
 
-Player::Player() : hp(5), speed(50), gravity(9.81), jumpspeed(15), state(State::IDLE), direction(Direction::RIGHT)
+Player::Player() : hp(5), speed(50), gravity(9.81), jumpspeed(15), state(State::IDLE), direction(Direction::RIGHT), action(Action::NONE)
 {
 	playershape.setFillColor(Color::Cyan);
 	playershape.setSize({ 25,25 });
 	playershape.setOrigin(12.5, 12.5);
 	playershape.setPosition(100, 100);
+
+	hook.setSize({ 2.5f,2.5f });
+	hook.setFillColor(Color::White);
+	hook.setOrigin(0, 1.75f);
 }
 
 void Player::update(float deltatime)
@@ -17,9 +21,18 @@ void Player::update(float deltatime)
 	handleInput();
 	jump();
 	dash();
+	grapplinshoot();
+
+	hook.setPosition(playershape.getPosition().x, playershape.getPosition().y);
 }
 
-void Player::draw(RenderWindow& window) { window.draw(playershape); }
+void Player::draw(RenderWindow& window) 
+{ 
+	window.draw(playershape); 
+	if (action == Action::HOOK){ 
+		window.draw(hook); 
+	} 
+}
 
 void Player::handleInput()
 {
@@ -45,9 +58,14 @@ void Player::handleInput()
 		}
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::LShift) && cd.getElapsedTime().asSeconds() > 1) {
+	if (Keyboard::isKeyPressed(Keyboard::F)) { 
+		action = Action::HOOK;
+		hookSize = 0; 
+	}
+
+	if (Keyboard::isKeyPressed(Keyboard::LShift) && cd.getElapsedTime().asSeconds() > 1 && action != Action::HOOK) {
 		cd.restart();
-		state = State::DASHING;
+		action = Action::DASHING;
 	}
 
 	// Joystick input
@@ -78,7 +96,7 @@ void Player::handleInput()
 
 		if (Joystick::isButtonPressed(0, 1) && cd.getElapsedTime().asSeconds() > 1) { // Assuming button 1 is the dash button
 			cd.restart();
-			state = State::DASHING;
+			action = Action::DASHING;
 		}
 	}
 }
@@ -95,7 +113,7 @@ void Player::jump()
 			jumpspeed = 35;
 		}
 	}
-	else if (state != State::DASHING) {
+	else if (action != Action::DASHING) {
 		if (playershape.getPosition().y <= 800) {
 			state = State::MIDAIR;
 			playershape.setPosition(playershape.getPosition().x, playershape.getPosition().y + gravity * dtime * 70);
@@ -108,7 +126,7 @@ void Player::jump()
 
 void Player::dash()
 {
-	if (state == State::DASHING) {
+	if (action == Action::DASHING) {
 		switch (direction) {
 		case Direction::RIGHT: playershape.move(dashspeed * dtime * 15, 0); break;
 		case Direction::LEFT: playershape.move(-dashspeed * dtime * 15, 0); break;
@@ -138,7 +156,24 @@ void Player::dash()
 		}
 
 		if (cd.getElapsedTime().asSeconds() > 0.1f) {
-			state = State::IDLE;
+			action = Action::NONE;
+		}
+	}
+}
+
+void Player::grapplinshoot()
+{
+	if (action == Action::HOOK) {
+		hookSize += dtime * 170;
+		if (direction == Direction::RIGHT || direction == Direction::UPRIGHT) {
+			hook.setScale({ hookSize,2.5f });
+		}
+		else {
+			hook.setScale({ -hookSize,2.5f });
+		}
+		
+		if (hookSize >= 100) {
+			action = Action::NONE;
 		}
 	}
 }
@@ -151,12 +186,6 @@ void Player::coutState()
 		break;
 	case State::JUMPING:
 		cout << "State : Jumping" << endl;
-		break;
-	case State::DOUBLEJUMP:
-		cout << "State : DoubleJump" << endl;
-		break;
-	case State::DASHING:
-		cout << "State : Dashing" << endl;
 		break;
 	case State::MIDAIR:
 		cout << "State : Air" << endl;
