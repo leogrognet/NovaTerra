@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -27,6 +28,7 @@
     <ClCompile Include="Map.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
@@ -98,8 +100,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)/SFML-2.6.2/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/SFML-2.6.2/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SFML-2.6.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SFML-2.6.2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\leoam\source\repos\NovaTerra\SFML-2.6.2\include;C:\Users\lgrognet\source\repos\NovaTerra\SFML-2.6.2\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>

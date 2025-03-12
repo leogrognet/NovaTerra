@@ -1,13 +1,13 @@
 #include "Game.h"
 
 Player player;
+Background background("assets/parallaxe/bg.png", - 50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
-    bg.setSize({ 1000000, 2000 });
-    bg.setFillColor(sf::Color::Cyan);
+
 }
 
 Game::~Game() {
@@ -27,6 +27,7 @@ void Game::run() {
     vec.push_back(rectangle1);
 
     Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
+
     Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
         Event event;
@@ -41,7 +42,7 @@ void Game::run() {
 
         window.clear();
         player.update(deltatime, vec);
-        window.draw(bg); // Background
+        background.draw(window); // Background
         map->draw(window);
         window.draw(rectangle);
         window.draw(rectangle1);
