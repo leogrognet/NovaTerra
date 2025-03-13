@@ -20,6 +20,8 @@ public:
     bool getIsGrounded();
 
 
+    void setIsGrounded(bool isGrounded);
+
     RigidBody(Vector2f pos);
     void groundCollision(const std::vector<RectangleShape>& colliders, const FloatRect& selfShape);
     void update(float deltaTime);

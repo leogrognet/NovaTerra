@@ -5,6 +5,11 @@
 
 
 
+void RigidBody::setIsGrounded(bool isGrounded)
+{
+    m_isGrounded = isGrounded;
+}
+
 RigidBody::RigidBody(Vector2f pos) : m_position(pos), m_isGrounded(false) {
     m_velocity = { 0, 0 };
 }
