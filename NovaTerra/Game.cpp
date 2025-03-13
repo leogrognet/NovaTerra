@@ -1,6 +1,5 @@
 #include "Game.h"
 
-Player player;
 Background background("assets/parallaxe/bg.png", - 50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
@@ -16,15 +15,18 @@ Game::~Game() {
 
 void Game::run() {
     Clock clock;
-    RectangleShape rectangle({ 500,50 });
-    rectangle.setFillColor(Color::Black);
-    rectangle.setPosition(100, 800);
-    RectangleShape rectangle1({ 50,400 });
-    rectangle1.setFillColor(Color::Black);
-    rectangle1.setPosition(300, 400);
-    vector<RectangleShape> vec;
-    vec.push_back(rectangle);
-    vec.push_back(rectangle1);
+
+    Plateforme plat1(100,800,{ 10,1 },true);
+    Plateforme plat2(300, 400, { 1,10 },true);
+
+    vector<shared_ptr<Entity>> vec;
+
+    vec.push_back(make_shared<Plateforme>(plat1));
+    vec.push_back(make_shared<Plateforme>(plat2));
+
+    Player player(vec,100,600,false);
+
+    vec.push_back(make_shared<Player>(player));
 
     Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
 
@@ -41,13 +43,13 @@ void Game::run() {
 
 
         window.clear();
-        player.update(deltatime, vec);
 		background.update(deltatime);
         background.draw(window);
         map->draw(window);
-        window.draw(rectangle);
-        window.draw(rectangle1);
-        player.draw(window);
+        for (auto entityvec : vec) {
+            entityvec->draw(window);
+            entityvec->update(deltatime, vec);
+        }
         window.display();
     }
 }

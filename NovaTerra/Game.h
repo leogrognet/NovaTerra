@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "Scroll.h"
 #include "Background.h"
+#include "PlateformeTemp.h"
 
 class Game {
 private:

@@ -148,11 +148,11 @@ void Map::loadFromFile(const string& filename) {
 //            int tileX = (itemIndex % itemsetWidth) * tileSize;
 //            int tileY = (itemIndex / itemsetWidth) * tileSize;
 //
-//            Sprite sprite;
-//            sprite.setTexture(itemSet);
-//            sprite.setTextureRect(IntRect(tileX, tileY, tileSize, tileSize));
-//            sprite.setPosition(x * tileSize, y * tileSize);
-//            items.push_back(sprite);
+//            Sprite shape;
+//            shape.setTexture(itemSet);
+//            shape.setTextureRect(IntRect(tileX, tileY, tileSize, tileSize));
+//            shape.setPosition(x * tileSize, y * tileSize);
+//            items.push_back(shape);
 //        }
 //    }
 //}

@@ -29,8 +29,8 @@ void Background::update(float deltaTime) {
     }
 
     // Messages de débogage
-    cout << "Sprite 1 position: " << sprite.getPosition().x << ", " << sprite.getPosition().y << endl;
-    cout << "Sprite 2 position: " << sprite2.getPosition().x << ", " << sprite2.getPosition().y << endl;
+    //cout << "Sprite 1 position: " << sprite.getPosition().x << ", " << sprite.getPosition().y << endl;
+    //cout << "Sprite 2 position: " << sprite2.getPosition().x << ", " << sprite2.getPosition().y << endl;
 }
 
 void Background::draw(RenderWindow& window) {
