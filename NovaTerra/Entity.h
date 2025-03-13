@@ -13,7 +13,7 @@ protected:
 
 
 public:
-	virtual void update(float deltaTime, const std::vector<Entity*>& colliders);
+	virtual void update(float deltaTime, const std::vector<shared_ptr<Entity>>& colliders);
 	virtual void draw(RenderWindow& window) ;
 
 	Entity(float posX, float posY);

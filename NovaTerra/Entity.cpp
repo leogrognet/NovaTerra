@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-void Entity::update(float deltaTime, const std::vector<Entity*>& colliders)
+void Entity::update(float deltaTime, const std::vector<shared_ptr<Entity>>& colliders)
 {
 
     vector<FloatRect> vec;
