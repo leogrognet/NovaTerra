@@ -1,14 +1,14 @@
 #pragma once
-#include "RigidBody.h"
+#include "Entity.h"
 
 
-class FallBlock {
+class FallBlock : public Entity {
 public:
-	RigidBody m_body;
 	FloatRect m_detectionBox;
-	FloatRect m_colliderBox;
+	FloatRect m_hitBox;
 	bool isFalling;
 private:
-	void update(float deltaTime, FloatRect playerShape, std::vector<RectangleShape> colliders);
+	void update(float deltaTime, FloatRect playerShape);
 	void fall(FloatRect playerShape);
+	bool crushEntity(FloatRect entity);
 };

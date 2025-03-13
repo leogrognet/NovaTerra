@@ -1,21 +1,26 @@
 #include "FallBlock.h"
 
-void FallBlock::update(float deltaTime, FloatRect playerShape, std::vector<RectangleShape> colliders)
+void FallBlock::update(float deltaTime, FloatRect playerShape)
 {
-
-	m_body.groundCollision(colliders, m_colliderBox);
+	crushEntity(playerShape);
 	fall(playerShape);
-	m_body.update(deltaTime);
 }
 
 void FallBlock::fall(FloatRect playerShape)
 {
 	if (playerShape.intersects(m_detectionBox)){
-		m_body.setIsGrounded(false);
+		m_rigidBody.setIsStatic(false);
 	}
 	else {
-		m_body.setIsGrounded(true);
+		m_rigidBody.setIsStatic(true);
 	}
+}
+
+bool FallBlock::crushEntity(FloatRect entity) {
+	if (entity.intersects(m_hitBox)) {
+		return true;
+	}
+	return false;
 }
 
 
