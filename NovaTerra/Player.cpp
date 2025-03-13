@@ -19,7 +19,7 @@ void Player::update(float deltatime, vector<RectangleShape>& shape)
 	body.update(deltatime);
 	body.groundCollision(shape, playershape.getGlobalBounds());
 
-	playershape.setPosition(body.position);
+	playershape.setPosition(body.getPosition());
 	grapplinshoot();
 
 	hook.setPosition(playershape.getPosition().x, playershape.getPosition().y);
@@ -36,9 +36,9 @@ void Player::draw(RenderWindow& window)
 void Player::handleInput()
 {
 	// Keyboard input
-	if (Keyboard::isKeyPressed(Keyboard::Q)) { direction = Direction::LEFT;  body.velocity.x = -500; }
-	else if (Keyboard::isKeyPressed(Keyboard::D)) { direction = Direction::RIGHT; body.velocity.x = 500;}
-	else { body.velocity.x = 0; }
+	if (Keyboard::isKeyPressed(Keyboard::Q)) { direction = Direction::LEFT;  body.getVelocity().x = -500; }
+	else if (Keyboard::isKeyPressed(Keyboard::D)) { direction = Direction::RIGHT; body.getVelocity().x = 500;}
+	else { body.getVelocity().x = 0; }
 
 	if (Keyboard::isKeyPressed(Keyboard::Z)) { direction = Direction::UP; }
 	if (Keyboard::isKeyPressed(Keyboard::S)) { direction = Direction::DOWN; }
@@ -51,8 +51,8 @@ void Player::handleInput()
 	if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::D)) { direction = Direction::DOWNRIGHT; }
 	if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { direction = Direction::DOWNLEFT; }
 
-	if (Keyboard::isKeyPressed(Keyboard::Space) && body.isGrounded) {
-		body.velocity.y = -500;
+	if (Keyboard::isKeyPressed(Keyboard::Space) && body.getIsGrounded()) {
+		body.getVelocity().y = -500;
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::F)) { 
@@ -69,8 +69,8 @@ void Player::handleInput()
 		float x = Joystick::getAxisPosition(0, Joystick::X);
 		float y = Joystick::getAxisPosition(0, Joystick::Y);
 
-		if (x < -50) { direction = Direction::LEFT; body.velocity.x = -500; }
-		if (x > 50) { direction = Direction::RIGHT; body.velocity.x = 500; }
+		if (x < -50) { direction = Direction::LEFT; body.getVelocity().x = -500; }
+		if (x > 50) { direction = Direction::RIGHT; body.getVelocity().x = 500; }
 
 		if (y < -50) { direction = Direction::UP; }
 		if (y > 50) { direction = Direction::DOWN; }
@@ -83,8 +83,8 @@ void Player::handleInput()
 		if (y > 50 && x > 50) { direction = Direction::DOWNRIGHT; }
 		if (y > 50 && x < -50) { direction = Direction::DOWNLEFT; }
 
-		if (Joystick::isButtonPressed(0, 0) && body.isGrounded) {
-			body.velocity.y = -500;
+		if (Joystick::isButtonPressed(0, 0) && body.getIsGrounded()) {
+			body.getVelocity().y = -500;
 		}
 
 		if (Joystick::isButtonPressed(0, 1) && cd.getElapsedTime().asSeconds() > 1) { // Assuming button 1 is the dash button
@@ -98,11 +98,11 @@ void Player::dash()
 {
 	if (action == Action::DASHING) {
 		switch (direction) {
-		case Direction::RIGHT: body.velocity.x = 1000; break;
-		case Direction::LEFT: body.velocity.x = -1000; break;
-		case Direction::UP: body.velocity.y = -1000; break;
-		case Direction::UPRIGHT: body.velocity.x = 1000; body.velocity.y = -1000; break;
-		case Direction::UPLEFT: body.velocity.x = -1000; body.velocity.y = -1000; break;
+		case Direction::RIGHT: body.getVelocity().x = 1000; break;
+		case Direction::LEFT: body.getVelocity().x = -1000; break;
+		case Direction::UP: body.getVelocity().y = -1000; break;
+		case Direction::UPRIGHT: body.getVelocity().x = 1000; body.getVelocity().y = -1000; break;
+		case Direction::UPLEFT: body.getVelocity().x = -1000; body.getVelocity().y = -1000; break;
 		}
 
 		if (cd.getElapsedTime().asSeconds() > 0.1f) {
