@@ -28,6 +28,8 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 	grapplinshoot();
 	grabing();
 
+	Entity::update(deltatime, colliders);
+
 	//Cout du player pos si besoin de debug
 	cout << "Shape joueur : " << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
 	cout << "RigiBody : " <<m_rigidBody.getPosition().x << " " << m_rigidBody.getPosition().y << endl;

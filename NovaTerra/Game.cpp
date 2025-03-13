@@ -16,13 +16,11 @@ Game::~Game() {
 void Game::run() {
     Clock clock;
 
-    Plateforme plat1(100,800,{ 10,1 },true);
-    Plateforme plat2(300, 400, { 1,10 },true);
-
     vector<shared_ptr<Entity>> vec;
 
-    vec.push_back(make_shared<Plateforme>(plat1));
-    vec.push_back(make_shared<Plateforme>(plat2));
+    vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true));
+    vec.push_back(make_shared<Plateforme>(300, 400, Vector2f(1, 10), true));
+
 
     Player player(vec,100,600,false);
 
