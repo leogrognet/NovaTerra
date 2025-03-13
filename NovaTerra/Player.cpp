@@ -128,12 +128,13 @@ void Player::grapplinshoot(vector<RectangleShape>& shape)
 		hookSize += dtime * 170;
 		for (auto& vec : shape) {
 			if (hook.getGlobalBounds().intersects(vec.getGlobalBounds(), intersection)) {
+				body.velocity.x = 100.f;
 				playershape.setPosition(intersection.left + intersection.width - 10, intersection.top + intersection.height);
 				action = Action::GRABING;
 			}
-			if (direction == Direction::RIGHT || direction == Direction::UPRIGHT) {
+			if (direction == Direction::RIGHT) {
 				hook.setScale({ hookSize,2.5f });
-			} else {
+			} else if(direction == Direction::LEFT) {
 				hook.setScale({ -hookSize,2.5f });
 			}
 			if (hookSize >= 100) {
