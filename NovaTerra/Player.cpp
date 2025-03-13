@@ -24,10 +24,10 @@ void Player::update(float deltatime, vector<RectangleShape>& shape)
 	
 	dash();
 	body.update(deltatime);
-  m_playershape.setPosition(body.position);
+  m_playershape.setPosition(body.getPosition());
 	body.groundCollision(shape, m_playershape.getGlobalBounds());
 	
-	m_playershape.setPosition(body.position);
+	m_playershape.setPosition(body.getPosition());
 	grapplinshoot(shape);
 	grabing();
 
@@ -49,8 +49,8 @@ void Player::handleInput()
 	// D�sactiv� les inputs si le joueur est en train de hook ou de grab
 	if (m_action != Action::REVERSEHOOK && m_action != Action::GRABING) {
 	// Keyboard input
-	if (Keyboard::isKeyPressed(Keyboard::Q)) { direction = Direction::LEFT;  body.getVelocity().x = -500; }
-	else if (Keyboard::isKeyPressed(Keyboard::D)) { direction = Direction::RIGHT; body.getVelocity().x = 500;}
+	if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  body.getVelocity().x = -500; }
+	else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; body.getVelocity().x = 500;}
 	else { body.getVelocity().x = 0; }
 
 		if (Keyboard::isKeyPressed(Keyboard::Z)) { m_direction = Direction::UP; }
@@ -82,8 +82,8 @@ void Player::handleInput()
 			float x = Joystick::getAxisPosition(0, Joystick::X);
 			float y = Joystick::getAxisPosition(0, Joystick::Y);
 
-		if (x < -50) { direction = Direction::LEFT; body.getVelocity().x = -500; }
-		if (x > 50) { direction = Direction::RIGHT; body.getVelocity().x = 500; }
+		if (x < -50) { m_direction = Direction::LEFT; body.getVelocity().x = -500; }
+		if (x > 50) { m_direction = Direction::RIGHT; body.getVelocity().x = 500; }
 
 			if (y < -50) { m_direction = Direction::UP; }
 			if (y > 50) { m_direction = Direction::DOWN; }
@@ -111,8 +111,8 @@ void Player::handleInput()
 
 void Player::dash()
 {
-	if (action == Action::DASHING) {
-		switch (direction) {
+	if (m_action == Action::DASHING) {
+		switch (m_direction) {
 		case Direction::RIGHT: body.getVelocity().x = 1000; break;
 		case Direction::LEFT: body.getVelocity().x = -1000; break;
 		case Direction::UP: body.getVelocity().y = -1000; break;
@@ -134,7 +134,7 @@ void Player::grapplinshoot(vector<RectangleShape>& shape)
 			if (m_hook.getGlobalBounds().intersects(vec.getGlobalBounds(), m_intersection)) {
 				m_hookCd.restart();
 				m_action = Action::REVERSEHOOK;
-				body.velocity = { 0,0 };
+				body.getVelocity() = {0,0};
 			}
 
 			m_hook.setScale({ m_hookSize * m_stockedDirection.x,2.5f });
@@ -145,7 +145,7 @@ void Player::grapplinshoot(vector<RectangleShape>& shape)
 		}		
 	}
 	if (m_action == Action::REVERSEHOOK) {
-		body.velocity.x = 800.f * m_stockedDirection.x;
+		body.getVelocity().x = 800.f * m_stockedDirection.x;
 		m_hookSize -= m_deltatime * 300;
 		m_hook.setScale(m_hookSize * m_stockedDirection.x , 2.5f);
 
@@ -158,14 +158,14 @@ void Player::grapplinshoot(vector<RectangleShape>& shape)
 void Player::grabing()
 {
 	if (m_action == Action::GRABING) {
-		body.getVelocity.y = -981.f * m_deltatime;
+		body.getVelocity().y = -981.f * m_deltatime;
 		if (Keyboard::isKeyPressed(Keyboard::Space)) {
 			m_action = Action::NONE; 
-			body.setVelocity.y = -400;
+			body.getVelocity().y = -400;
 		}
 		if (Joystick::isConnected(0) && Joystick::isButtonPressed(0,0)) {
 			m_action = Action::NONE;
-			body.setVelocity.y = -400;
+			body.getVelocity().y = -400;
 		}
 	}
 }
