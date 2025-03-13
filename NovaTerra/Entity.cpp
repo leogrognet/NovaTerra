@@ -18,7 +18,7 @@ void Entity::draw(RenderWindow& window)
     window.draw(m_shape);
 }
 
-Entity::Entity(float posX, float posY) : m_rigidBody({posX,posY})
+Entity::Entity(float posX, float posY) : m_rigidBody({posX,posY}, true)
 {
     m_shape.setPosition(posX, posY);
 }
