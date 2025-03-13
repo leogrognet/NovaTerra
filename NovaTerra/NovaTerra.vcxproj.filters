@@ -28,6 +28,9 @@
     <Filter Include="RigidBody">
       <UniqueIdentifier>{5368f5a5-2597-4801-a053-e16bcc6ed5c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Biomes">
+      <UniqueIdentifier>{2a0b3511-6d98-4c10-8517-55b7ad6013a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -45,6 +48,18 @@
     <ClInclude Include="RigidBody.h">
       <Filter>RigidBody</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Scroll.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Biome.h">
+      <Filter>Biomes</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Biomes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp">
@@ -61,6 +76,18 @@
     </ClCompile>
     <ClCompile Include="RigidBody.cpp">
       <Filter>RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scroll.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Biome.cpp">
+      <Filter>Biomes</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Biomes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

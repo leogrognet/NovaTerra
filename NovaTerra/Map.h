@@ -16,21 +16,25 @@ using namespace std;
 class Map {
 private:
     //Calques de la carte
+
     vector<vector<int>> tileMap; 
     //vector<vector<int>> itemMap;
     //vector<vector<int>> entityMap;
 
     //Blocages (collision)
+
     vector<int> blockedTileValues;
     //vector<int> blockedItemValues;
     vector<Vector2i> blockedTiles;
     //vector<Vector2i> blockedItemTiles;
 
     //item speciaux
+    // 
     //vector<Vector2f> potionPositions;
     //vector<Vector2f> chestPositions;
 
     //Entités du jeu
+    // 
     //vector<Vector2f> chaserEnemyPositions;
     //Vector2f bossPosition;
     //vector<Vector2f> patternEnemyPositions;
@@ -39,6 +43,7 @@ private:
     //Vector2f alternativeSpawnPosition = { 0, 0 };
 
     //Graphiques
+
     Texture tileSet;
     //Texture itemSet;
     vector<Sprite> tiles;
