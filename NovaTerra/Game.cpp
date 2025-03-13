@@ -42,7 +42,8 @@ void Game::run() {
 
         window.clear();
         player.update(deltatime, vec);
-        background.draw(window); // Background
+		background.update(deltatime);
+        background.draw(window);
         map->draw(window);
         window.draw(rectangle);
         window.draw(rectangle1);

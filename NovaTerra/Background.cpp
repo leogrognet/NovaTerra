@@ -2,12 +2,12 @@
 #include <iostream>
 
 Background::Background(const string& texturePath, float speed) : scrollSpeed(speed) {
-    // Charger la texture une seule fois
+    
     if (!texture.loadFromFile("assets/parallaxe/bg.png")) {
         throw runtime_error("Failed to load texture");
     }
 
-    // Initialiser les sprites avec la même texture
+    
     sprite.setTexture(texture);
     sprite.setPosition(0, 0);
 
@@ -16,7 +16,7 @@ Background::Background(const string& texturePath, float speed) : scrollSpeed(spe
 }
 
 void Background::update(float deltaTime) {
-    // Déplacer les sprites en fonction de la vitesse de défilement et du temps écoulé
+    
     sprite.move(scrollSpeed * deltaTime, 0);
     sprite2.move(scrollSpeed * deltaTime, 0);
 
@@ -34,7 +34,6 @@ void Background::update(float deltaTime) {
 }
 
 void Background::draw(RenderWindow& window) {
-    // Dessiner les deux sprites sur la fenêtre
     window.draw(sprite);
     window.draw(sprite2);
 }

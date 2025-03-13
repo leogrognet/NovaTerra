@@ -13,11 +13,8 @@ private:
 
 public:
     Texture texture;
-    Texture texture2;
     Sprite sprite;
     Sprite sprite2;
-
-    //   palier pal;
 
     Background(const string& texturePath, float speed);
     void update(float deltaTime);
