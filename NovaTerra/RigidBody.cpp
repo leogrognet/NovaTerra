@@ -2,12 +2,15 @@
 #include <iostream>
 #include <algorithm>
 
-RigidBody::RigidBody(Vector2f pos) : position(pos), isGrounded(false) {
-    velocity = { 0, 0 };
+
+
+
+RigidBody::RigidBody(Vector2f pos) : m_position(pos), m_isGrounded(false) {
+    m_velocity = { 0, 0 };
 }
 
 void RigidBody::groundCollision(const std::vector<RectangleShape>& colliders, const FloatRect& selfShape) {
-    isGrounded = false;
+    m_isGrounded = false;
 
     for (const auto& collider : colliders) {
         FloatRect colliderBounds = collider.getGlobalBounds();
@@ -20,31 +23,47 @@ void RigidBody::groundCollision(const std::vector<RectangleShape>& colliders, co
 
             if (overlapX < overlapY) {
                 if (selfShape.left < colliderBounds.left) {
-                    position.x = colliderBounds.left - selfShape.width;
+                    m_position.x = colliderBounds.left - selfShape.width;
                 }
                 else {
-                    position.x = colliderBounds.left + colliderBounds.width;
+                    m_position.x = colliderBounds.left + colliderBounds.width;
                 }
-                velocity.x = 0;
+                m_velocity.x = 0;
             }
             else {
                 if (selfShape.top < colliderBounds.top) {
-                    position.y = colliderBounds.top - selfShape.height;
-                    isGrounded = true;
+                    m_position.y = colliderBounds.top - selfShape.height;
+                    m_isGrounded = true;
                 }
                 else {
-                    position.y = colliderBounds.top + colliderBounds.height;
+                    m_position.y = colliderBounds.top + colliderBounds.height;
                 }
-                velocity.y = 0;
+                m_velocity.y = 0;
             }
         }
     }
 }
 
 void RigidBody::update(float deltaTime) {
-    if (!isGrounded) {
-        velocity.y += 981.0f * deltaTime; // Gravité (981 pixels/sec²)
+    if (!m_isGrounded) {
+        m_velocity.y += 981.0f * deltaTime; // Gravité (981 pixels/sec²)
     }
 
-    position += velocity * deltaTime;
+    m_position += m_velocity * deltaTime;
+}
+
+
+Vector2f RigidBody::getPosition()
+{
+    return m_position;
+}
+
+Vector2f& RigidBody::getVelocity()
+{
+    return m_velocity;
+}
+
+bool RigidBody::getIsGrounded()
+{
+    return m_isGrounded;
 }

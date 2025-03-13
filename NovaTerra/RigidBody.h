@@ -1,5 +1,4 @@
-#ifndef RIGIDBODY_H
-#define RIGIDBODY_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -7,14 +6,23 @@
 using namespace sf;
 
 class RigidBody {
+private:
+    Vector2f m_position;
+    Vector2f m_velocity;
+    bool m_isGrounded;
 public:
-    Vector2f position;
-    Vector2f velocity;
-    bool isGrounded;
+
+    //Getters
+
+    Vector2f getPosition();
+    Vector2f& getVelocity();
+    
+    bool getIsGrounded();
+
 
     RigidBody(Vector2f pos);
     void groundCollision(const std::vector<RectangleShape>& colliders, const FloatRect& selfShape);
     void update(float deltaTime);
 };
 
-#endif
+

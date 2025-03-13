@@ -24,9 +24,9 @@ void Player::update(float deltatime, vector<RectangleShape>& shape)
 	
 	dash();
 	body.update(deltatime);
+  m_playershape.setPosition(body.position);
 	body.groundCollision(shape, m_playershape.getGlobalBounds());
 	
-
 	m_playershape.setPosition(body.position);
 	grapplinshoot(shape);
 	grabing();
@@ -46,11 +46,12 @@ void Player::draw(RenderWindow& window)
 
 void Player::handleInput()
 {
-	// Désactivé les inputs si le joueur est en train de hook ou de grab
+	// Dï¿½sactivï¿½ les inputs si le joueur est en train de hook ou de grab
 	if (m_action != Action::REVERSEHOOK && m_action != Action::GRABING) {
-		if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  body.velocity.x = -500; }
-		else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; body.velocity.x = 500; }
-		else { body.velocity.x = 0; }
+	// Keyboard input
+	if (Keyboard::isKeyPressed(Keyboard::Q)) { direction = Direction::LEFT;  body.getVelocity().x = -500; }
+	else if (Keyboard::isKeyPressed(Keyboard::D)) { direction = Direction::RIGHT; body.getVelocity().x = 500;}
+	else { body.getVelocity().x = 0; }
 
 		if (Keyboard::isKeyPressed(Keyboard::Z)) { m_direction = Direction::UP; }
 		if (Keyboard::isKeyPressed(Keyboard::S)) { m_direction = Direction::DOWN; }
@@ -63,9 +64,9 @@ void Player::handleInput()
 		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::DOWNRIGHT; }
 		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::DOWNLEFT; }
 
-		if (Keyboard::isKeyPressed(Keyboard::Space) && body.isGrounded) {
-			body.velocity.y = -500;
-		}
+	if (Keyboard::isKeyPressed(Keyboard::Space) && body.getIsGrounded()) {
+		body.getVelocity().y = -500;
+	}
 
 		if (Keyboard::isKeyPressed(Keyboard::F) && m_hookCd.getElapsedTime().asSeconds() >= 5) {
 			m_action = Action::HOOK;
@@ -81,8 +82,8 @@ void Player::handleInput()
 			float x = Joystick::getAxisPosition(0, Joystick::X);
 			float y = Joystick::getAxisPosition(0, Joystick::Y);
 
-			if (x < -50) { m_direction = Direction::LEFT; body.velocity.x = -500; }
-			if (x > 50) { m_direction = Direction::RIGHT; body.velocity.x = 500; }
+		if (x < -50) { direction = Direction::LEFT; body.getVelocity().x = -500; }
+		if (x > 50) { direction = Direction::RIGHT; body.getVelocity().x = 500; }
 
 			if (y < -50) { m_direction = Direction::UP; }
 			if (y > 50) { m_direction = Direction::DOWN; }
@@ -95,9 +96,9 @@ void Player::handleInput()
 			if (y > 50 && x > 50) { m_direction = Direction::DOWNRIGHT; }
 			if (y > 50 && x < -50) { m_direction = Direction::DOWNLEFT; }
 
-			if (Joystick::isButtonPressed(0, 0) && body.isGrounded) {
-				body.velocity.y = -500;
-			}
+		if (Joystick::isButtonPressed(0, 0) && body.getIsGrounded()) {
+			body.getVelocity().y = -500;
+		}
 
 			if (Joystick::isButtonPressed(0, 1) && m_hookCd.getElapsedTime().asSeconds() > 1) { // Assuming button 1 is the dash button
 				m_hookCd.restart();
@@ -110,13 +111,13 @@ void Player::handleInput()
 
 void Player::dash()
 {
-	if (m_action == Action::DASHING) {
-		switch (m_direction) {
-		case Direction::RIGHT: body.velocity.x = 1300; break;
-		case Direction::LEFT: body.velocity.x = -1300; break;
-		case Direction::UP: body.velocity.y = -500; break;
-		case Direction::UPRIGHT: body.velocity.x = 500; body.velocity.y = -500; break;
-		case Direction::UPLEFT: body.velocity.x = -500; body.velocity.y = -500; break;
+	if (action == Action::DASHING) {
+		switch (direction) {
+		case Direction::RIGHT: body.getVelocity().x = 1000; break;
+		case Direction::LEFT: body.getVelocity().x = -1000; break;
+		case Direction::UP: body.getVelocity().y = -1000; break;
+		case Direction::UPRIGHT: body.getVelocity().x = 1000; body.getVelocity().y = -1000; break;
+		case Direction::UPLEFT: body.getVelocity().x = -1000; body.getVelocity().y = -1000; break;
 		}
 
 		if (m_hookCd.getElapsedTime().asSeconds() > 0.1f) {
@@ -157,14 +158,14 @@ void Player::grapplinshoot(vector<RectangleShape>& shape)
 void Player::grabing()
 {
 	if (m_action == Action::GRABING) {
-		body.velocity.y = -981 * m_deltatime;
+		body.getVelocity.y = -981.f * m_deltatime;
 		if (Keyboard::isKeyPressed(Keyboard::Space)) {
 			m_action = Action::NONE; 
-			body.velocity.y = -400;
+			body.setVelocity.y = -400;
 		}
 		if (Joystick::isConnected(0) && Joystick::isButtonPressed(0,0)) {
 			m_action = Action::NONE;
-			body.velocity.y = -400;
+			body.setVelocity.y = -400;
 		}
 	}
 }
