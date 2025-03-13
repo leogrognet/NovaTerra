@@ -17,6 +17,7 @@ void Player::update(float deltatime, vector<RectangleShape>& shape)
 	handleInput();
 	dash();
 	body.update(deltatime);
+	playershape.setPosition(body.getPosition());
 	body.groundCollision(shape, playershape.getGlobalBounds());
 
 	playershape.setPosition(body.getPosition());

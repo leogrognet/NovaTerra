@@ -28,6 +28,9 @@
     <Filter Include="RigidBody">
       <UniqueIdentifier>{5368f5a5-2597-4801-a053-e16bcc6ed5c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FallBlock">
+      <UniqueIdentifier>{89b3d668-6d22-4dd2-96b4-711082f3825e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -45,6 +48,15 @@
     <ClInclude Include="RigidBody.h">
       <Filter>RigidBody</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Scroll.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="FallBlock.h">
+      <Filter>FallBlock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp">
@@ -61,6 +73,12 @@
     </ClCompile>
     <ClCompile Include="RigidBody.cpp">
       <Filter>RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scroll.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
