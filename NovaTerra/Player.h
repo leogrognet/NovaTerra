@@ -47,7 +47,7 @@ private:
 
 	State state;
 	Direction direction;
-	//Action action;
+	Action action;
 
 	bool jumpButtonPressed = false;
 	bool canJump = false;

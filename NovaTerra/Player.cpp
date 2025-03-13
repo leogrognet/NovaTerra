@@ -85,17 +85,13 @@ void Player::handleInput()
 
 		if (Joystick::isButtonPressed(0, 0) && body.getIsGrounded()) {
 			body.getVelocity().y = -500;
-		}
-		if (Joystick::isButtonPressed(0, 0)) { 
-			if (playershape.getPosition().y >= 800 && state != State::JUMPING) {
-				state = State::JUMPING;
-				time = 0;
-			}
+			cout << "Jump triggered from controller!" << std::endl;
 		}
 
 		if (Joystick::isButtonPressed(0, 1) && cd.getElapsedTime().asSeconds() > 1) { 
 			cd.restart();
-			state = State::DASHING;
+			action = Action::DASHING;
+			cout << "Dashing triggered from controller!" << std::endl;
 		}
 	}
 }
