@@ -4,9 +4,7 @@ Player player;
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
-    //map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
     world = new World();
-    //scroll = new Scroll(WIDTH, HEIGHT);
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
     bg.setSize({ 1000000, 2000 });
@@ -46,7 +44,6 @@ void Game::run() {
         player.update(deltatime, vec);
         window.draw(bg); // Background
         world->render(window);
-        //map->draw(window);
         window.draw(rectangle);
         window.draw(rectangle1);
         player.draw(window);

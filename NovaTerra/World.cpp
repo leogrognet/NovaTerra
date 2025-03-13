@@ -24,3 +24,20 @@ void World::render(sf::RenderWindow& window) {
 		biome->render(window);
 	}
 }
+
+bool World::isBossZone(sf::Vector2f playerPos) {
+	return true;
+}
+
+void World::startBossFight() {
+
+}
+
+bool World::isBossDefeated() {
+
+}
+
+void World::nextBiome() {
+	currentBossIndex += 1;
+	std::cout << "Changement de biome\n";
+}

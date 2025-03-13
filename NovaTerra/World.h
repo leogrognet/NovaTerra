@@ -15,8 +15,9 @@ public:
 	void render(sf::RenderWindow& window);
 
 	bool isBossZone(sf::Vector2f playerPos);
-	bool startBossFight();
+	void startBossFight();
 	bool isBossDefeated();
+	void nextBiome();
 
 private:
 	std::vector<std::unique_ptr<Biome>> biomes;
