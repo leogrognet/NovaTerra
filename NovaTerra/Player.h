@@ -14,18 +14,20 @@ public:
 
 	RigidBody body;
 	enum class State { JUMPING, IDLE, MIDAIR, DASHING };
-	enum class Action { DASHING, HOOK, NONE };
+	enum class Action { DASHING, HOOK, REVERSEHOOK, GRABING, NONE };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
 	Player();
 
 	void update(float deltatime, vector<RectangleShape>& shape);
+	void updateDirection();
 
 	void draw(RenderWindow& window);
 	void handleInput();
 
 	void dash();
-	void grapplinshoot();
+	void grapplinshoot(vector<RectangleShape>& shape);
+	void grabing();
 
 	void coutState();
 
@@ -35,21 +37,32 @@ private:
 	float speed;
 	float jumpspeed;
 	float gravity;
+	float m_deltatime = 0;
+	float m_time = 0;
 
 	float dtime = 0;
 	float time = 0;
+	int m_hp;
 
+	RectangleShape m_playershape;
+	RectangleShape m_hook;
+	float m_hookSize = 0;
+
+	Clock m_hookCd;
+	Clock m_grabCd;
 	int hp;
 
-	RectangleShape playershape;
-	RectangleShape hook;
-	float hookSize = 0;
+	State m_state;
+	Direction m_direction;
+	Action m_action;
 
-	Clock cd;
+	FloatRect m_intersection;
+	Vector2f m_grabPos = { 0,0 };
 
-	State state;
-	Direction direction;
-	Action action;
+	// Variable pour changer en fonction de la direction (enum) (0,1) pour bas par exemple
+	Vector2f m_stockedDirection = { 0, 0 };
 
-	bool jumpKeyPressed = false;
+	bool m_jumpButtonPressed = false;
+	bool m_canJump = false;
+	bool m_jumpKeyPressed = false;
 };
