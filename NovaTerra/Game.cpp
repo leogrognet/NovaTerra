@@ -19,9 +19,9 @@ void Game::run() {
     RectangleShape rectangle({ 500,50 });
     rectangle.setFillColor(Color::Black);
     rectangle.setPosition(100, 800);
-    RectangleShape rectangle1({ 50,500 });
+    RectangleShape rectangle1({ 50,400 });
     rectangle1.setFillColor(Color::Black);
-    rectangle1.setPosition(500, 400);
+    rectangle1.setPosition(300, 400);
     vector<RectangleShape> vec;
     vec.push_back(rectangle);
     vec.push_back(rectangle1);
