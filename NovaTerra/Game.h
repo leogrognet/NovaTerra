@@ -6,13 +6,13 @@
 #include "Player.h"
 #include "Map.h"
 #include "Scroll.h"
+#include "Background.h"
 
 class Game {
 private:
     const int WIDTH;
     const int HEIGHT;
     RenderWindow window;
-    sf::RectangleShape bg;
 public:
     Game(const int _WIDTH, const int _HEIGHT);
     ~Game();
