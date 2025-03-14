@@ -3,17 +3,19 @@
 #include <iostream>
 
 using namespace std;
-class Plateforme : public Entity {
+class MovePlat : public Entity {
 public:
 
-	Plateforme(float posX, float posY, Vector2f size,bool isStatic);
+	MovePlat(float posX, float posY, Vector2f size, bool isStatic);
 
 	void draw(RenderWindow& window) override;
 	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;
-	int getID() override;
 
+	void move(float deltatime, const vector<shared_ptr<Entity>>& colliders);
+	int getID() override;
 private:
 
+	bool reverseMove = false;
 	Texture plateformetexture;
 	Vector2f m_stockedPos;
 };

@@ -31,6 +31,12 @@ public:
 
 	void setGrabLiane(bool value);
 
+	int getID() override;
+
+	void ForceMove() override;
+
+	RectangleShape getHitBox()override;
+
 private:
 
     float m_deltatime = 0;

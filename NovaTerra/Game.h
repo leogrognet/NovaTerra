@@ -8,6 +8,7 @@
 #include "Scroll.h"
 #include "Background.h"
 #include "PlateformeTemp.h"
+#include "MovingPlatform.h"
 
 class Game {
 private:

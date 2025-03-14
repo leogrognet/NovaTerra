@@ -13,9 +13,10 @@ void Plateforme::draw(RenderWindow& window) {
 
 void Plateforme::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
-
-	//cout << m_rigidBody.getVelocity().x << " " << m_rigidBody.getVelocity().y << endl;
-	//m_rigidBody.getVelocity().x += deltaTime * 50;
 	Entity::update(deltaTime, colliders);
+}
 
+int Plateforme::getID()
+{
+	return 0;
 }
