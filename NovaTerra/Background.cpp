@@ -28,7 +28,6 @@ void Background::update(float deltaTime) {
         sprite2.setPosition(sprite.getPosition().x + sprite.getGlobalBounds().width, 0);
     }
   
-
     // Messages de débogage
     //cout << "Sprite 1 position: " << sprite.getPosition().x << ", " << sprite.getPosition().y << endl;
     //cout << "Sprite 2 position: " << sprite2.getPosition().x << ", " << sprite2.getPosition().y << endl;

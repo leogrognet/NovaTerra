@@ -74,7 +74,7 @@ void RigidBody::update(float deltaTime, const vector<FloatRect>& colliders, cons
 
 }
 
-Vector2f RigidBody::getPosition()
+Vector2f RigidBody::getPosition() const
 {
     return m_position;
 }

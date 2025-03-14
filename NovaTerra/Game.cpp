@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Background background("assets/parallaxe/bg.png", - 50);
-
+GolemEnemy golem({ 500, 700 });
 Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
     window.setFramerateLimit(60);
@@ -42,13 +42,15 @@ void Game::run() {
 
         window.clear();
 		background.update(deltatime);
+        player.update(deltatime, vec);
+		golem.update(deltatime, player);
         background.draw(window);
         map->draw(window);
+		golem.draw(window);
         for (auto entityvec : vec) {
             entityvec->update(deltatime, vec);
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
-
         }
         window.display();
     }

@@ -16,7 +16,7 @@ public:
 
     //Getters
 
-    Vector2f getPosition();
+    Vector2f getPosition() const;
     Vector2f& getVelocity();
 
     bool getIsGrounded();
