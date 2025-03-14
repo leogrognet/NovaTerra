@@ -19,8 +19,8 @@ void Game::run() {
     vector<shared_ptr<Entity>> vec;
 
     vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true));
-    vec.push_back(make_shared<Plateforme>(300, 400, Vector2f(1, 10), true));
-
+    vec.push_back(make_shared<Plateforme>(300, 300, Vector2f(5, 5), true));
+    vec.push_back(make_shared<MovePlat>(500, 700, Vector2f(3, 3), true));
 
     Player player(vec,100,600,false);
 

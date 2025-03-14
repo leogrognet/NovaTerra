@@ -15,6 +15,9 @@ Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool i
 	m_hook.setSize({ 2.5f,2.5f });
 	m_hook.setFillColor(Color::White);
 	m_hook.setOrigin(0, 1.75f);
+
+	m_hitbox.setSize({ 70,70 });
+	m_hitbox.setPosition(posX, posY);
 }
 
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
@@ -28,6 +31,8 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 	grapplinshoot();
 	grabing();
 
+	ForceMove();
+
 	Entity::update(deltatime, colliders);
 
 	//Cout du player pos si besoin de debug
@@ -35,7 +40,8 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 	//cout << "RigiBody : " <<m_rigidBody.getPosition().x << " " << m_rigidBody.getPosition().y << endl;
 	//cout << m_shape.getScale().x << " " << m_shape.getScale().y << endl;
 
-	m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y);
+	m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
+	m_hitbox.setPosition(m_shape.getPosition().x, m_shape.getPosition().y);
 }
 
 void Player::draw(RenderWindow& window) 
@@ -67,7 +73,7 @@ void Player::handleInput()
 		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::DOWNLEFT; }
 
 	if (Keyboard::isKeyPressed(Keyboard::Space) && m_rigidBody.getIsGrounded()) {
-		m_rigidBody.getVelocity().y = -250;
+		m_rigidBody.getVelocity().y = -350;
 	}
 
 		if (Keyboard::isKeyPressed(Keyboard::F) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
@@ -114,11 +120,11 @@ void Player::dash()
 {
 	if (m_action == Action::DASHING) {
 		switch (m_direction) {
-		case Direction::RIGHT: m_rigidBody.getVelocity().x = 500; break;
-		case Direction::LEFT: m_rigidBody.getVelocity().x = -500; break;
-		case Direction::UP: m_rigidBody.getVelocity().y = -500; break;
-		case Direction::UPRIGHT: m_rigidBody.getVelocity().x = 500; m_rigidBody.getVelocity().y = -500; break;
-		case Direction::UPLEFT: m_rigidBody.getVelocity().x = -500; m_rigidBody.getVelocity().y = -500; break;
+		case Direction::RIGHT: m_rigidBody.getVelocity().x = 800; break;
+		case Direction::LEFT: m_rigidBody.getVelocity().x = -800; break;
+		case Direction::UP: m_rigidBody.getVelocity().y = -350; break;
+		case Direction::UPRIGHT: m_rigidBody.getVelocity().x = 300; m_rigidBody.getVelocity().y = -300; break;
+		case Direction::UPLEFT: m_rigidBody.getVelocity().x = -300; m_rigidBody.getVelocity().y = -300; break;
 		}
 
 		if (m_hookCd.getElapsedTime().asSeconds() > 0.1f) {
@@ -130,12 +136,12 @@ void Player::dash()
 void Player::grapplinshoot()
 {
 	if (m_action == Action::HOOK) {
-		m_hookSize += m_deltatime * 170 / 2;
+		m_hookSize += m_deltatime * 85;
 		for (auto& vec : m_wallvec) {
 			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection)) {
 				m_hookCd.restart();
 				m_action = Action::REVERSEHOOK;
-				m_rigidBody.getVelocity() = {0,0};
+				m_rigidBody.getVelocity() = { 0,0 };
 			}
 
 			m_hook.setScale({ m_hookSize * m_stockedDirection.x,2.5f });
@@ -178,6 +184,21 @@ void Player::grabing()
 void Player::setGrabLiane(bool value)
 {
 	grabLiane = value;
+}
+
+int Player::getID()
+{
+	return 1;
+}
+
+void Player::ForceMove()
+{
+	m_rigidBody.getVelocity() += m_forcedVelocity;
+}
+
+RectangleShape Player::getHitBox()
+{
+	return m_hitbox;
 }
 
 void Player::updateDirection()

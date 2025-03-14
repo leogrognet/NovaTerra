@@ -9,14 +9,10 @@ void Entity::update(float deltaTime, const vector<std::shared_ptr<Entity>>& coll
             continue;
         }
         vec.push_back(collider->m_shape.getGlobalBounds());
-
     }
 
     m_shape.setPosition(m_rigidBody.getPosition());
     m_rigidBody.update(deltaTime, vec, m_shape.getGlobalBounds());
-
-   
-
 
 }
 
@@ -24,6 +20,25 @@ void Entity::update(float deltaTime, const vector<std::shared_ptr<Entity>>& coll
 void Entity::draw(RenderWindow& window)
 {
     window.draw(m_shape);
+}
+
+int Entity::getID()
+{
+    return 0;
+}
+
+void Entity::ForceMove()
+{
+}
+
+RectangleShape Entity::getHitBox()
+{
+    return m_hitbox;
+}
+
+void Entity::setForcedVelocity(Vector2f velocity)
+{
+    m_forcedVelocity = velocity;
 }
 
 Entity::Entity(float posX, float posY, bool isStatic) : m_rigidBody({ posX,posY }, isStatic)

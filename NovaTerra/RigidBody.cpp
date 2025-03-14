@@ -9,7 +9,9 @@ RigidBody::RigidBody(Vector2f pos, bool isStatic) : m_position(pos), m_isGrounde
 }
 
 void RigidBody::colliderFunc(const std::vector<FloatRect>& colliders, const FloatRect& selfShape) {
+    int tempPos = 0;
     for (const auto& colliderBounds : colliders) {
+        tempPos += 1;
         if (colliderBounds.intersects(selfShape)) {
             float overlapX = std::min(selfShape.left + selfShape.width, colliderBounds.left + colliderBounds.width) -
                 std::max(selfShape.left, colliderBounds.left);
