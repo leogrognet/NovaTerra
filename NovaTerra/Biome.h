@@ -5,11 +5,7 @@
 
 class Biome {
 public:
-	Biome(const std::string& filePath, sf::Vector2f _startPosition);
-
-	void load();
-	void update(float deltatime);
-	void render(sf::RenderWindow& window);
+	Biome(sf::FloatRect _bounds);
 
 	sf::FloatRect getBounds() const { return bounds; }
 	bool hasBoss() const { return bossSpawned; }
@@ -18,8 +14,6 @@ public:
 	void defeatBoss();
 
 private:
-	Map* map;
-	sf::Vector2f startPosition;
 	sf::FloatRect bounds;
 	bool bossSpawned;
 	bool bossDefeated;

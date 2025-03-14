@@ -18,4 +18,5 @@ void Scroll::update(float deltatime) {
 
 void Scroll::move(float offsetX, float offsetY) {
 	view.move(offsetX, offsetY);
+	
 }

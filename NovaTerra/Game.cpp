@@ -4,7 +4,7 @@ Player player;
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
-    world = new World();
+    world = new World("assets/map/lobby.txt");
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
     bg.setSize({ 1000000, 2000 });
@@ -17,15 +17,15 @@ Game::~Game() {
 
 void Game::run() {
     Clock clock;
-    RectangleShape rectangle({ 500,50 });
+    RectangleShape rectangle({ 5000,50 });
     rectangle.setFillColor(Color::Black);
     rectangle.setPosition(100, 800);
-    RectangleShape rectangle1({ 50,500 });
-    rectangle1.setFillColor(Color::Black);
-    rectangle1.setPosition(500, 400);
+    //RectangleShape rectangle1({ 50,500 });
+    //rectangle1.setFillColor(Color::Black);
+    //rectangle1.setPosition(500, 400);
     vector<RectangleShape> vec;
     vec.push_back(rectangle);
-    vec.push_back(rectangle1);
+    //vec.push_back(rectangle1);
 
     while (window.isOpen()) {
         Event event;
@@ -33,19 +33,17 @@ void Game::run() {
             if (event.type == Event::Closed)
                 window.close();
         }
-        //scroll->move(1.f, 0.f);
-        //scroll->applyView(window);
         
         float deltatime = clock.restart().asSeconds();
-
-        world->update(deltatime);
+        
+        world->update(deltatime, player.body.getPosition());
 
         window.clear();
         player.update(deltatime, vec);
         window.draw(bg); // Background
         world->render(window);
         window.draw(rectangle);
-        window.draw(rectangle1);
+        //window.draw(rectangle1);
         player.draw(window);
         window.display();
     }

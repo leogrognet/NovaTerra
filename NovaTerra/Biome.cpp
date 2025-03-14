@@ -1,22 +1,7 @@
 #include "Biome.h"
 
-
-Biome::Biome(const std::string& filePath, sf::Vector2f _startPosition)
-	: bossDefeated(false), bossSpawned(false), startPosition(_startPosition) {
-	map = new Map(filePath, "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
-}
-
-void Biome::load() {
-
-}
-
-void Biome::update(float deltatime) {
-
-}
-
-void Biome::render(sf::RenderWindow& window) {
-	map->draw(window);
-}
+Biome::Biome(sf::FloatRect _bounds)
+	: bounds(_bounds), bossDefeated(false), bossSpawned(false) {}
 
 bool Biome::isBossDefeated() const {
 	return bossDefeated;
