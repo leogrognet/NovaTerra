@@ -17,7 +17,8 @@ public:
 	
 	void setScript();
 	void loadScript(string& textPathType);
-	void updateScriptBox();
+	void updateScriptBox(float deltaTime);
+	void displayerBox();
 	void drawBox(RenderWindow& window);
 	
 
@@ -26,9 +27,16 @@ private:
 	Font m_font;
 	Text m_text;
 	Sprite m_box;
+	string displayedText;
+	
 	vector<string> m_textPath;
 	vector<string> m_textFile;
 	vector<string> m_textLine;
 
+
+	int 
+
 	bool m_isTyping;
+	float m_typingCoolDown;
+	float m_typingIncr;
 };

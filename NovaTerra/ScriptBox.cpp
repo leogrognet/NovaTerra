@@ -32,8 +32,23 @@ void Script::loadScript(string& textPathType)
 	}
 }
 
-void Script::updateScriptBox()
+void Script::updateScriptBox(float deltaTime)
 {
+	m_typingIncr += deltaTime;
+
+		for (auto& line : m_textLine) {
+			if (m_isTyping && m_typingIncr > m_typingCoolDown) {
+
+				for (auto& chr : line) {
+					displayedText +=
+				}
+		}
+	}
+
+}
+
+
+void Script::displayerBox() {
 
 }
 
