@@ -25,6 +25,8 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GolemEnemy.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MovingPlatform.cpp" />
+    <ClCompile Include="PlateformeTemp.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Map.cpp" />
   </ItemGroup>
@@ -34,6 +36,8 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GolemEnemy.h" />
+    <ClInclude Include="MovingPlatform.h" />
+    <ClInclude Include="PlateformeTemp.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Map.h" />
   </ItemGroup>
@@ -102,8 +106,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\SFML-2.6.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SFML-2.6.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SFML-2.6.2\include;$(SolutionDir)/SFML-2.6.2/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SFML-2.6.2\lib;$(SolutionDir)/SFML-2.6.2/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\leoam\source\repos\NovaTerra\SFML-2.6.2\include;C:\Users\lgrognet\source\repos\NovaTerra\SFML-2.6.2\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -118,8 +122,8 @@
     <LibraryPath>C:\SFML-2.6.2\lib;C:\Users\lgrognet\source\repos\NovaTerra\SFML-2.6.2\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\SFML-2.6.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SFML-2.6.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SFML-2.6.2\include;$(SolutionDir)/SFML-2.6.2/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SFML-2.6.2\lib;$(SolutionDir)/SFML-2.6.2/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

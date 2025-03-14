@@ -8,6 +8,9 @@
 #include "Scroll.h"
 #include "Background.h"
 #include "GolemEnemy.h"
+#include "PlateformeTemp.h"
+#include "MovingPlatform.h"
+
 class Game {
 private:
     const int WIDTH;

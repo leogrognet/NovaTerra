@@ -1,6 +1,5 @@
 #include "Game.h"
 
-Player player;
 Background background("assets/parallaxe/bg.png", - 50);
 GolemEnemy golem({ 500, 700 });
 Game::Game(const int _WIDTH, const int _HEIGHT)
@@ -17,15 +16,15 @@ Game::~Game() {
 void Game::run() {
     Clock clock;
 
-    RectangleShape rectangle({ 500,50 });
-    rectangle.setFillColor(Color::Black);
-    rectangle.setPosition(100, 800);
-    RectangleShape rectangle1({ 50,100 });
-    rectangle1.setFillColor(Color::Black);
-    rectangle1.setPosition(300, 400);
-    vector<RectangleShape> vec;
-    vec.push_back(rectangle);
-    vec.push_back(rectangle1);
+    vector<shared_ptr<Entity>> vec;
+
+    vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true));
+    vec.push_back(make_shared<Plateforme>(300, 300, Vector2f(5, 5), true));
+    vec.push_back(make_shared<MovePlat>(500, 700, Vector2f(3, 3), true));
+
+    Player player(vec,100,600,false);
+
+    vec.push_back(make_shared<Player>(player));
 
     Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
 
@@ -47,10 +46,12 @@ void Game::run() {
 		golem.update(deltatime, player);
         background.draw(window);
         map->draw(window);
-        window.draw(rectangle);
-        window.draw(rectangle1);
-        player.draw(window);
 		golem.draw(window);
+        for (auto entityvec : vec) {
+            entityvec->update(deltatime, vec);
+            entityvec->draw(window);
+            entityvec->update(deltatime, vec);
+        }
         window.display();
     }
 }
