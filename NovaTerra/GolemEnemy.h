@@ -17,9 +17,9 @@ public:
     void draw(RenderWindow& window);
 
 private:
+
     void updateFSM(const Player& player);
     void jumpToPlayer(const Player& player);
-    bool raycastToPlayer(const Player& player);
     void landAndCooldown();
 
     RectangleShape m_golemShape;
@@ -27,7 +27,7 @@ private:
     State m_golemState;
 
     Clock m_golemCooldownClock;
-    float m_golemJumpForce = -800.f;
+    float m_golemJumpForce = -600.f;
     float m_golemJumpSpeedX = 300.f;
     float m_golemDetectionRange = 500.f;
 };

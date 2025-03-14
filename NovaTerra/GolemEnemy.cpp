@@ -17,9 +17,12 @@ void GolemEnemy::draw(RenderWindow& window) {
 }
 
 void GolemEnemy::updateFSM(const Player& player) {
+    float distance = abs(player.body.getPosition().x - m_golemBody.getPosition().x);
+
     switch (m_golemState) {
     case State::IDLE:
-        if (raycastToPlayer(player)) {
+        if (distance <= m_golemDetectionRange) {
+			cout << "Golem detected player\n";
             jumpToPlayer(player);
             m_golemState = State::JUMPING;
         }
@@ -39,23 +42,16 @@ void GolemEnemy::updateFSM(const Player& player) {
     }
 }
 
-bool GolemEnemy::raycastToPlayer(const Player& player) {
-    Vector2f playerPos = player.body.getPosition();
-    Vector2f golemPos = m_golemBody.getPosition();
-    float distance = (playerPos.x - golemPos.x);
-
-    // Simple horizontal raycast logic
-    return distance <= m_golemDetectionRange && (playerPos.y - golemPos.y) < 100;
-}
-
 void GolemEnemy::jumpToPlayer(const Player& player) {
     Vector2f dir = player.body.getPosition() - m_golemBody.getPosition();
     m_golemBody.getVelocity().y = m_golemJumpForce;
     m_golemBody.getVelocity().x = (dir.x > 0) ? m_golemJumpSpeedX : -m_golemJumpSpeedX;
+    cout << "Golem jumped to player\n";
 }
 
 void GolemEnemy::landAndCooldown() {
     m_golemCooldownClock.restart();
     m_golemBody.getVelocity().x = 0;
     m_golemState = State::COOLDOWN;
+    cout << "Golem landed and is on cooldown\n";
 }
