@@ -4,15 +4,18 @@
 #include "RigidBody.h"
 #include "Player.h"
 
-class Pungus {
+class Pungus : public Entity {
 private:
 	sf::RectangleShape shape;
 	RigidBody* body;
 	sf::Clock attackCD;
+	sf::Texture m_texture;
 public:
-	Pungus(sf::Vector2f pos);
+	Pungus(vector<shared_ptr<Entity>>& shape, sf::Vector2f pos, bool isStatic);
 
-	void update(float deltatime, Player& player);
-	void draw(sf::RenderWindow& window);
+	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;
+	void draw(RenderWindow& window) override;
 	void attack();
+
+	sf::Clock poison;
 };
