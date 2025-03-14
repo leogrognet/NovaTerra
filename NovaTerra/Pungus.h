@@ -6,8 +6,8 @@
 
 class Pungus {
 private:
-	sf::RectangleShape pungusShape;
-	RigidBody* pungusBody;
+	sf::RectangleShape shape;
+	RigidBody* body;
 	sf::Clock attackCD;
 public:
 	Pungus(sf::Vector2f pos);
