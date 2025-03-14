@@ -1,20 +1,21 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "Entity.h"
 #include "Player.h"
 #include "RigidBody.h"
 
 using namespace sf; 
 using namespace std;
 
-class GolemEnemy {
+class GolemEnemy : public Entity {
 public:
     enum class State { IDLE, JUMPING, COOLDOWN };
 
-    GolemEnemy(Vector2f position);
+    GolemEnemy(Vector2f position, float posX, float posY, bool isStatic);
 
-    void update(float deltaTime, const Player& player);
-    void draw(RenderWindow& window);
+    void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)override;
+    void draw(RenderWindow& window) override;
 
 private:
 
@@ -25,6 +26,8 @@ private:
     RectangleShape m_golemShape;
     RigidBody m_golemBody;
     State m_golemState;
+
+    Texture golemTexture;
 
     Clock m_golemCooldownClock;
     float m_golemJumpForce = -600.f;

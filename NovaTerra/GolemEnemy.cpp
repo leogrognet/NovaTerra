@@ -1,19 +1,21 @@
 #include "GolemEnemy.h"
 
-GolemEnemy::GolemEnemy(Vector2f position) : m_golemState(State::IDLE), m_golemBody(position) {
-    m_golemShape.setSize({ 40.f, 60.f });
-    m_golemShape.setFillColor(Color::Yellow);
-    m_golemShape.setPosition(position);
+GolemEnemy::GolemEnemy(Vector2f position, float posX, float posY, bool isStatic) : Entity(posX, posY, isStatic),m_golemState(State::IDLE), m_golemBody(position) {
+    golemTexture.loadFromFile("../assets/fries.png");
+    m_shape.setTexture(golemTexture);
+    m_shape.setPosition(posX, posY);
+    m_shape.setScale(1.f,1.f);
 }
 
-void GolemEnemy::update(float deltaTime, const Player& player) {
+void GolemEnemy::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) {
     updateFSM(player);
-    m_golemBody.update(deltaTime);
+
+    Entity::update(deltaTime,colliders)
     m_golemShape.setPosition(m_golemBody.getPosition());
 }
 
 void GolemEnemy::draw(RenderWindow& window) {
-    window.draw(m_golemShape);
+    window.draw(m_shape);
 }
 
 void GolemEnemy::updateFSM(const Player& player) {
