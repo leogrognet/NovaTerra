@@ -1,6 +1,8 @@
 #pragma once
 #include "Entity.h"
+#include <iostream>
 
+using namespace std;
 class Plateforme : public Entity {
 public:
 

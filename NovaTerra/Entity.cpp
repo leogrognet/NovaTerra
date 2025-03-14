@@ -1,18 +1,23 @@
 #include "Entity.h"
 
-void Entity::update(float deltaTime, const std::vector<std::shared_ptr<Entity>>& colliders)
+void Entity::update(float deltaTime, const vector<std::shared_ptr<Entity>>& colliders)
 {
-    std::vector<FloatRect> vec;
+
+    vector<FloatRect> vec;
     for (auto& collider : colliders) {
         if (&collider->m_shape == &m_shape) {
             continue;
         }
         vec.push_back(collider->m_shape.getGlobalBounds());
+
     }
 
+    m_shape.setPosition(m_rigidBody.getPosition());
     m_rigidBody.update(deltaTime, vec, m_shape.getGlobalBounds());
 
-    m_shape.setPosition(m_rigidBody.getPosition());
+   
+
+
 }
 
 

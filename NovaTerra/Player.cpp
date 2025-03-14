@@ -31,8 +31,8 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 	Entity::update(deltatime, colliders);
 
 	//Cout du player pos si besoin de debug
-	cout << "Shape joueur : " << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
-	cout << "RigiBody : " <<m_rigidBody.getPosition().x << " " << m_rigidBody.getPosition().y << endl;
+	//cout << "Shape joueur : " << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
+	//cout << "RigiBody : " <<m_rigidBody.getPosition().x << " " << m_rigidBody.getPosition().y << endl;
 	//cout << m_shape.getScale().x << " " << m_shape.getScale().y << endl;
 
 	m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y);
@@ -51,8 +51,8 @@ void Player::handleInput()
 	// D�sactiv� les inputs si le joueur est en train de hook ou de grab
 	if (m_action != Action::REVERSEHOOK && m_action != Action::GRABING) {
 	// Keyboard input
-		if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -500; }
-	else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 500;}
+		if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -250; }
+	else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 250;}
 	else { m_rigidBody.getVelocity().x = 0; }
 
 		if (Keyboard::isKeyPressed(Keyboard::Z)) { m_direction = Direction::UP; }
@@ -67,7 +67,7 @@ void Player::handleInput()
 		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::DOWNLEFT; }
 
 	if (Keyboard::isKeyPressed(Keyboard::Space) && m_rigidBody.getIsGrounded()) {
-		m_rigidBody.getVelocity().y = -500;
+		m_rigidBody.getVelocity().y = -250;
 	}
 
 		if (Keyboard::isKeyPressed(Keyboard::F) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
@@ -115,11 +115,11 @@ void Player::dash()
 {
 	if (m_action == Action::DASHING) {
 		switch (m_direction) {
-		case Direction::RIGHT: m_rigidBody.getVelocity().x = 1000; break;
-		case Direction::LEFT: m_rigidBody.getVelocity().x = -1000; break;
-		case Direction::UP: m_rigidBody.getVelocity().y = -1000; break;
-		case Direction::UPRIGHT: m_rigidBody.getVelocity().x = 1000; m_rigidBody.getVelocity().y = -1000; break;
-		case Direction::UPLEFT: m_rigidBody.getVelocity().x = -1000; m_rigidBody.getVelocity().y = -1000; break;
+		case Direction::RIGHT: m_rigidBody.getVelocity().x = 500; break;
+		case Direction::LEFT: m_rigidBody.getVelocity().x = -500; break;
+		case Direction::UP: m_rigidBody.getVelocity().y = -500; break;
+		case Direction::UPRIGHT: m_rigidBody.getVelocity().x = 500; m_rigidBody.getVelocity().y = -500; break;
+		case Direction::UPLEFT: m_rigidBody.getVelocity().x = -500; m_rigidBody.getVelocity().y = -500; break;
 		}
 
 		if (m_hookCd.getElapsedTime().asSeconds() > 0.1f) {
@@ -131,7 +131,7 @@ void Player::dash()
 void Player::grapplinshoot()
 {
 	if (m_action == Action::HOOK) {
-		m_hookSize += m_deltatime * 170;
+		m_hookSize += m_deltatime * 170 / 2;
 		for (auto& vec : m_wallvec) {
 			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection)) {
 				m_hookCd.restart();
@@ -147,9 +147,9 @@ void Player::grapplinshoot()
 		}		
 	}
 	if (m_action == Action::REVERSEHOOK) {
-		m_rigidBody.getVelocity().x = 800.f * m_stockedDirection.x;
-		m_hookSize -= m_deltatime * 300;
-		m_hook.setScale(m_hookSize * m_stockedDirection.x , 2.5f);
+		m_rigidBody.getVelocity().x = 400.f * m_stockedDirection.x;
+		m_hookSize -= m_deltatime * 150;
+		m_hook.setScale(m_hookSize * m_stockedDirection.x , 2.5f );
 
 		if (m_hookSize <= 0) {
 			m_action = Action::GRABING;
@@ -160,18 +160,18 @@ void Player::grapplinshoot()
 void Player::grabing()
 {
 	if (m_action == Action::GRABING) {
-		m_rigidBody.getVelocity().y = -981.f * m_deltatime;
+		m_rigidBody.getVelocity().y = -981.f * m_deltatime / 2;
 		if (Keyboard::isKeyPressed(Keyboard::Space)) {
 			m_action = Action::NONE; 
-			m_rigidBody.getVelocity().y = -400;
+			m_rigidBody.getVelocity().y = -200;
 		}
 		if (Joystick::isConnected(0) && Joystick::isButtonPressed(0,0)) {
 			m_action = Action::NONE;
-			m_rigidBody.getVelocity().y = -400;
+			m_rigidBody.getVelocity().y = -200;
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Z) && grabLiane) {
-			m_rigidBody.getVelocity().y = -200.f;
+			m_rigidBody.getVelocity().y = -100.f;
 		}
 	}
 }

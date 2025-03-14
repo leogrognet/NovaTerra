@@ -54,20 +54,22 @@ void RigidBody::checkGrounded(const std::vector<FloatRect>& colliders, const Flo
     }
 }
 
-void RigidBody::update(float deltaTime, const std::vector<FloatRect>& colliders, const FloatRect& selfShape) {
+void RigidBody::update(float deltaTime, const vector<FloatRect>& colliders, const FloatRect& selfShape) {
     checkGrounded(colliders, selfShape);
-
+    
     if (!m_isGrounded && !m_isStatic) {
-        m_velocity.y += 981.0f * deltaTime;
+        m_velocity.y += 981.0f * deltaTime / 2;
         if (m_velocity.y > 2500.f) {
             m_velocity.y = 2500.f;
         }
     }
 
+    if (!m_isStatic) {
+        colliderFunc(colliders, selfShape);
+    }
+
     m_position += m_velocity * deltaTime;
 
-
-    colliderFunc(colliders, selfShape);
 }
 
 Vector2f RigidBody::getPosition()

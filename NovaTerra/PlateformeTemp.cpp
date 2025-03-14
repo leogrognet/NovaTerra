@@ -5,7 +5,6 @@ Plateforme::Plateforme(float posX, float posY, Vector2f size, bool isStatic):Ent
 	plateformetexture.loadFromFile("../assets/deepslate.png");
 	m_shape.setTexture(plateformetexture);
 	m_shape.setScale(size);
-
 }
 
 void Plateforme::draw(RenderWindow& window) {
@@ -14,5 +13,9 @@ void Plateforme::draw(RenderWindow& window) {
 
 void Plateforme::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
-	// Plateforme non mouvante ne rien mettre
+
+	//cout << m_rigidBody.getVelocity().x << " " << m_rigidBody.getVelocity().y << endl;
+	//m_rigidBody.getVelocity().x += deltaTime * 50;
+	Entity::update(deltaTime, colliders);
+
 }

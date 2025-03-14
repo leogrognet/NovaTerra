@@ -45,8 +45,10 @@ void Game::run() {
         background.draw(window);
         map->draw(window);
         for (auto entityvec : vec) {
+            entityvec->update(deltatime, vec);
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
+
         }
         window.display();
     }
