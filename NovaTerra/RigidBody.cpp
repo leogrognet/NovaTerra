@@ -53,7 +53,7 @@ void RigidBody::update(float deltaTime) {
 }
 
 
-Vector2f RigidBody::getPosition()
+Vector2f RigidBody::getPosition() const
 {
     return m_position;
 }

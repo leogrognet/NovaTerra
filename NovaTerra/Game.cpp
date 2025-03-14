@@ -2,7 +2,7 @@
 
 Player player;
 Background background("assets/parallaxe/bg.png", - 50);
-
+GolemEnemy golem({ 500, 700 });
 Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
     window.setFramerateLimit(60);
@@ -16,10 +16,11 @@ Game::~Game() {
 
 void Game::run() {
     Clock clock;
+
     RectangleShape rectangle({ 500,50 });
     rectangle.setFillColor(Color::Black);
     rectangle.setPosition(100, 800);
-    RectangleShape rectangle1({ 50,400 });
+    RectangleShape rectangle1({ 50,100 });
     rectangle1.setFillColor(Color::Black);
     rectangle1.setPosition(300, 400);
     vector<RectangleShape> vec;
@@ -41,13 +42,15 @@ void Game::run() {
 
 
         window.clear();
-        player.update(deltatime, vec);
 		background.update(deltatime);
+        player.update(deltatime, vec);
+		golem.update(deltatime, player);
         background.draw(window);
         map->draw(window);
         window.draw(rectangle);
         window.draw(rectangle1);
         player.draw(window);
+		golem.draw(window);
         window.display();
     }
 }

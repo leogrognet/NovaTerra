@@ -7,7 +7,7 @@
 #include "Map.h"
 #include "Scroll.h"
 #include "Background.h"
-
+#include "GolemEnemy.h"
 class Game {
 private:
     const int WIDTH;
