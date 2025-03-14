@@ -20,15 +20,16 @@ void Background::update(float deltaTime) {
     sprite.move(scrollSpeed * deltaTime, 0);
     sprite2.move(scrollSpeed * deltaTime, 0);
 
-    // Réinitialiser la position des sprites lorsqu'ils sortent de l'écran
+    // RÃ©initialiser la position des sprites lorsqu'ils sortent de l'Ã©cran
     if (sprite.getPosition().x + sprite.getGlobalBounds().width <= 0) {
         sprite.setPosition(sprite2.getPosition().x + sprite2.getGlobalBounds().width, 0);
     }
     if (sprite2.getPosition().x + sprite2.getGlobalBounds().width <= 0) {
         sprite2.setPosition(sprite.getPosition().x + sprite.getGlobalBounds().width, 0);
     }
+  
 
-    // Messages de débogage
+    // Messages de dÃ©bogage
     //cout << "Sprite 1 position: " << sprite.getPosition().x << ", " << sprite.getPosition().y << endl;
     //cout << "Sprite 2 position: " << sprite2.getPosition().x << ", " << sprite2.getPosition().y << endl;
 }

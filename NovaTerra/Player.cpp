@@ -51,7 +51,7 @@ void Player::handleInput()
 	// D�sactiv� les inputs si le joueur est en train de hook ou de grab
 	if (m_action != Action::REVERSEHOOK && m_action != Action::GRABING) {
 	// Keyboard input
-		if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -250; }
+	if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -250; }
 	else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 250;}
 	else { m_rigidBody.getVelocity().x = 0; }
 
@@ -108,7 +108,6 @@ void Player::handleInput()
 			}
 		}
 	}
-	
 }
 
 void Player::dash()
