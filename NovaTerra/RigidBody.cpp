@@ -4,17 +4,12 @@
 
 
 
-
-RigidBody::RigidBody(Vector2f pos) : m_position(pos), m_isGrounded(false) {
+RigidBody::RigidBody(Vector2f pos, bool isStatic) : m_position(pos), m_isGrounded(false), m_isStatic(isStatic) {
     m_velocity = { 0, 0 };
 }
 
-void RigidBody::groundCollision(const std::vector<RectangleShape>& colliders, const FloatRect& selfShape) {
-    m_isGrounded = false;
-
-    for (const auto& collider : colliders) {
-        FloatRect colliderBounds = collider.getGlobalBounds();
-
+void RigidBody::colliderFunc(const std::vector<FloatRect>& colliders, const FloatRect& selfShape) {
+    for (const auto& colliderBounds : colliders) {
         if (colliderBounds.intersects(selfShape)) {
             float overlapX = std::min(selfShape.left + selfShape.width, colliderBounds.left + colliderBounds.width) -
                 std::max(selfShape.left, colliderBounds.left);
@@ -44,14 +39,38 @@ void RigidBody::groundCollision(const std::vector<RectangleShape>& colliders, co
     }
 }
 
-void RigidBody::update(float deltaTime) {
-    if (!m_isGrounded) {
-        m_velocity.y += 981.0f * deltaTime; // Gravité (981 pixels/sec²)
+void RigidBody::checkGrounded(const std::vector<FloatRect>& colliders, const FloatRect& selfShape) {
+    m_isGrounded = false;
+
+    for (const auto& collider : colliders) {
+
+        if (selfShape.top + selfShape.height == collider.top &&
+            selfShape.left + selfShape.width > collider.left &&
+            selfShape.left < collider.left + collider.width)
+        {
+            m_isGrounded = true;
+            return;
+        }
+    }
+}
+
+void RigidBody::update(float deltaTime, const vector<FloatRect>& colliders, const FloatRect& selfShape) {
+    checkGrounded(colliders, selfShape);
+    
+    if (!m_isGrounded && !m_isStatic) {
+        m_velocity.y += 981.0f * deltaTime / 2;
+        if (m_velocity.y > 2500.f) {
+            m_velocity.y = 2500.f;
+        }
+    }
+
+    if (!m_isStatic) {
+        colliderFunc(colliders, selfShape);
     }
 
     m_position += m_velocity * deltaTime;
-}
 
+}
 
 Vector2f RigidBody::getPosition()
 {
@@ -66,4 +85,9 @@ Vector2f& RigidBody::getVelocity()
 bool RigidBody::getIsGrounded()
 {
     return m_isGrounded;
+}
+
+void RigidBody::setIsStatic(bool isStatic)
+{
+    m_isStatic = isStatic;
 }
