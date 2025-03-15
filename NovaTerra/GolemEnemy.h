@@ -12,19 +12,18 @@ class GolemEnemy : public Entity {
 public:
     enum class State { IDLE, JUMPING, COOLDOWN };
 
-    GolemEnemy(Vector2f position, float posX, float posY, bool isStatic);
+    GolemEnemy(float posX, float posY, bool isStatic);
 
     void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)override;
     void draw(RenderWindow& window) override;
 
 private:
 
-    void updateFSM(const Player& player);
-    void jumpToPlayer(const Player& player);
+    void updateFSM(const vector<shared_ptr<Entity>>& colliders);
+    void jumpToPlayer(const vector<shared_ptr<Entity>>& colliders);
     void landAndCooldown();
 
     RectangleShape m_golemShape;
-    RigidBody m_golemBody;
     State m_golemState;
 
     Texture golemTexture;
