@@ -16,13 +16,15 @@ Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool i
 	m_hook.setFillColor(Color::White);
 	m_hook.setOrigin(0, 1.75f);
 
-	m_hitbox.setSize({ 70,70 });
+	m_hitbox.setSize({ 75,75 });
 	m_hitbox.setPosition(posX, posY);
+	m_hitbox.setFillColor(Color::Red);
 }
 
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
 	m_deltatime = deltatime;
+	cout << m_rigidBody.getVelocity().x << " " << m_rigidBody.getVelocity().y << endl;
 
 	updateDirection();
 	handleInput(); 
@@ -34,18 +36,19 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 	ForceMove();
 
 	Entity::update(deltatime, colliders);
-
+	
 	//Cout du player pos si besoin de debug
 	//cout << "Shape joueur : " << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
 	//cout << "RigiBody : " <<m_rigidBody.getPosition().x << " " << m_rigidBody.getPosition().y << endl;
 	//cout << m_shape.getScale().x << " " << m_shape.getScale().y << endl;
 
 	m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
-	m_hitbox.setPosition(m_shape.getPosition().x, m_shape.getPosition().y);
+	m_hitbox.setPosition(m_shape.getPosition().x - 5, m_shape.getPosition().y - 5);
 }
 
 void Player::draw(RenderWindow& window) 
 { 
+	window.draw(m_hitbox);
 	window.draw(m_shape); 
 	if (m_action == Action::HOOK || m_action == Action::REVERSEHOOK){ 
 		window.draw(m_hook); 
@@ -73,7 +76,7 @@ void Player::handleInput()
 		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::DOWNLEFT; }
 
 	if (Keyboard::isKeyPressed(Keyboard::Space) && m_rigidBody.getIsGrounded()) {
-		m_rigidBody.getVelocity().y = -750;
+		m_rigidBody.getVelocity().y = -350;
 	}
 
 		if (Keyboard::isKeyPressed(Keyboard::F) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
@@ -175,9 +178,11 @@ void Player::grabing()
 			m_rigidBody.getVelocity().y = -200;
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Z) && grabLiane) {
+		for (auto entity : m_wallvec) {
+			if (Keyboard::isKeyPressed(Keyboard::Z) && grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())){
 			m_rigidBody.getVelocity().y = -100.f;
-		}
+				}
+		}		
 	}
 }
 

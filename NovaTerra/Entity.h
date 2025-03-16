@@ -25,6 +25,9 @@ public:
 	virtual RectangleShape getHitBox();
 	virtual void setForcedVelocity(Vector2f velocity);
 
+	virtual Vector2f getVelocity();
+	virtual void setVelocity(Vector2f velocity);
+
 	Entity(float posX, float posY,bool isStatic);
 
 	Sprite& getSprite();

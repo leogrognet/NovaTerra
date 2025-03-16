@@ -26,7 +26,7 @@ void Bounce::propulse(const vector<shared_ptr<Entity>>& colliders)
 	for (auto entity : colliders) {
 		if (entity->getID() == 1 && m_shape.getGlobalBounds().intersects(entity->getHitBox().getGlobalBounds())) {
 			if (Keyboard::isKeyPressed(Keyboard::Space)) {
-				entity->setForcedVelocity({ 0,-500 });
+				entity->setForcedVelocity({ 0,-150 }); // Attention la vitesse se cumule avec le saut de base mdr
 			}	
 			else {
 				entity->setForcedVelocity({ 0,-200 });

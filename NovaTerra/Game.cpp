@@ -19,10 +19,9 @@ void Game::run() {
     vector<shared_ptr<Entity>> vec;
 
     vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true));
-    vec.push_back(make_shared<Plateforme>(300, 300, Vector2f(5, 5), true));
+    vec.push_back(make_shared<Plateforme>(300, 500, Vector2f(5, 5), true));
     vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true));
-    vec.push_back(make_shared<MovePlat>(100, 100, Vector2f(1, 1), true));
-
+    vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true));
 
     vec.push_back(make_shared<GolemEnemy>(500, 700, false));
 

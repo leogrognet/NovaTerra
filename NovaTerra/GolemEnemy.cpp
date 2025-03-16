@@ -27,7 +27,7 @@ void GolemEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
         }
     }
 
-    cout << distance << endl;
+    //cout << distance << endl;
 
     switch (m_golemState) {
     case State::IDLE:

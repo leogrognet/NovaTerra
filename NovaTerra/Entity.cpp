@@ -42,6 +42,16 @@ void Entity::setForcedVelocity(Vector2f velocity)
     m_forcedVelocity.y = velocity.y * 2;
 }
 
+Vector2f Entity::getVelocity()
+{
+    return m_rigidBody.getVelocity();
+}
+
+void Entity::setVelocity(Vector2f velocity)
+{
+    m_rigidBody.getVelocity() = velocity;
+}
+
 Entity::Entity(float posX, float posY, bool isStatic) : m_rigidBody({ posX,posY }, isStatic)
 {
     m_shape.setPosition(posX, posY);
