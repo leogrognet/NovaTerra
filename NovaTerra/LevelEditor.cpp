@@ -91,12 +91,32 @@ void LevelEditor::handleInput(RenderWindow& window, View& view, Event& event, fl
             break;
         case DELETE_TILE:
             if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) != m_tiles.end()) {
+                // Supprime la tuile de la map
                 m_tiles.erase({ mouseTilePosition.x, mouseTilePosition.y });
+
+                // Supprime la forme du vecteur m_tilesShape
+                m_tilesShape.erase(
+                    remove_if(m_tilesShape.begin(), m_tilesShape.end(),
+                        [&](const unique_ptr<RectangleShape>& rect) {
+                            return rect->getPosition() ==
+                                Vector2f(mouseTilePosition.x * TILE_SIZE,
+                                    mouseTilePosition.y * TILE_SIZE);
+                        }),
+                    m_tilesShape.end());
             }
             break;
 
         case SET_TILE:
-            m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = m_entityTile;
+            if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) == m_tiles.end()) {
+                m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = m_entityTile;
+                
+                auto rect1 = make_unique<RectangleShape>();
+                rect1->setSize(Vector2f(TILE_SIZE, TILE_SIZE));  // Taille du rectangle
+                rect1->setPosition(Vector2f(mouseTilePosition.x * TILE_SIZE, mouseTilePosition.y *TILE_SIZE ));  // Position du rectangle
+                rect1->setFillColor(Color::Blue);
+                m_tilesShape.push_back(move(rect1));
+            }
+            
             break;
         }
     }
