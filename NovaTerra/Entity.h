@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "RigidBody.h"
 using namespace sf;
 using namespace std;
@@ -9,6 +10,7 @@ class Entity {
 protected:
 
 	Sprite m_shape;
+	Texture m_shapeTexture;
 	RigidBody m_rigidBody;
 	RectangleShape m_hitbox;
 	Vector2f m_forcedVelocity;

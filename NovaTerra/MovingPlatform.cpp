@@ -27,8 +27,6 @@ void MovePlat::move(float deltatime, const vector<shared_ptr<Entity>>& colliders
 		for (auto entity : colliders) {
 			if (entity->getID() == 1 && entity->getHitBox().getGlobalBounds().intersects(m_shape.getGlobalBounds())) {
 				entity->setForcedVelocity({ 5000 * deltatime,0 });
-			} else {
-				entity->setForcedVelocity({ 0,0 });
 			}
 		}
 		if (m_shape.getPosition().x >= m_stockedPos.x + 300) {
@@ -40,8 +38,6 @@ void MovePlat::move(float deltatime, const vector<shared_ptr<Entity>>& colliders
 		for (auto entity : colliders) {
 			if (entity->getID() == 1 && entity->getHitBox().getGlobalBounds().intersects(m_shape.getGlobalBounds())) {
 				entity->setForcedVelocity({ -5000 * deltatime,0 });
-			} else {
-				entity->setForcedVelocity({ 0,0 });
 			}
 		}
 		if (m_shape.getPosition().x <= m_stockedPos.x - 300) {

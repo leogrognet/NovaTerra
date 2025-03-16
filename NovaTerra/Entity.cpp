@@ -13,7 +13,7 @@ void Entity::update(float deltaTime, const vector<std::shared_ptr<Entity>>& coll
 
     m_shape.setPosition(m_rigidBody.getPosition());
     m_rigidBody.update(deltaTime, vec, m_shape.getGlobalBounds());
-
+    m_forcedVelocity = { 0,0 };
 }
 
 
@@ -38,7 +38,8 @@ RectangleShape Entity::getHitBox()
 
 void Entity::setForcedVelocity(Vector2f velocity)
 {
-    m_forcedVelocity = velocity;
+    m_forcedVelocity.x = velocity.x * 2;
+    m_forcedVelocity.y = velocity.y * 2;
 }
 
 Entity::Entity(float posX, float posY, bool isStatic) : m_rigidBody({ posX,posY }, isStatic)

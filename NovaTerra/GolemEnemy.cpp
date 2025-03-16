@@ -23,8 +23,11 @@ void GolemEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
         // Le player a un ID = 1
         if (entity->getID() == 1) {
             distance = abs(entity->getSprite().getPosition().x - m_shape.getPosition().x);
+            break;
         }
     }
+
+    cout << distance << endl;
 
     switch (m_golemState) {
     case State::IDLE:
@@ -54,6 +57,7 @@ void GolemEnemy::jumpToPlayer(const vector<shared_ptr<Entity>>& colliders) {
     for (auto entity : colliders) {
         if (entity->getID() == 1) {
             dir = entity->getSprite().getPosition() - m_shape.getPosition();
+            break;
         }
     }
     m_rigidBody.getVelocity().y = m_golemJumpForce;
