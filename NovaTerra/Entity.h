@@ -6,6 +6,14 @@ using namespace sf;
 using namespace std;
 
 
+enum entityType 
+{
+	GOLEM,
+	PLAYER,
+	TILE,
+};
+
+
 class Entity {
 protected:
 
