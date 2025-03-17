@@ -1,4 +1,4 @@
-#include "BouncingPlatform.h"
+ #include "BouncingPlatform.h"
 
 Bounce::Bounce(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision)
 {

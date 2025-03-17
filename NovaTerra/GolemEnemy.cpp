@@ -11,6 +11,11 @@ void GolemEnemy::update(float deltaTime, const vector<shared_ptr<Entity>>& colli
     updateFSM(colliders);
 
     Entity::update(deltaTime, colliders);
+    for (auto entity : colliders) {
+        if (entity->getID() == 1 && m_shape.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
+            entity->takeDamage();
+        }
+    }
 }
 
 void GolemEnemy::draw(RenderWindow& window) {

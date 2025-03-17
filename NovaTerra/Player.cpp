@@ -2,9 +2,8 @@
 #include <SFML/Window/Joystick.hpp>
 
 Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),
-	m_hp(5), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE)
+	m_hp(3), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE)
 {
-
 	m_wallvec = shape;
 
 	m_texture.loadFromFile("../assets/player.png");
@@ -24,40 +23,47 @@ Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool i
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
 	m_deltatime = deltatime;
-	cout << m_rigidBody.getVelocity().x << " " << m_rigidBody.getVelocity().y << endl;
+	if (m_state != State::DEAD) {
 
-	updateDirection();
-	handleInput(); 
-	dash();
+		isDead();
 
-	grapplinshoot();
-	grabing();
+		updateDirection();
+		handleInput();
+		dash();
 
-	ForceMove();
+		grapplinshoot();
+		grabing();
 
-	Entity::update(deltatime, colliders);
-	
-	//Cout du player pos si besoin de debug
-	//cout << "Shape joueur : " << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
-	//cout << "RigiBody : " <<m_rigidBody.getPosition().x << " " << m_rigidBody.getPosition().y << endl;
-	//cout << m_shape.getScale().x << " " << m_shape.getScale().y << endl;
+		forceMove();
 
-	m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
-	m_hitbox.setPosition(m_shape.getPosition().x - 5, m_shape.getPosition().y - 5);
+		Entity::update(deltatime, colliders);
+
+		m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
+		m_hitbox.setPosition(m_shape.getPosition().x - 5, m_shape.getPosition().y - 5);
+	}
+	else {
+		deathAnim();
+	}
 }
 
 void Player::draw(RenderWindow& window) 
 { 
-	window.draw(m_hitbox);
+	//window.draw(m_hitbox);
 	window.draw(m_shape); 
 	if (m_action == Action::HOOK || m_action == Action::REVERSEHOOK){ 
 		window.draw(m_hook); 
 	} 
+	if (m_state == State::DEAD) {
+		window.draw(m_blackscreen);
+	}
 }
 
 void Player::handleInput()
 {
 	// D�sactiv� les inputs si le joueur est en train de hook ou de grab
+	if (Keyboard::isKeyPressed(Keyboard::E)) {
+		m_hp = 0;
+	}
 	if (m_action != Action::REVERSEHOOK && m_action != Action::GRABING) {
 	// Keyboard input
 	if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -250; }
@@ -196,7 +202,7 @@ int Player::getID()
 	return 1;
 }
 
-void Player::ForceMove()
+void Player::forceMove()
 {
 	m_rigidBody.getVelocity() += m_forcedVelocity;
 }
@@ -204,6 +210,45 @@ void Player::ForceMove()
 RectangleShape Player::getHitBox()
 {
 	return m_hitbox;
+}
+
+bool Player::isDead()
+{
+	if (m_hp <= 0 || m_shape.getPosition().y >= 1080) {
+		m_stockedPos = m_shape.getPosition();
+		m_shape.setColor(Color(255, 255, 255, 128));
+		initializeBlackScreen();
+		m_state = State::DEAD;
+		return true;
+	}
+	return false;
+}
+
+void Player::deathAnim()
+{
+	if (m_fadeValue <= 255) {
+		m_fadeValue += m_deltatime * 60;
+		m_blackscreen.setFillColor(Color(7, 7, 7, m_fadeValue));
+
+		m_rotationAngle += m_deltatime * 20;
+		m_shape.move(0, -3);
+		m_shape.setRotation(-m_rotationAngle);
+	}
+}
+
+void Player::takeDamage()
+{
+	if (m_invincibleFrame.getElapsedTime().asSeconds() >= 1) {
+		m_invincibleFrame.restart();
+		m_hp--;
+	}
+}
+
+void Player::initializeBlackScreen()
+{
+	m_blackscreen.setFillColor(Color(0, 0, 0, 0));
+	m_blackscreen.setSize({ 2000,2000 });
+	m_blackscreen.setPosition(0,0);
 }
 
 void Player::updateDirection()

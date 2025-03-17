@@ -20,7 +20,7 @@ public:
 	virtual void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders);
 	virtual void draw(RenderWindow& window);
 	virtual int getID();
-	virtual void ForceMove();
+	virtual void forceMove();
 
 	virtual RectangleShape getHitBox();
 	virtual void setForcedVelocity(Vector2f velocity);
@@ -29,6 +29,9 @@ public:
 	virtual void setVelocity(Vector2f velocity);
 
 	Entity(float posX, float posY,bool isStatic, bool asCollision);
+
+	virtual void takeDamage();
+	virtual bool isDead();
 
 	Sprite& getSprite();
 

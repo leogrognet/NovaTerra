@@ -1,40 +1,34 @@
 #include "TextureLoader.h"
 
-void TextureLoader::loadTexture(string& imagePathType)
+TextureLoader::TextureLoader()
+    : m_tileWidth(128), m_tileHeight(128), m_tilesetWidth(0), m_tilesetHeight(0)
 {
-	try {
-
-			try {
-				for (const auto& entry : fs::directory_iterator(imagePathType)) {
-					imagesPath.push_back(entry.path().string());
-				}
-			}
-			catch (const fs::filesystem_error& e) {
-				std::cerr << "Erreur de système de fichiers lors de l'itération du répertoire " << imagePathType
-					<< " : " << e.what() << std::endl;
-			}
-
-		for (auto image : imagesPath) {
-			try {
-				textureList.push_back(std::make_shared<sf::Texture>());
-				if (!textureList.back()->loadFromFile(image)) {
-					std::cerr << "Erreur : impossible de charger la texture depuis " << image << std::endl;
-				}
-				textureList.back()->setSmooth(true);
-			}
-			catch (const exception& e) {
-				std::cerr << "Erreur lors du chargement de la texture " << image << " : " << e.what() << std::endl;
-			}
-		}
-	}
-	catch (const std::exception& e) {
-		std::cerr << "Une erreur s'est produite lors du chargement des textures : " << e.what() << std::endl;
-	}
 }
 
-TextureLoader::TextureLoader(string imagePathType)
+void TextureLoader::loadTextureAssets()
 {
-	loadTexture(imagePathType);
+    m_tilesetTexture = make_shared<Texture>();
+    if (!m_tilesetTexture->loadFromFile("../assets/tiles1.png")) {
+        std::cerr << "Erreur lors du chargement du tileset" << std::endl;
+        return;
+    }
+
+    m_tilesetWidth = m_tilesetTexture->getSize().x / m_tileWidth;
+    m_tilesetHeight = m_tilesetTexture->getSize().y / m_tileHeight;
 }
 
+Sprite TextureLoader::getTileFromCoordinates(int tileX, int tileY)
+{
+    int x = tileX * m_tileWidth;
+    int y = tileY * m_tileHeight;
 
+    Sprite tileSprite(*m_tilesetTexture);
+    tileSprite.setTextureRect(IntRect(x, y, m_tileWidth, m_tileHeight));
+
+    return tileSprite;
+}
+
+void TextureLoader::clearTexture()
+{
+    m_tilesetTexture.reset();
+}

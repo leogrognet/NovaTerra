@@ -13,7 +13,7 @@ using namespace sf;
 class Player : public Entity {
 public:
 
-	enum class State { JUMPING, IDLE, MIDAIR, DASHING };
+	enum class State { JUMPING, IDLE, MIDAIR, DASHING, DEAD };
 	enum class Action { DASHING, HOOK, REVERSEHOOK, GRABING, NONE };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
@@ -33,20 +33,30 @@ public:
 
 	int getID() override;
 
-	void ForceMove() override;
+	void forceMove() override;
 
 	RectangleShape getHitBox()override;
+
+	bool isDead() override;
+	void deathAnim();
+	void takeDamage() override;
+
+	void initializeBlackScreen();
 
 private:
 
     float m_deltatime = 0;
 	float m_hookSize = 0;
+	float m_rotationAngle = 0;
+	float m_fadeValue = 0;
     int m_hp;
 	
 	RectangleShape m_hook;
+	RectangleShape m_blackscreen;
 
 	Clock m_hookCd;
 	Clock m_grabCd;
+	Clock m_invincibleFrame;
 
 	State m_state;
 	Direction m_direction;
@@ -56,6 +66,7 @@ private:
 	Vector2f m_grabPos = { 0,0 };
 
 	Texture m_texture;
+	Vector2f m_stockedPos = { 0,0 };
 
 	vector<shared_ptr<Entity>> m_wallvec;
 

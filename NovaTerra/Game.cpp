@@ -3,7 +3,7 @@
 Background background("assets/parallaxe/bg.png", - 50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
-    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
+    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0", Style::Fullscreen) {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 

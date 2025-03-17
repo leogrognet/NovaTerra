@@ -8,7 +8,7 @@
 #include "Scroll.h"
 #include "Background.h"
 #include "GolemEnemy.h"
-#include "PlateformeTemp.h"
+#include "Plateform.h"
 #include "MovingPlatform.h"
 #include "BouncingPlatform.h"
 
