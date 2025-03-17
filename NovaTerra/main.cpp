@@ -12,10 +12,17 @@ int main()
     // Définir le deltaTime
     Clock clock;
 
-    View view = window.getView();
+    View tileView = window.getView();
+    View Ui_View = window.getView();
     editor.dropDownMenu(window);
-    editor.selectButtonMenu(window);
+    editor.addSelectorButton(Color::Blue);
+    editor.addSelectorButton(Color::Red);
+    editor.addSelectorButton(Color::Green);
+    editor.addSelectorButton(Color::Yellow);
+
+
     // Boucle principale du jeu
+
     while (window.isOpen())
     {
         // Calculer le deltaTime
@@ -30,7 +37,7 @@ int main()
         }
 
         // Appeler la fonction de gestion des entrées (gère aussi la molette de la souris)
-        editor.handleInput(window, view, event, deltaTime);
+        editor.handleInput(window, tileView, event, deltaTime);
 
         // Mise à jour du jeu (si nécessaire)
         editor.update();
@@ -39,7 +46,7 @@ int main()
         window.clear();
 
         // Dessiner les éléments
-        editor.draw(window);
+        editor.draw(window,tileView, Ui_View);
 
         // Dessiner le menu déroulant
 

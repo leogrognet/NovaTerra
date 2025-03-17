@@ -4,6 +4,8 @@ LevelEditor::LevelEditor()
 {
     m_mouseEditorState = SELECT;
     m_lastState = DELETE_TILE;
+
+    m_currentLevel = "C:/Users/lgrognet/source/repos/NovaTerra/NovaTerra/assets/map/lobby.txt";
 }
 
 void LevelEditor::run()
@@ -39,17 +41,18 @@ void LevelEditor::savelevel(const string& filename)
     }
 }
 
-void LevelEditor::handleInput(RenderWindow& window, View& view, Event& event, float deltaTime)
+void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event, float deltaTime)
 {
-    Vector2i mouseTilePosition = Mouse::getPosition(window) / TILE_SIZE;
+    Vector2f worldMousePos = window.mapPixelToCoords(Mouse::getPosition(window), tileView);
+    Vector2i mouseTilePosition(worldMousePos.x / TILE_SIZE, worldMousePos.y / TILE_SIZE);
 
-    if (std::find_if(m_tilesMenu.begin(), m_tilesMenu.end(), [&](const auto& tileMenu) {
-        return tileMenu->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)));
-        }) != m_tilesMenu.end()) {
+
+    if (m_tileScrollBox.getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
         m_mouseEditorState = SELECT;
     }
     else {
         m_mouseEditorState =  m_lastState;;
+
         if (m_selectorMenu.at(0)->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
             if (Mouse::isButtonPressed(Mouse::Left)) {
                 m_selectorMenu.at(0)->setOutlineColor(Color::White);
@@ -57,8 +60,6 @@ void LevelEditor::handleInput(RenderWindow& window, View& view, Event& event, fl
                 m_mouseEditorState = SET_TILE;
                 m_lastState = m_mouseEditorState;
             }
-            
-            
 
         }
         else if (m_selectorMenu.at(1)->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
@@ -68,20 +69,60 @@ void LevelEditor::handleInput(RenderWindow& window, View& view, Event& event, fl
                 m_mouseEditorState = DELETE_TILE;
                 m_lastState = m_mouseEditorState;
             }
-            
+        }
+        else if (m_selectorMenu.at(2)->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
+            if (Mouse::isButtonPressed(Mouse::Left)) {
+                m_selectorMenu.at(1)->setOutlineColor(Color::White);
+                m_selectorMenu.at(1)->setOutlineThickness(5);
+                m_mouseEditorState = SAVE_FILE;
+                m_lastState = m_mouseEditorState;
+            }
+        }
+        else if (m_selectorMenu.at(3)->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
+            if (Mouse::isButtonPressed(Mouse::Left)) {
+                m_selectorMenu.at(1)->setOutlineColor(Color::White);
+                m_selectorMenu.at(1)->setOutlineThickness(5);
+                m_mouseEditorState = LOAD_FILE;
+                m_lastState = m_mouseEditorState;
+            }
+        }
+        else {
+            for (auto& selectorMenu : m_selectorMenu) {
+                if (!m_selectorMenu.empty() ) {
+                    if (selectorMenu != m_selectorMenu.at(m_lastState-1)) {
+                        selectorMenu->setOutlineColor(Color::Transparent);
+                        selectorMenu->setOutlineThickness(0);
+                    }
+                }
+
+                
+            }
         }
         
     }
    
 
-    if (Mouse::isButtonPressed(Mouse::Left)) {
+    if (Mouse::isButtonPressed(Mouse::Left) && find_if(m_selectorMenu.begin(), m_selectorMenu.end(), [&](const auto& button) {
+        return button->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window))); }) == m_selectorMenu.end()) 
+    {
         switch (m_mouseEditorState)
         {
         case SELECT:
-            for (auto& tileMenu : m_tilesMenu) {
+            for (auto& tileMenu : m_tilesScrollMenu) {
+                
                 if (tileMenu->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
                     tileMenu->setOutlineColor(Color::White); 
                     tileMenu->setOutlineThickness(5);
+                    if (tileMenu == m_tilesScrollMenu.at(0)) {
+                        m_entityTile = GOLEM;
+                    }
+                    else if (tileMenu == m_tilesScrollMenu.at(1))
+                    {
+                        m_entityTile = PLAYER;
+                    }
+                    else if (tileMenu == m_tilesScrollMenu.at(2)) {
+                        m_entityTile = TILE;
+                    }
                 }
                 else {
                     tileMenu->setOutlineColor(Color::Transparent); 
@@ -91,10 +132,10 @@ void LevelEditor::handleInput(RenderWindow& window, View& view, Event& event, fl
             break;
         case DELETE_TILE:
             if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) != m_tiles.end()) {
-                // Supprime la tuile de la map
+
                 m_tiles.erase({ mouseTilePosition.x, mouseTilePosition.y });
 
-                // Supprime la forme du vecteur m_tilesShape
+
                 m_tilesShape.erase(
                     remove_if(m_tilesShape.begin(), m_tilesShape.end(),
                         [&](const unique_ptr<RectangleShape>& rect) {
@@ -107,34 +148,69 @@ void LevelEditor::handleInput(RenderWindow& window, View& view, Event& event, fl
             break;
 
         case SET_TILE:
-            if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) == m_tiles.end()) {
+            if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) == m_tiles.end() ||
+                std::find_if(m_tiles.begin(), m_tiles.end(), [](const auto& tile) {
+                    return tile.second == entityType::NOTYPE;
+                    }) != m_tiles.end())
+            {
                 m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = m_entityTile;
-                
-                auto rect1 = make_unique<RectangleShape>();
-                rect1->setSize(Vector2f(TILE_SIZE, TILE_SIZE));  // Taille du rectangle
-                rect1->setPosition(Vector2f(mouseTilePosition.x * TILE_SIZE, mouseTilePosition.y *TILE_SIZE ));  // Position du rectangle
-                rect1->setFillColor(Color::Blue);
-                m_tilesShape.push_back(move(rect1));
+                auto rect = make_unique<RectangleShape>();
+                switch (m_entityTile)
+                {
+                case GOLEM:
+                    tileSetter(move(rect), mouseTilePosition, Color::Blue);
+                    break;
+                case PLAYER:
+                    tileSetter(move(rect), mouseTilePosition, Color::Red);
+
+                    break;
+                case TILE:
+                    tileSetter(move(rect), mouseTilePosition, Color::Green);
+                    break;
+
+                }
             }
-            
             break;
+        case SAVE_FILE:
+            savelevel(m_currentLevel);
         }
     }
 
+    float viewOffsetSpeed = 100.f;
+    if (Keyboard::isKeyPressed(Keyboard::Z)) {
+        tileView.move(0, viewOffsetSpeed * deltaTime);
+    }
+    else if(Keyboard::isKeyPressed(Keyboard::Q))
+    {
+        tileView.move(viewOffsetSpeed * deltaTime, 0);
+
+    }
+    else if (Keyboard::isKeyPressed(Keyboard::S))
+    {
+        tileView.move(0, -viewOffsetSpeed * deltaTime);
+
+    }
+    else if (Keyboard::isKeyPressed(Keyboard::D))
+    {
+        tileView.move(-viewOffsetSpeed *deltaTime, 0);
+    }
+
+
     float scrollSpeed = 100000;
-    float zoomFactor = 0.8f;
+    float baseZoom = 1.0f;
+    float zoomAmont = 0.3f  ;
     float minScrollY = 50; 
-    float maxScrollY = window.getSize().y - m_tilesMenu.back()->getSize().y - 50; 
-    cout << m_mouseEditorState << endl;
+    float maxScrollY = window.getSize().y - m_tilesScrollMenu.back()->getSize().y - 50; 
     if (event.type == Event::MouseWheelScrolled) {
+
         switch (m_mouseEditorState)
         {
 
         case SELECT:
             if (event.mouseWheelScroll.delta > 0) {
 
-                if (m_tilesMenu.back()->getPosition().y >= minScrollY ) {
-                    for (auto& tilesButton : m_tilesMenu) {
+                if (m_tilesScrollMenu.back()->getPosition().y >= minScrollY) {
+                    for (auto& tilesButton : m_tilesScrollMenu) {
                         tilesButton->move(0, -scrollSpeed * deltaTime);
                     }
                 }
@@ -142,74 +218,51 @@ void LevelEditor::handleInput(RenderWindow& window, View& view, Event& event, fl
 
             }
             else if (event.mouseWheelScroll.delta < 0) {
-                if ( m_tilesMenu.front()->getPosition().y <= maxScrollY) {
-                    for (auto& tilesButton : m_tilesMenu) {
+                if (m_tilesScrollMenu.front()->getPosition().y <= maxScrollY) {
+                    for (auto& tilesButton : m_tilesScrollMenu) {
                         tilesButton->move(0, scrollSpeed * deltaTime);
                     }
                 }
                 event.mouseWheelScroll.delta = 0;
             }
             break;
-        case DELETE_TILE:
+        default:
             if (event.mouseWheelScroll.delta > 0) {
-                //zoomFactor *= 0.9f;
-                //for (auto& tilesButton : m_tilesMenu) {
-                //    Vector2f initialSize = tilesButton->getSize();
-                //    tilesButton->setSize(Vector2f(initialSize.x, initialSize.y) * zoomFactor);
-                //    tilesButton->setPosition(Vector2f(view.getCenter().x - tilesButton->getLocalBounds().width / 2,
-                //        view.getCenter().y - tilesButton->getLocalBounds().height / 2));
-                //}
+                baseZoom *= baseZoom - zoomAmont;
+                event.mouseWheelScroll.delta = 0;
             }
             else if (event.mouseWheelScroll.delta < 0) {
-                //zoomFactor *= 1.1f;
-                //for (auto& tilesButton : m_tilesMenu) {
-                //    Vector2f initialSize = tilesButton->getSize();
-                //    tilesButton->setSize(Vector2f(initialSize.x, initialSize.y) * zoomFactor);
-                //    tilesButton->setPosition(Vector2f(view.getCenter().x - tilesButton->getLocalBounds().width / 2,
-                //        view.getCenter().y - tilesButton->getLocalBounds().height / 2));
-                //}
+                baseZoom *= baseZoom + zoomAmont;
+                event.mouseWheelScroll.delta = 0;
             }
-            view.setSize(window.getSize().x * zoomFactor, window.getSize().y * zoomFactor);
-            break;
-        case SET_TILE:
-            if (event.mouseWheelScroll.delta > 0) {
-                //zoomFactor *= 0.9f;
-                //for (auto& tilesButton : m_tilesMenu) {
-                //    Vector2f initialSize = tilesButton->getSize();
-                //    tilesButton->setSize(Vector2f(initialSize.x, initialSize.y) * zoomFactor);
-                //    tilesButton->setPosition(Vector2f(view.getCenter().x - tilesButton->getLocalBounds().width / 2,
-                //        view.getCenter().y - tilesButton->getLocalBounds().height / 2));
-                //}
-            }
-            else if (event.mouseWheelScroll.delta < 0) {
-               //zoomFactor *= 1.1f;
-               //for (auto& tilesButton : m_tilesMenu) {
-               //    Vector2f initialSize = tilesButton->getSize();
-               //    tilesButton->setSize(Vector2f(initialSize.x, initialSize.y) * zoomFactor);
-               //    tilesButton->setPosition(Vector2f(view.getCenter().x - tilesButton->getLocalBounds().width / 2,
-               //        view.getCenter().y - tilesButton->getLocalBounds().height / 2));
-               //}
-            }
-            view.setSize(window.getSize().x * zoomFactor, window.getSize().y * zoomFactor);
             break;
         }
     }
+    tileView.zoom(baseZoom);
 }
 
 void LevelEditor::update()
 {
 }
 
-void LevelEditor::draw(RenderWindow& window)
+
+
+
+void LevelEditor::draw(RenderWindow& window,View& tileView, View& Ui_view)
 {
 
+    window.setView(tileView);
+    window.clear();
     // Dessiner les tiles du niveau
     for (auto& tile : m_tilesShape) {
         window.draw(*tile);
     }
 
     // Dessiner le menu
-    for (auto& tileButton : m_tilesMenu) {
+    window.setView(Ui_view);
+
+    window.draw(m_tileScrollBox);
+    for (auto& tileButton : m_tilesScrollMenu) {
         window.draw(*tileButton);
     }
     for (auto& menuButton : m_selectorMenu) {
@@ -222,44 +275,70 @@ void LevelEditor::draw(RenderWindow& window)
 
 void LevelEditor::dropDownMenu(RenderWindow& window)
 {
+    m_tileScrollBox.setSize(Vector2f(50.f, window.getSize().y));
+    m_tileScrollBox.setPosition(50.f, 0.f);
+    m_tileScrollBox.setFillColor(Color::Transparent);
+    m_tileScrollBox.setOutlineColor(Color::White);
+    m_tileScrollBox.setOutlineThickness(5);
+
     // Créer des boutons avec une taille et une position
     auto rect1 = make_unique<RectangleShape>();
     rect1->setSize(Vector2f(50.f, 50.f));  // Taille du rectangle
     rect1->setPosition(50.f, 100.f);  // Position du rectangle
     rect1->setFillColor(Color::Blue);
-    m_tilesMenu.push_back(move(rect1));
+    m_tilesScrollMenu.push_back(move(rect1));
 
     auto rect2 = make_unique<RectangleShape>();
     rect2->setSize(Vector2f(50.f, 50.f));  // Taille du rectangle
     rect2->setPosition(50.f, 200.f);  // Position du rectangle
     rect2->setFillColor(Color::Red);
 
-    m_tilesMenu.push_back(move(rect2));
+    m_tilesScrollMenu.push_back(move(rect2));
 
     auto rect3 = make_unique<RectangleShape>();
     rect3->setSize(Vector2f(50.f, 50.f));  // Taille du rectangle
     rect3->setPosition(50.f, 300.f);  // Position du rectangle
     rect3->setFillColor(Color::Green);
 
-    m_tilesMenu.push_back(move(rect3));
+    m_tilesScrollMenu.push_back(move(rect3));
+}
+
+void LevelEditor::tileSetter(unique_ptr<RectangleShape> tile, Vector2i MousTilePos, Color color)
+{
+
+    tile->setSize(Vector2f(TILE_SIZE, TILE_SIZE));  // Taille du rectangle
+    tile->setPosition(Vector2f(MousTilePos.x * TILE_SIZE, MousTilePos.y * TILE_SIZE));  // Position du rectangle
+    tile->setFillColor(color);
+    m_tilesShape.push_back(move(tile));
+
 }
 
 void LevelEditor::updateTiles()
 {
 }
 
-void LevelEditor::selectButtonMenu(RenderWindow& window)
+void LevelEditor::addSelectorButton(sf::Color color)
 {
-    auto rect1 = make_unique<RectangleShape>();
-    rect1->setSize(Vector2f(50.f, 30.f));  // Taille du rectangle
-    rect1->setPosition(200.f, 100.f);  // Position du rectangle
-    rect1->setFillColor(Color::Blue);
-    m_selectorMenu.push_back(move(rect1));
+    const float buttonWidth = 50.f;
+    const float buttonHeight = 30.f;
+    const float spacing = 30.f; // espace entre les boutons
+    const float startX = 200.f;
+    const float startY = 100.f;
 
-    auto rect2 = make_unique<RectangleShape>();
-    rect2->setSize(Vector2f(50.f, 30.f));  // Taille du rectangle
-    rect2->setPosition(300.f, 100.f);  // Position du rectangle
-    rect2->setFillColor(Color::Red);
-    m_selectorMenu.push_back(move(rect2));
+    float newX;
+    if (!m_selectorMenu.empty()) {
+        // Récupère la position et la taille du dernier bouton
+        const auto& lastButton = m_selectorMenu.back();
+        newX = lastButton->getPosition().x + lastButton->getSize().x + spacing;
+    }
+    else {
+        newX = startX;
+    }
+
+    auto rect = std::make_unique<sf::RectangleShape>();
+    rect->setSize(sf::Vector2f(buttonWidth, buttonHeight));
+    rect->setPosition(newX, startY);
+    rect->setFillColor(color);
+    m_selectorMenu.push_back(std::move(rect));
 }
 
