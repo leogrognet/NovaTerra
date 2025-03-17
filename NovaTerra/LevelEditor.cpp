@@ -382,6 +382,7 @@ void LevelEditor::updateTiles() {
     m_tilesShape.clear();
     for (const auto& [pos, tileID] : m_tiles) {
         auto rect = make_unique<RectangleShape>();
+        m_entityTile = static_cast<entityType>(tileID);
         tileSetter(move(rect), Vector2i(pos.first, pos.second));
     }
 }
