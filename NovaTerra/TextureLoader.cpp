@@ -1,34 +1,37 @@
 #include "TextureLoader.h"
+#include <iostream>
 
-TextureLoader::TextureLoader()
-    : m_tileWidth(128), m_tileHeight(128), m_tilesetWidth(0), m_tilesetHeight(0)
+bool TextureLoader::loadTexture(const string& name, const string& filename)
 {
-}
-
-void TextureLoader::loadTextureAssets()
-{
-    m_tilesetTexture = make_shared<Texture>();
-    if (!m_tilesetTexture->loadFromFile("../assets/tiles1.png")) {
-        std::cerr << "Erreur lors du chargement du tileset" << std::endl;
-        return;
+    if (m_mapTextures.find(name) != m_mapTextures.end()) {
+        return true;
     }
 
-    m_tilesetWidth = m_tilesetTexture->getSize().x / m_tileWidth;
-    m_tilesetHeight = m_tilesetTexture->getSize().y / m_tileHeight;
+    auto texture = make_shared<Texture>();
+    if (!texture->loadFromFile(filename)) {
+        return false;
+    }
+
+    m_mapTextures[name] = texture;
+    m_mapFilePaths[name] = filename;
+    return true;
 }
 
-Sprite TextureLoader::getTileFromCoordinates(int tileX, int tileY)
+pair<shared_ptr<Texture>, IntRect> TextureLoader::GetTexture(int type)
 {
-    int x = tileX * m_tileWidth;
-    int y = tileY * m_tileHeight;
+    switch (type) {
+    case 3:
+    {
+        loadTexture("tileset", "../assets/tiles1.png");
 
-    Sprite tileSprite(*m_tilesetTexture);
-    tileSprite.setTextureRect(IntRect(x, y, m_tileWidth, m_tileHeight));
-
-    return tileSprite;
-}
-
-void TextureLoader::clearTexture()
-{
-    m_tilesetTexture.reset();
+        // Retourne la texture et le rect correspondant
+        if (m_mapTextures.find("tileset") != m_mapTextures.end()) {
+            return { m_mapTextures["tileset"], IntRect(128, 384, 128, 128) };
+        }
+        break;
+    }
+    default:
+        return { nullptr, IntRect() };
+    }
+    return { nullptr, IntRect() };
 }

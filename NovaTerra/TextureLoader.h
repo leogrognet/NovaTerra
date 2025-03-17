@@ -1,27 +1,22 @@
 #pragma once
-#include "SFML/Graphics.hpp"
-
-#include <iostream>
-#include <string>
+#include <SFML/Graphics.hpp>
 #include <unordered_map>
-#include <memory> // Pour shared_ptr
+#include <string>
+#include <memory>
 
 using namespace std;
 using namespace sf;
 
 class TextureLoader {
 public:
-    TextureLoader();
 
-    void loadTextureAssets();  // Charge le tileset
-    Sprite getTileSprite(int tileIndex);  // Retourne un sprite pour une tuile spécifique dans le tileset
-    Sprite getTileFromCoordinates(int tileX, int tileY); // Retourne un sprite basé sur les coordonnées d'une tuile
-    void clearTexture();  // Vider la map des textures
+	bool loadTexture(const string& name, const string& filename);
+	pair<shared_ptr<Texture>, IntRect> GetTexture(int type);
 
 private:
-    shared_ptr<Texture> m_tilesetTexture;  // Texture principale (le tileset)
-    int m_tileWidth;  // Largeur d'une tuile
-    int m_tileHeight; // Hauteur d'une tuile
-    int m_tilesetWidth; // Largeur du tileset (en tuiles)
-    int m_tilesetHeight; // Hauteur du tileset (en tuiles)
+	unordered_map <string, shared_ptr<Texture>> m_mapTextures;
+	unordered_map<string, IntRect> m_mapTileRects;
+	unordered_map<string, string> m_mapFilePaths;
+
+
 };

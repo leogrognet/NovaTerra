@@ -1,4 +1,7 @@
 #include "Game.h"
+#include "TextureLoader.h"
+
+TextureLoader textureloader;
 
 Background background("assets/parallaxe/bg.png", - 50);
 
@@ -18,8 +21,8 @@ void Game::run() {
 
     vector<shared_ptr<Entity>> vec;
 
-    vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true,true));
-    vec.push_back(make_shared<Plateforme>(300, 400, Vector2f(5, 5), true,true));
+    vec.push_back(make_shared<Plateform>(100, 800, Vector2f(10, 1), true,true, textureloader));
+    vec.push_back(make_shared<Plateform>(300, 400, Vector2f(5, 5), true,true, textureloader));
     vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true,true));
     vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true,true));
 

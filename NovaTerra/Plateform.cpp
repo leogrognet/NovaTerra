@@ -1,25 +1,32 @@
 #include "Plateform.h"
 
-Plateforme::Plateforme(float posX, float posY, Vector2f size, bool isStatic, bool asCollision):Entity(posX,posY,isStatic,asCollision)
+Plateform::Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, TextureLoader& textureLoader) :Entity(posX, posY, isStatic, asCollision)
 {
-	plateformetexture.loadFromFile("../assets/tiles1.png");
-	IntRect rect(128, 384, 128, 128);
+    auto textureData = textureLoader.GetTexture(getID());
 
-	m_shape.setTexture(plateformetexture);
-	m_shape.setTextureRect(rect);
-	m_shape.setScale(1,1);
+    if (textureData.first) {
+        m_texture = textureData.first;
+        m_textureRect = textureData.second;
+
+        if (m_textureRect.width > 0 && m_textureRect.height > 0) {
+            m_shape.setTexture(*m_texture);
+            m_shape.setTextureRect(m_textureRect);
+            m_shape.setScale(1.f, 1.f);
+            m_shape.setPosition(posX, posY);
+        }
+    }
 }
 
-void Plateforme::draw(RenderWindow& window) {
+void Plateform::draw(RenderWindow& window) {
 	window.draw(m_shape);
 }
 
-void Plateforme::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
+void Plateform::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
 	Entity::update(deltaTime, colliders);
 }
 
-int Plateforme::getID()
+int Plateform::getID()
 {
-	return 0;
+	return 3;
 }
