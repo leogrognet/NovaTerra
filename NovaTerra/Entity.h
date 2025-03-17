@@ -8,10 +8,11 @@ using namespace std;
 
 enum entityType 
 {
-	NOTYPE,
+	
 	GOLEM,
 	PLAYER,
 	TILE,
+	NOTYPE,
 };
 
 

@@ -1,15 +1,23 @@
 #include "LevelEditor.h"
 
-LevelEditor::LevelEditor()
+LevelEditor::LevelEditor(RenderWindow& window)
 {
     m_mouseEditorState = SELECT;
-    m_lastState = DELETE_TILE;
+    viewOffsetSpeed = 500.f;
 
-    m_currentLevel = "";
-
-    if (!m_font.loadFromFile("arial.ttf")) {
+    if (!m_font.loadFromFile("assets/font/default.ttf")) {
         std::cerr << "Erreur : Impossible de charger la police" << std::endl;
     }
+
+    m_textureId = 0;
+    string map_tileSet = "assets\\map\\map_tileset";
+    loadTexture.loadTexture(map_tileSet, m_tileTextures);
+    dropDownMenu(window);
+    dropDownMenu(window);
+    addSelectorButton(Color::Blue, "Set");
+    addSelectorButton(Color::Red, "Delete");
+    addSelectorButton(Color::Green, "Save");
+    addSelectorButton(Color::Yellow, "Load");
 }
 
 void LevelEditor::run()
@@ -83,7 +91,7 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
         m_mouseEditorState = SELECT;
     }
     else {
-        m_mouseEditorState =  m_lastState;;
+        m_mouseEditorState = static_cast<MouseState>(m_lastState);
 
         if (m_selectorMenu.at(0)->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
             if (Mouse::isButtonPressed(Mouse::Left)) {
@@ -112,6 +120,7 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                 savelevel(m_currentLevel);
             }
         }
+
         else if (m_selectorMenu.at(3)->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
             if (Mouse::isButtonPressed(Mouse::Left)) {
                 m_selectorMenu.at(3)->setOutlineColor(Color::White);
@@ -119,16 +128,22 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                 m_mouseEditorState = LOAD_FILE;
                 m_lastState = m_mouseEditorState;
                 openFileExplorer();
-                loadLevel(m_currentLevel);
+                if (!m_currentLevel.empty()) {
+                    loadLevel(m_currentLevel);
+                }
             }
         }
         else {
             for (auto& selectorMenu : m_selectorMenu) {
                 if (!m_selectorMenu.empty() ) {
-                    if (selectorMenu != m_selectorMenu.at(m_lastState-1)) {
-                        selectorMenu->setOutlineColor(Color::Transparent);
-                        selectorMenu->setOutlineThickness(0);
+                    if (m_lastState != SELECT) {
+                        if (selectorMenu != m_selectorMenu.at(m_lastState)) {
+                            selectorMenu->setOutlineColor(Color::Transparent);
+                            selectorMenu->setOutlineThickness(0);
+                        }
+
                     }
+                   
                 }
             }
         }
@@ -139,28 +154,25 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
     if (Mouse::isButtonPressed(Mouse::Left) && find_if(m_selectorMenu.begin(), m_selectorMenu.end(), [&](const auto& button) {
         return button->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window))); }) == m_selectorMenu.end()) 
     {
+        int index = 0;
         switch (m_mouseEditorState)
         {
         case SELECT:
+            
             for (auto& tileMenu : m_tilesScrollMenu) {
-
                 if (tileMenu->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
                     tileMenu->setOutlineColor(Color::White);
                     tileMenu->setOutlineThickness(5);
-                    if (tileMenu == m_tilesScrollMenu.at(0)) {
-                        m_entityTile = GOLEM;
-                    }
-                    else if (tileMenu == m_tilesScrollMenu.at(1))
-                    {
-                        m_entityTile = PLAYER;
-                    }
-                    else if (tileMenu == m_tilesScrollMenu.at(2)) {
-                        m_entityTile = TILE;
+                    if (tileMenu == m_tilesScrollMenu.at(index)) {
+                        m_entityTile = static_cast<entityType>(index);
                     }
                 }
                 else {
                     tileMenu->setOutlineColor(Color::Transparent);
                     tileMenu->setOutlineThickness(0);
+                }
+                if (index < m_tilesScrollMenu.size()) {
+                    index++;
                 }
             }
             break;
@@ -192,14 +204,14 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                 switch (m_entityTile)
                 {
                 case GOLEM:
-                    tileSetter(move(rect), mouseTilePosition, Color::Blue);
+                    tileSetter(move(rect), mouseTilePosition);
                     break;
                 case PLAYER:
-                    tileSetter(move(rect), mouseTilePosition, Color::Red);
+                    tileSetter(move(rect), mouseTilePosition);
 
                     break;
                 case TILE:
-                    tileSetter(move(rect), mouseTilePosition, Color::Green);
+                    tileSetter(move(rect), mouseTilePosition);
                     break;
 
                 }
@@ -209,7 +221,7 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
        
     }
 
-    float viewOffsetSpeed = 100.f;
+    
     if (Keyboard::isKeyPressed(Keyboard::Z)) {
         tileView.move(0, viewOffsetSpeed * deltaTime);
     }
@@ -281,9 +293,7 @@ void LevelEditor::update()
 
 
 
-void LevelEditor::draw(RenderWindow& window,View& tileView, View& Ui_view)
-{
-
+void LevelEditor::draw(RenderWindow& window, View& tileView, View& Ui_view) {
     window.setView(tileView);
     window.clear();
 
@@ -291,15 +301,19 @@ void LevelEditor::draw(RenderWindow& window,View& tileView, View& Ui_view)
         window.draw(*tile);
     }
 
-
     window.setView(Ui_view);
-
     window.draw(m_tileScrollBox);
+
     for (auto& tileButton : m_tilesScrollMenu) {
         window.draw(*tileButton);
     }
+
     for (auto& menuButton : m_selectorMenu) {
         window.draw(*menuButton);
+    }
+
+    for (auto& text : m_selectorMenuTexts) {
+        window.draw(*text);
     }
 }
 
@@ -308,40 +322,53 @@ void LevelEditor::draw(RenderWindow& window,View& tileView, View& Ui_view)
 
 void LevelEditor::dropDownMenu(RenderWindow& window)
 {
+    const float buttonWidth = 50.f;
+    const float buttonHeight = 50.f;
+    const float spacing = 50.f;
+    const float startX = 50.f;
+    const float startY = 100.f;
+
     m_tileScrollBox.setSize(Vector2f(50.f, window.getSize().y));
     m_tileScrollBox.setPosition(50.f, 0.f);
     m_tileScrollBox.setFillColor(Color::Transparent);
-    m_tileScrollBox.setOutlineColor(Color::White);
+    m_tileScrollBox.setOutlineColor(Color::Transparent);
     m_tileScrollBox.setOutlineThickness(5);
 
+
+
+
+
+
+    float newY;
+    if (!m_tilesScrollMenu.empty()) {
+        const auto& lastButton = m_tilesScrollMenu.back();
+        newY = lastButton->getPosition().y + lastButton->getSize().y + spacing;
+    }
+    else {
+        newY = startY;
+    }
     
-    auto rect1 = make_unique<RectangleShape>();
-    rect1->setSize(Vector2f(50.f, 50.f));  
-    rect1->setPosition(50.f, 100.f);  
-    rect1->setFillColor(Color::Blue);
-    m_tilesScrollMenu.push_back(move(rect1));
-
-    auto rect2 = make_unique<RectangleShape>();
-    rect2->setSize(Vector2f(50.f, 50.f));  
-    rect2->setPosition(50.f, 200.f);  
-    rect2->setFillColor(Color::Red);
-
-    m_tilesScrollMenu.push_back(move(rect2));
-
-    auto rect3 = make_unique<RectangleShape>();
-    rect3->setSize(Vector2f(50.f, 50.f)); 
-    rect3->setPosition(50.f, 300.f);  
-    rect3->setFillColor(Color::Green);
-
-    m_tilesScrollMenu.push_back(move(rect3));
+    auto rect = std::make_unique<sf::RectangleShape>();
+    rect->setSize(sf::Vector2f(buttonWidth, buttonHeight));
+    rect->setPosition(startX, newY);
+    //rect->setFillColor(Color::Transparent);
+    if (!m_tileTextures.empty()) {
+        rect->setTexture(m_tileTextures.at(m_textureId).get());
+    }
+    m_tilesScrollMenu.push_back(std::move(rect));
+    if (m_textureId < m_tileTextures.size()) {
+        m_textureId++;
+    }
 }
 
-void LevelEditor::tileSetter(unique_ptr<RectangleShape> tile, Vector2i MousTilePos, Color color)
+void LevelEditor::tileSetter(unique_ptr<RectangleShape> tile, Vector2i MousTilePos)
 {
 
     tile->setSize(Vector2f(TILE_SIZE, TILE_SIZE));  
     tile->setPosition(Vector2f(MousTilePos.x * TILE_SIZE, MousTilePos.y * TILE_SIZE));  
-    tile->setFillColor(color);
+    if (!m_tileTextures.empty()) {
+        tile->setTexture(m_tileTextures.at(m_entityTile).get());
+    }
     m_tilesShape.push_back(move(tile));
 
 }
@@ -354,31 +381,16 @@ void LevelEditor::updateFile()
 void LevelEditor::updateTiles() {
     m_tilesShape.clear();
     for (const auto& [pos, tileID] : m_tiles) {
-        cout << pos.first<<endl;
         auto rect = make_unique<RectangleShape>();
-        switch (tileID)
-        {
-        case GOLEM:
-            tileSetter(move(rect), Vector2i(pos.first, pos.second), Color::Blue);
-            break;
-        case PLAYER:
-            tileSetter(move(rect), Vector2i(pos.first, pos.second), Color::Red);
-
-            break;
-        case TILE:
-            tileSetter(move(rect), Vector2i(pos.first, pos.second), Color::Green);
-            break;
-
-        }
+        tileSetter(move(rect), Vector2i(pos.first, pos.second));
     }
 }
 
 
-void LevelEditor::addSelectorButton(sf::Color color)
-{
+void LevelEditor::addSelectorButton(sf::Color color, const std::string& label) {
     const float buttonWidth = 50.f;
     const float buttonHeight = 30.f;
-    const float spacing = 30.f; 
+    const float spacing = 30.f;
     const float startX = 200.f;
     const float startY = 100.f;
 
@@ -391,9 +403,19 @@ void LevelEditor::addSelectorButton(sf::Color color)
         newX = startX;
     }
 
+    // Création du bouton
     auto rect = std::make_unique<sf::RectangleShape>();
     rect->setSize(sf::Vector2f(buttonWidth, buttonHeight));
     rect->setPosition(newX, startY);
     rect->setFillColor(color);
     m_selectorMenu.push_back(std::move(rect));
+
+    // Création du texte
+    auto text = std::make_unique<sf::Text>();
+    text->setFont(m_font);
+    text->setString(label);
+    text->setCharacterSize(20);
+    text->setFillColor(sf::Color::Black);
+    text->setPosition(newX + 5, startY + 5);
+    m_selectorMenuTexts.push_back(std::move(text));
 }

@@ -1,6 +1,6 @@
 #include "TextureLoader.h"
 
-void TextureLoader::loadTexture(string& imagePathType)
+void TextureLoader::loadTexture(string& imagePathType, vector<shared_ptr<Texture>>& textureList)
 {
 	try {
 
@@ -32,9 +32,10 @@ void TextureLoader::loadTexture(string& imagePathType)
 	}
 }
 
-TextureLoader::TextureLoader(string imagePathType)
+
+
+TextureLoader::TextureLoader()
 {
-	loadTexture(imagePathType);
 }
 
 

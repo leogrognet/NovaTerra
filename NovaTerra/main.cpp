@@ -7,18 +7,14 @@ int main()
     RenderWindow window(VideoMode(800, 600), "Level Editor");
 
     // Créer un objet LevelEditor
-    LevelEditor editor;
+    LevelEditor editor(window);
 
     // Définir le deltaTime
     Clock clock;
 
     View tileView = window.getView();
     View Ui_View = window.getView();
-    editor.dropDownMenu(window);
-    editor.addSelectorButton(Color::Blue);
-    editor.addSelectorButton(Color::Red);
-    editor.addSelectorButton(Color::Green);
-    editor.addSelectorButton(Color::Yellow);
+    
 
 
     // Boucle principale du jeu
