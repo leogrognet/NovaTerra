@@ -93,8 +93,8 @@ void Player::handleInput()
 			float x = Joystick::getAxisPosition(0, Joystick::X);
 			float y = Joystick::getAxisPosition(0, Joystick::Y);
 
-			if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -500; }
-			if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 500; }
+			if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -350; }
+			if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 350; }
 
 			if (y < -50) { m_direction = Direction::UP; }
 			if (y > 50) { m_direction = Direction::DOWN; }
@@ -108,7 +108,7 @@ void Player::handleInput()
 			if (y > 50 && x < -50) { m_direction = Direction::DOWNLEFT; }
 
 			if (Joystick::isButtonPressed(0, 0) && m_rigidBody.getIsGrounded()) {
-				m_rigidBody.getVelocity().y = -500;
+				m_rigidBody.getVelocity().y = -350;
 			}
 
 			if (Joystick::isButtonPressed(0, 2) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
