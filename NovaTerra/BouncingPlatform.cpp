@@ -1,6 +1,6 @@
 #include "BouncingPlatform.h"
 
-Bounce::Bounce(float posX, float posY, Vector2f size, bool isStatic) :Entity(posX, posY, isStatic)
+Bounce::Bounce(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision)
 {
 	m_shape.setPosition(posX, posY);
 	m_shapeTexture.loadFromFile("../assets/cat1.jpg");

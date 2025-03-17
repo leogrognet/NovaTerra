@@ -18,14 +18,14 @@ void Game::run() {
 
     vector<shared_ptr<Entity>> vec;
 
-    vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true));
-    vec.push_back(make_shared<Plateforme>(300, 500, Vector2f(5, 5), true));
-    vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true));
-    vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true));
+    vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true,true));
+    vec.push_back(make_shared<Plateforme>(300, 400, Vector2f(5, 5), true,true));
+    vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true,true));
+    vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true,true));
 
-    vec.push_back(make_shared<GolemEnemy>(500, 700, false));
+    vec.push_back(make_shared<GolemEnemy>(500, 700, false, false));
 
-    vec.push_back(make_shared<Player>(vec, 100, 600, false));
+    vec.push_back(make_shared<Player>(vec, 100, 600, false, true));
 
     Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
 

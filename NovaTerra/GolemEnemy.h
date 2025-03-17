@@ -12,10 +12,11 @@ class GolemEnemy : public Entity {
 public:
     enum class State { IDLE, JUMPING, COOLDOWN };
 
-    GolemEnemy(float posX, float posY, bool isStatic);
+    GolemEnemy(float posX, float posY, bool isStatic, bool asCollision);
 
     void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)override;
     void draw(RenderWindow& window) override;
+    int getID()override;
 
 private:
 

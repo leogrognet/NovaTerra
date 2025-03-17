@@ -12,6 +12,7 @@ private:
     Vector2f m_velocity;
     bool m_isGrounded;
     bool m_isStatic;
+    bool m_asCollision;
 public:
 
     //Getters
@@ -23,7 +24,7 @@ public:
 
     void setIsStatic(bool isStatic);
 
-    RigidBody(Vector2f pos, bool isStatic);
+    RigidBody(Vector2f pos, bool isStatic, bool asCollision);
     void colliderFunc(const vector<FloatRect>& colliders, const FloatRect& selfShape);
     void checkGrounded(const vector<FloatRect>& colliders, const FloatRect& selfShape);
     void update(float deltaTime, const vector<FloatRect>& colliders, const FloatRect& selfShape);

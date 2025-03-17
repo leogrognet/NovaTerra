@@ -1,6 +1,6 @@
 #include "GolemEnemy.h"
 
-GolemEnemy::GolemEnemy(float posX, float posY, bool isStatic) : Entity(posX, posY, isStatic),m_golemState(State::IDLE) {
+GolemEnemy::GolemEnemy(float posX, float posY, bool isStatic, bool asCollision): Entity(posX, posY, isStatic, asCollision),m_golemState(State::IDLE) {
     golemTexture.loadFromFile("../assets/fries.png");
     m_shape.setTexture(golemTexture);
     m_shape.setPosition(posX, posY);
@@ -15,6 +15,11 @@ void GolemEnemy::update(float deltaTime, const vector<shared_ptr<Entity>>& colli
 
 void GolemEnemy::draw(RenderWindow& window) {
     window.draw(m_shape);
+}
+
+int GolemEnemy::getID()
+{
+    return 2;
 }
 
 void GolemEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {

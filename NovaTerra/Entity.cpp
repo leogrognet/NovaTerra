@@ -5,9 +5,18 @@ void Entity::update(float deltaTime, const vector<std::shared_ptr<Entity>>& coll
 
     vector<FloatRect> vec;
     for (auto& collider : colliders) {
-        if (&collider->m_shape == &m_shape) {
+        if (&collider->m_shape == &m_shape ) {
             continue;
         }
+        else if (collider->getID() == 1  && getID() == 2)
+        {
+            continue;
+        }
+        else if (collider->getID() == 2 && getID() == 1)
+        {
+            continue;
+        }
+
         vec.push_back(collider->m_shape.getGlobalBounds());
     }
 
@@ -52,7 +61,7 @@ void Entity::setVelocity(Vector2f velocity)
     m_rigidBody.getVelocity() = velocity;
 }
 
-Entity::Entity(float posX, float posY, bool isStatic) : m_rigidBody({ posX,posY }, isStatic)
+Entity::Entity(float posX, float posY, bool isStatic, bool asCollision) : m_rigidBody({ posX,posY }, isStatic, asCollision)
 {
     m_shape.setPosition(posX, posY);
 }

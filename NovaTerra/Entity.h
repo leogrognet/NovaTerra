@@ -28,7 +28,7 @@ public:
 	virtual Vector2f getVelocity();
 	virtual void setVelocity(Vector2f velocity);
 
-	Entity(float posX, float posY,bool isStatic);
+	Entity(float posX, float posY,bool isStatic, bool asCollision);
 
 	Sprite& getSprite();
 
