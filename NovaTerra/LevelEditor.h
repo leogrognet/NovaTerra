@@ -50,11 +50,15 @@ public:
 	void openFileExplorer();
 
 
+
 	map<pair<int, int>, int> m_tiles;
 	RectangleShape m_tileScrollBox;
 	vector<unique_ptr<RectangleShape>> m_tilesShape;
 	vector<unique_ptr<RectangleShape>> m_tilesScrollMenu;
 	vector<unique_ptr<RectangleShape>> m_selectorMenu;
+	vector<unique_ptr<Text>> m_selectorMenuTexts;
+	Font m_font;
+
 	const int TILE_SIZE = 32;
 
 

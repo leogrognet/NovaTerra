@@ -6,6 +6,10 @@ LevelEditor::LevelEditor()
     m_lastState = DELETE_TILE;
 
     m_currentLevel = "";
+
+    if (!m_font.loadFromFile("arial.ttf")) {
+        std::cerr << "Erreur : Impossible de charger la police" << std::endl;
+    }
 }
 
 void LevelEditor::run()
