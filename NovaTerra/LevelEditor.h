@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include "Entity.h"
+#include "tinyfiledialogs.h"
 
 using namespace std;
 using namespace sf;
@@ -44,6 +45,8 @@ public:
 	void updateTiles();
 
 	void addSelectorButton(sf::Color color);
+
+	void openFileExplorer();
 
 
 	map<pair<int, int>, int> m_tiles;

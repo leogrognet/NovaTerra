@@ -43,6 +43,8 @@ void LevelEditor::savelevel(const string& filename)
 
 void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event, float deltaTime)
 {
+   // cout << m_mouseEditorState << endl;
+
     Vector2f worldMousePos = window.mapPixelToCoords(Mouse::getPosition(window), tileView);
     Vector2i mouseTilePosition(worldMousePos.x / TILE_SIZE, worldMousePos.y / TILE_SIZE);
 
@@ -72,18 +74,20 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
         }
         else if (m_selectorMenu.at(2)->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
             if (Mouse::isButtonPressed(Mouse::Left)) {
-                m_selectorMenu.at(1)->setOutlineColor(Color::White);
-                m_selectorMenu.at(1)->setOutlineThickness(5);
+                m_selectorMenu.at(2)->setOutlineColor(Color::White);
+                m_selectorMenu.at(2)->setOutlineThickness(5);
                 m_mouseEditorState = SAVE_FILE;
                 m_lastState = m_mouseEditorState;
+                savelevel(m_currentLevel);
             }
         }
         else if (m_selectorMenu.at(3)->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
             if (Mouse::isButtonPressed(Mouse::Left)) {
-                m_selectorMenu.at(1)->setOutlineColor(Color::White);
-                m_selectorMenu.at(1)->setOutlineThickness(5);
+                m_selectorMenu.at(3)->setOutlineColor(Color::White);
+                m_selectorMenu.at(3)->setOutlineThickness(5);
                 m_mouseEditorState = LOAD_FILE;
                 m_lastState = m_mouseEditorState;
+                openFileExplorer();
             }
         }
         else {
@@ -109,9 +113,9 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
         {
         case SELECT:
             for (auto& tileMenu : m_tilesScrollMenu) {
-                
+
                 if (tileMenu->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
-                    tileMenu->setOutlineColor(Color::White); 
+                    tileMenu->setOutlineColor(Color::White);
                     tileMenu->setOutlineThickness(5);
                     if (tileMenu == m_tilesScrollMenu.at(0)) {
                         m_entityTile = GOLEM;
@@ -125,7 +129,7 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                     }
                 }
                 else {
-                    tileMenu->setOutlineColor(Color::Transparent); 
+                    tileMenu->setOutlineColor(Color::Transparent);
                     tileMenu->setOutlineThickness(0);
                 }
             }
@@ -171,9 +175,8 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                 }
             }
             break;
-        case SAVE_FILE:
-            savelevel(m_currentLevel);
         }
+       
     }
 
     float viewOffsetSpeed = 100.f;
@@ -342,3 +345,28 @@ void LevelEditor::addSelectorButton(sf::Color color)
     m_selectorMenu.push_back(std::move(rect));
 }
 
+
+
+
+void LevelEditor::openFileExplorer() {
+    // Ouvrir une boîte de dialogue de fichier pour choisir un fichier .txt
+    const char* filterPatterns[] = { "*.txt" };
+    const char* filePath = tinyfd_openFileDialog(
+        "Choisir un fichier .txt",  // Titre du dialogue
+        "",  // Dossier initial (vide pour le répertoire par défaut)
+        1,  // Nombre de filtres (ici on ne veut que des fichiers .txt)
+        filterPatterns,  // Filtres des fichiers
+        NULL,  // Options supplémentaires
+        0  // Fenêtre parente
+    );
+
+    if (filePath) {
+        std::cout << "Fichier sélectionné : " << filePath << std::endl;
+        m_currentLevel = filePath;
+        // Charge le fichier si un fichier a été sélectionné
+    }
+    else {
+        std::cout << "Aucun fichier sélectionné." << std::endl;
+    }
+    
+}

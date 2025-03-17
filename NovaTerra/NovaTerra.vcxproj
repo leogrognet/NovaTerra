@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Downloads\tinyfiledialogs.c" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="BouncingPlatform.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="Map.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Downloads\tinyfiledialogs.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="BouncingPlatform.h" />
     <ClInclude Include="Enemy.h" />
