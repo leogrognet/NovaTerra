@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Downloads\tinyfiledialogs.c" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="BouncingPlatform.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -32,9 +31,9 @@
     <ClCompile Include="PlateformeTemp.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="tinyfiledialogs.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Downloads\tinyfiledialogs.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="BouncingPlatform.h" />
     <ClInclude Include="Enemy.h" />
@@ -46,6 +45,7 @@
     <ClInclude Include="PlateformeTemp.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="tinyfiledialogs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />

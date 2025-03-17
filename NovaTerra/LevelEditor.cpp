@@ -5,12 +5,14 @@ LevelEditor::LevelEditor()
     m_mouseEditorState = SELECT;
     m_lastState = DELETE_TILE;
 
-    m_currentLevel = "C:/Users/lgrognet/source/repos/NovaTerra/NovaTerra/assets/map/lobby.txt";
+    m_currentLevel = "";
 }
 
 void LevelEditor::run()
 {
 }
+
+
 
 void LevelEditor::loadLevel(const std::string& filename) {
     ifstream file(filename);
@@ -20,6 +22,8 @@ void LevelEditor::loadLevel(const std::string& filename) {
     }
 
     m_tiles.clear();
+    m_tilesShape.clear(); 
+
     int x, y, tileID;
     while (file >> x >> y >> tileID) {
         m_tiles[{x, y}] = tileID;
@@ -27,6 +31,8 @@ void LevelEditor::loadLevel(const std::string& filename) {
 
     file.close();
     std::cout << "Niveau chargé depuis " << filename << std::endl;
+
+    updateTiles();
 }
 
 void LevelEditor::savelevel(const string& filename)
@@ -41,10 +47,30 @@ void LevelEditor::savelevel(const string& filename)
     }
 }
 
+void LevelEditor::openFileExplorer() {
+    const char* filterPatterns[] = { "*.txt" };
+    const char* filePath = tinyfd_openFileDialog(
+        "Choisir un fichier .txt",  
+        "", 
+        1,  
+        filterPatterns,  
+        NULL,  
+        0  
+    );
+
+    if (filePath) {
+        std::cout << "Fichier sélectionné : " << filePath << std::endl;
+        m_currentLevel = filePath;
+    }
+    else {
+        std::cout << "Aucun fichier sélectionné." << std::endl;
+    }
+
+}
+
+
 void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event, float deltaTime)
 {
-   // cout << m_mouseEditorState << endl;
-
     Vector2f worldMousePos = window.mapPixelToCoords(Mouse::getPosition(window), tileView);
     Vector2i mouseTilePosition(worldMousePos.x / TILE_SIZE, worldMousePos.y / TILE_SIZE);
 
@@ -78,6 +104,7 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                 m_selectorMenu.at(2)->setOutlineThickness(5);
                 m_mouseEditorState = SAVE_FILE;
                 m_lastState = m_mouseEditorState;
+                openFileExplorer();
                 savelevel(m_currentLevel);
             }
         }
@@ -88,6 +115,7 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                 m_mouseEditorState = LOAD_FILE;
                 m_lastState = m_mouseEditorState;
                 openFileExplorer();
+                loadLevel(m_currentLevel);
             }
         }
         else {
@@ -98,8 +126,6 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                         selectorMenu->setOutlineThickness(0);
                     }
                 }
-
-                
             }
         }
         
@@ -256,12 +282,12 @@ void LevelEditor::draw(RenderWindow& window,View& tileView, View& Ui_view)
 
     window.setView(tileView);
     window.clear();
-    // Dessiner les tiles du niveau
+
     for (auto& tile : m_tilesShape) {
         window.draw(*tile);
     }
 
-    // Dessiner le menu
+
     window.setView(Ui_view);
 
     window.draw(m_tileScrollBox);
@@ -284,23 +310,23 @@ void LevelEditor::dropDownMenu(RenderWindow& window)
     m_tileScrollBox.setOutlineColor(Color::White);
     m_tileScrollBox.setOutlineThickness(5);
 
-    // Créer des boutons avec une taille et une position
+    
     auto rect1 = make_unique<RectangleShape>();
-    rect1->setSize(Vector2f(50.f, 50.f));  // Taille du rectangle
-    rect1->setPosition(50.f, 100.f);  // Position du rectangle
+    rect1->setSize(Vector2f(50.f, 50.f));  
+    rect1->setPosition(50.f, 100.f);  
     rect1->setFillColor(Color::Blue);
     m_tilesScrollMenu.push_back(move(rect1));
 
     auto rect2 = make_unique<RectangleShape>();
-    rect2->setSize(Vector2f(50.f, 50.f));  // Taille du rectangle
-    rect2->setPosition(50.f, 200.f);  // Position du rectangle
+    rect2->setSize(Vector2f(50.f, 50.f));  
+    rect2->setPosition(50.f, 200.f);  
     rect2->setFillColor(Color::Red);
 
     m_tilesScrollMenu.push_back(move(rect2));
 
     auto rect3 = make_unique<RectangleShape>();
-    rect3->setSize(Vector2f(50.f, 50.f));  // Taille du rectangle
-    rect3->setPosition(50.f, 300.f);  // Position du rectangle
+    rect3->setSize(Vector2f(50.f, 50.f)); 
+    rect3->setPosition(50.f, 300.f);  
     rect3->setFillColor(Color::Green);
 
     m_tilesScrollMenu.push_back(move(rect3));
@@ -309,28 +335,51 @@ void LevelEditor::dropDownMenu(RenderWindow& window)
 void LevelEditor::tileSetter(unique_ptr<RectangleShape> tile, Vector2i MousTilePos, Color color)
 {
 
-    tile->setSize(Vector2f(TILE_SIZE, TILE_SIZE));  // Taille du rectangle
-    tile->setPosition(Vector2f(MousTilePos.x * TILE_SIZE, MousTilePos.y * TILE_SIZE));  // Position du rectangle
+    tile->setSize(Vector2f(TILE_SIZE, TILE_SIZE));  
+    tile->setPosition(Vector2f(MousTilePos.x * TILE_SIZE, MousTilePos.y * TILE_SIZE));  
     tile->setFillColor(color);
     m_tilesShape.push_back(move(tile));
 
 }
 
-void LevelEditor::updateTiles()
+void LevelEditor::updateFile()
 {
+
 }
+
+void LevelEditor::updateTiles() {
+    m_tilesShape.clear();
+    for (const auto& [pos, tileID] : m_tiles) {
+        cout << pos.first<<endl;
+        auto rect = make_unique<RectangleShape>();
+        switch (tileID)
+        {
+        case GOLEM:
+            tileSetter(move(rect), Vector2i(pos.first, pos.second), Color::Blue);
+            break;
+        case PLAYER:
+            tileSetter(move(rect), Vector2i(pos.first, pos.second), Color::Red);
+
+            break;
+        case TILE:
+            tileSetter(move(rect), Vector2i(pos.first, pos.second), Color::Green);
+            break;
+
+        }
+    }
+}
+
 
 void LevelEditor::addSelectorButton(sf::Color color)
 {
     const float buttonWidth = 50.f;
     const float buttonHeight = 30.f;
-    const float spacing = 30.f; // espace entre les boutons
+    const float spacing = 30.f; 
     const float startX = 200.f;
     const float startY = 100.f;
 
     float newX;
     if (!m_selectorMenu.empty()) {
-        // Récupère la position et la taille du dernier bouton
         const auto& lastButton = m_selectorMenu.back();
         newX = lastButton->getPosition().x + lastButton->getSize().x + spacing;
     }
@@ -343,30 +392,4 @@ void LevelEditor::addSelectorButton(sf::Color color)
     rect->setPosition(newX, startY);
     rect->setFillColor(color);
     m_selectorMenu.push_back(std::move(rect));
-}
-
-
-
-
-void LevelEditor::openFileExplorer() {
-    // Ouvrir une boîte de dialogue de fichier pour choisir un fichier .txt
-    const char* filterPatterns[] = { "*.txt" };
-    const char* filePath = tinyfd_openFileDialog(
-        "Choisir un fichier .txt",  // Titre du dialogue
-        "",  // Dossier initial (vide pour le répertoire par défaut)
-        1,  // Nombre de filtres (ici on ne veut que des fichiers .txt)
-        filterPatterns,  // Filtres des fichiers
-        NULL,  // Options supplémentaires
-        0  // Fenêtre parente
-    );
-
-    if (filePath) {
-        std::cout << "Fichier sélectionné : " << filePath << std::endl;
-        m_currentLevel = filePath;
-        // Charge le fichier si un fichier a été sélectionné
-    }
-    else {
-        std::cout << "Aucun fichier sélectionné." << std::endl;
-    }
-    
 }

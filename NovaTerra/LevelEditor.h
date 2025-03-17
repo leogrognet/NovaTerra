@@ -41,6 +41,7 @@ public:
 	void tileSetter(unique_ptr<RectangleShape> tile, Vector2i MousTilePos, Color color);
 
 
+	void updateFile();
 
 	void updateTiles();
 
@@ -55,6 +56,10 @@ public:
 	vector<unique_ptr<RectangleShape>> m_tilesScrollMenu;
 	vector<unique_ptr<RectangleShape>> m_selectorMenu;
 	const int TILE_SIZE = 32;
+
+
+
+
 private:
 	
 	MouseState m_lastState;
