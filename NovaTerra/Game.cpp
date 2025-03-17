@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Background background("assets/parallaxe/bg.png", - 50);
-GolemEnemy golem({ 500, 700 });
+
 Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
     window.setFramerateLimit(60);
@@ -18,13 +18,14 @@ void Game::run() {
 
     vector<shared_ptr<Entity>> vec;
 
-    vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true));
-    vec.push_back(make_shared<Plateforme>(300, 300, Vector2f(5, 5), true));
-    vec.push_back(make_shared<MovePlat>(500, 700, Vector2f(3, 3), true));
+    vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true,true));
+    vec.push_back(make_shared<Plateforme>(300, 400, Vector2f(5, 5), true,true));
+    vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true,true));
+    vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true,true));
 
-    Player player(vec,100,600,false);
+    vec.push_back(make_shared<GolemEnemy>(500, 700, false, false));
 
-    vec.push_back(make_shared<Player>(player));
+    vec.push_back(make_shared<Player>(vec, 100, 600, false, true));
 
     Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
 
@@ -42,11 +43,9 @@ void Game::run() {
 
         window.clear();
 		background.update(deltatime);
-        player.update(deltatime, vec);
-		golem.update(deltatime, player);
+        //player.update(deltatime, vec);
         background.draw(window);
         map->draw(window);
-		golem.draw(window);
         for (auto entityvec : vec) {
             entityvec->update(deltatime, vec);
             entityvec->draw(window);

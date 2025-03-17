@@ -4,14 +4,15 @@
 
 
 
-RigidBody::RigidBody(Vector2f pos, bool isStatic) : m_position(pos), m_isGrounded(false), m_isStatic(isStatic) {
+RigidBody::RigidBody(Vector2f pos, bool isStatic, bool asCollision) : m_position(pos), m_isGrounded(false), m_isStatic(isStatic), m_asCollision(asCollision) {
     m_velocity = { 0, 0 };
 }
 
 void RigidBody::colliderFunc(const std::vector<FloatRect>& colliders, const FloatRect& selfShape) {
-    int tempPos = 0;
     for (const auto& colliderBounds : colliders) {
+        int tempPos = 0;
         tempPos += 1;
+
         if (colliderBounds.intersects(selfShape)) {
             float overlapX = std::min(selfShape.left + selfShape.width, colliderBounds.left + colliderBounds.width) -
                 std::max(selfShape.left, colliderBounds.left);
@@ -57,21 +58,19 @@ void RigidBody::checkGrounded(const std::vector<FloatRect>& colliders, const Flo
 }
 
 void RigidBody::update(float deltaTime, const vector<FloatRect>& colliders, const FloatRect& selfShape) {
-    checkGrounded(colliders, selfShape);
-    
-    if (!m_isGrounded && !m_isStatic) {
-        m_velocity.y += 981.0f * deltaTime / 2;
-        if (m_velocity.y > 2500.f) {
-            m_velocity.y = 2500.f;
+        checkGrounded(colliders, selfShape);
+        if (!m_isGrounded && !m_isStatic) {
+            m_velocity.y += 981.0f * deltaTime / 2;
+            if (m_velocity.y > 2500.f) {
+                m_velocity.y = 2500.f;
+            }
         }
-    }
 
-    if (!m_isStatic) {
-        colliderFunc(colliders, selfShape);
-    }
+        if (!m_isStatic) {
+            colliderFunc(colliders, selfShape);
+        }
 
-    m_position += m_velocity * deltaTime;
-
+        m_position += m_velocity * deltaTime;
 }
 
 Vector2f RigidBody::getPosition() const

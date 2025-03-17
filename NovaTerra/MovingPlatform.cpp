@@ -1,6 +1,6 @@
 #include "MovingPlatform.h"
 
-MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic) :Entity(posX, posY, isStatic)
+MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision)
 {
 	plateformetexture.loadFromFile("../assets/Spruce.png");
 	m_shape.setTexture(plateformetexture);
@@ -27,8 +27,6 @@ void MovePlat::move(float deltatime, const vector<shared_ptr<Entity>>& colliders
 		for (auto entity : colliders) {
 			if (entity->getID() == 1 && entity->getHitBox().getGlobalBounds().intersects(m_shape.getGlobalBounds())) {
 				entity->setForcedVelocity({ 5000 * deltatime,0 });
-			} else {
-				entity->setForcedVelocity({ 0,0 });
 			}
 		}
 		if (m_shape.getPosition().x >= m_stockedPos.x + 300) {
@@ -40,8 +38,6 @@ void MovePlat::move(float deltatime, const vector<shared_ptr<Entity>>& colliders
 		for (auto entity : colliders) {
 			if (entity->getID() == 1 && entity->getHitBox().getGlobalBounds().intersects(m_shape.getGlobalBounds())) {
 				entity->setForcedVelocity({ -5000 * deltatime,0 });
-			} else {
-				entity->setForcedVelocity({ 0,0 });
 			}
 		}
 		if (m_shape.getPosition().x <= m_stockedPos.x - 300) {

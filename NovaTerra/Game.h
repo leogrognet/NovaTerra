@@ -10,6 +10,7 @@
 #include "GolemEnemy.h"
 #include "PlateformeTemp.h"
 #include "MovingPlatform.h"
+#include "BouncingPlatform.h"
 
 class Game {
 private:

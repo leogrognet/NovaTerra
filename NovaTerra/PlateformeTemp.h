@@ -6,7 +6,7 @@ using namespace std;
 class Plateforme : public Entity {
 public:
 
-	Plateforme(float posX, float posY, Vector2f size,bool isStatic);
+	Plateforme(float posX, float posY, Vector2f size,bool isStatic, bool asCollision);
 
 	void draw(RenderWindow& window) override;
 	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;

@@ -1,6 +1,6 @@
 #include "PlateformeTemp.h"
 
-Plateforme::Plateforme(float posX, float posY, Vector2f size, bool isStatic):Entity(posX,posY,isStatic)
+Plateforme::Plateforme(float posX, float posY, Vector2f size, bool isStatic, bool asCollision):Entity(posX,posY,isStatic,asCollision)
 {
 	plateformetexture.loadFromFile("../assets/deepslate.png");
 	m_shape.setTexture(plateformetexture);

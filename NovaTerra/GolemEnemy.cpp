@@ -1,35 +1,50 @@
 #include "GolemEnemy.h"
 
-GolemEnemy::GolemEnemy(Vector2f position) : m_golemState(State::IDLE), m_golemBody(position) {
-    m_golemShape.setSize({ 40.f, 60.f });
-    m_golemShape.setFillColor(Color::Yellow);
-    m_golemShape.setPosition(position);
+GolemEnemy::GolemEnemy(float posX, float posY, bool isStatic, bool asCollision): Entity(posX, posY, isStatic, asCollision),m_golemState(State::IDLE) {
+    golemTexture.loadFromFile("../assets/fries.png");
+    m_shape.setTexture(golemTexture);
+    m_shape.setPosition(posX, posY);
+    m_shape.setScale(1.f,1.f);
 }
 
-void GolemEnemy::update(float deltaTime, const Player& player) {
-    updateFSM(player);
-    m_golemBody.update(deltaTime);
-    m_golemShape.setPosition(m_golemBody.getPosition());
+void GolemEnemy::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) {
+    updateFSM(colliders);
+
+    Entity::update(deltaTime, colliders);
 }
 
 void GolemEnemy::draw(RenderWindow& window) {
-    window.draw(m_golemShape);
+    window.draw(m_shape);
 }
 
-void GolemEnemy::updateFSM(const Player& player) {
-    float distance = abs(player.body.getPosition().x - m_golemBody.getPosition().x);
+int GolemEnemy::getID()
+{
+    return 2;
+}
+
+void GolemEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
+    float distance;
+    for (auto entity : colliders) {
+        // Le player a un ID = 1
+        if (entity->getID() == 1) {
+            distance = abs(entity->getSprite().getPosition().x - m_shape.getPosition().x);
+            break;
+        }
+    }
+
+    //cout << distance << endl;
 
     switch (m_golemState) {
     case State::IDLE:
         if (distance <= m_golemDetectionRange) {
 			cout << "Golem detected player\n";
-            jumpToPlayer(player);
+            jumpToPlayer(colliders);
             m_golemState = State::JUMPING;
         }
         break;
 
     case State::JUMPING:
-        if (m_golemBody.getIsGrounded()) {
+        if (m_rigidBody.getIsGrounded()) {
             landAndCooldown();
         }
         break;
@@ -42,16 +57,22 @@ void GolemEnemy::updateFSM(const Player& player) {
     }
 }
 
-void GolemEnemy::jumpToPlayer(const Player& player) {
-    Vector2f dir = player.body.getPosition() - m_golemBody.getPosition();
-    m_golemBody.getVelocity().y = m_golemJumpForce;
-    m_golemBody.getVelocity().x = (dir.x > 0) ? m_golemJumpSpeedX : -m_golemJumpSpeedX;
+void GolemEnemy::jumpToPlayer(const vector<shared_ptr<Entity>>& colliders) {
+    Vector2f dir;
+    for (auto entity : colliders) {
+        if (entity->getID() == 1) {
+            dir = entity->getSprite().getPosition() - m_shape.getPosition();
+            break;
+        }
+    }
+    m_rigidBody.getVelocity().y = m_golemJumpForce;
+    m_rigidBody.getVelocity().x = (dir.x > 0) ? m_golemJumpSpeedX : -m_golemJumpSpeedX;
     cout << "Golem jumped to player\n";
 }
 
 void GolemEnemy::landAndCooldown() {
     m_golemCooldownClock.restart();
-    m_golemBody.getVelocity().x = 0;
+    m_rigidBody.getVelocity().x = 0;
     m_golemState = State::COOLDOWN;
     cout << "Golem landed and is on cooldown\n";
 }
