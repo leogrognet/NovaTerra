@@ -25,6 +25,8 @@ public:
 	void draw(RenderWindow& window) override;
 	void handleInput();
 
+	Vector2f getPosition() const;
+
 	void dash();
 	void grapplinshoot();
 	void grabing();

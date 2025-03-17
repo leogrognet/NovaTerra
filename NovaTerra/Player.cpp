@@ -124,6 +124,10 @@ void Player::handleInput()
 	}
 }
 
+Vector2f Player::getPosition() const {
+	return m_shape.getPosition();
+}
+
 void Player::dash()
 {
 	if (m_action == Action::DASHING) {
