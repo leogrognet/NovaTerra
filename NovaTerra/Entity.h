@@ -8,13 +8,18 @@ using namespace std;
 
 enum entityType
 {
-
 	GOLEM,
 	PLAYER,
 	TILE,
 	NOTYPE,
 };
 
+enum texturetype 
+{
+	GRASS_TILE,
+	ROAD_TILE,
+
+};
 
 class Entity {
 protected:

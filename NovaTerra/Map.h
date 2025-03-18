@@ -7,6 +7,9 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include "Entity.h";
+
+
 
 using namespace sf;
 using namespace std;
@@ -16,6 +19,12 @@ using namespace std;
 class Map {
 private:
     //Calques de la carte
+
+    map<pair<int, int>, int> m_tiles;
+
+
+    entityType m_entityTypeTile;
+
     vector<vector<int>> tileMap; 
     //vector<vector<int>> itemMap;
     //vector<vector<int>> entityMap;

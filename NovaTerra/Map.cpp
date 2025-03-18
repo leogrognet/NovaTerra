@@ -23,164 +23,45 @@ Map::Map(const string& filename, const string& tilesetPath, int tileSize, vector
 
 void Map::loadFromFile(const string& filename) {
     ifstream file(filename);
-    if (!file) {
-        cerr << "Erreur d'ouverture du fichier de la carte" << endl;
+    if (!file.is_open()) {
+        std::cerr << "Erreur : Impossible de charger le fichier " << filename << std::endl;
         return;
     }
 
-    string line;
-    int layer = 0;  // 0 = Ground Layer, 1 = Items Layer, 2 = Entity Layer
-    int currentY = 0;
+    m_tiles.clear();
 
-    //Stockage temporaire des calques
-    vector<vector<int>> tempTileMap;
-    //vector<vector<int>> tempItemMap;
-    //vector<vector<int>> tempEntityMap;
-
-    vector<Vector2i> tempBlockedTiles;
-    //vector<Vector2i> tempBlockedItemTiles;
-
-    //vector<Vector2f> tempChaserEnemyPositions;
-    //vector<Vector2f> tempPatternEnemyPosition;
-    //vector<Vector2f> tempNpcPositions;
-    //Vector2f tempPlayerStartPosition;
-    //Vector2f tempAlternativeSpawnPosition;
-
-    while (getline(file, line)) {
-        //Détection des sections du fichier
-        /*if (line.find("# Items Layer") != string::npos) {
-            layer = 1; currentY = 0;
-            continue;
-        }
-        else if (line.find("# Entity Layer") != string::npos) {
-            layer = 2; currentY = 0;
-            continue;
-        }*/
-
-        vector<int> row;
-        stringstream ss(line);
-        int tile;
-        int x = 0;
-
-        while (ss >> tile) {
-            row.push_back(tile);
-
-            if (layer == 0) {  // Ground Layer
-                if (find(blockedTileValues.begin(), blockedTileValues.end(), tile) != blockedTileValues.end()) {
-                    tempBlockedTiles.push_back(Vector2i(x, currentY));
-                }
-            }
-            //else if (layer == 1) {  // Items Layer
-            //    if (find(blockedItemValues.begin(), blockedItemValues.end(), tile) != blockedItemValues.end()) {
-            //        tempBlockedItemTiles.push_back(Vector2i(x, currentY));
-            //    }
-            //    //Détection des potions (ID 22)
-            //    if (tile == 22) {
-            //        potionPositions.push_back(Vector2f(x * tileSize, currentY * tileSize));
-            //        cout << "Potion ajoutee à la position (" << x << ", " << currentY << ")" << endl;
-            //    }
-            //    if (tile == 64) {
-            //        chestPositions.push_back(Vector2f(x * tileSize, currentY * tileSize));
-            //        cout << "chest added to (" << x << ", " << currentY << ")" << endl;
-            //    }
-            //}
-            //else if (layer == 2) {  // Entity Layer
-            //    if (tile == 1) {  // Spawn normal
-            //        tempPlayerStartPosition = Vector2f(x * tileSize, currentY * tileSize);
-            //    }
-            //    else if (tile == 4) {  // Spawn alternatif (TP retour)
-            //        tempAlternativeSpawnPosition = Vector2f(x * tileSize, currentY * tileSize);
-            //        cout << "joueur en (" << x << ", " << currentY << ")" << endl;
-            //    }
-            //    else if (tile == 2) {  // Ennemi chasseur
-            //        tempChaserEnemyPositions.push_back(Vector2f(x * tileSize + 80, currentY * tileSize));
-            //    }
-            //    else if (tile == 5) {   // Enemy pattern
-            //        tempPatternEnemyPosition.push_back(Vector2f(x * tileSize + 16, currentY * tileSize));
-            //    }
-            //    else if (tile == 9) {  //Boss
-            //        bossPosition = Vector2f(x * tileSize, currentY * tileSize);
-            //        std::cout << "Boss spawn en (" << x << ", " << currentY << ")" << std::endl;
-            //    }
-            //    else if (tile == 3) {  // NPC
-            //        tempNpcPositions.push_back(Vector2f(x * tileSize, currentY * tileSize));
-            //    }
-            //}
-
-            x++;
-        }
-
-        //Ajout des lignes aux calques correspondants
-        if (layer == 0) tempTileMap.push_back(row);
-        //else if (layer == 1) tempItemMap.push_back(row);
-        //else if (layer == 2) tempEntityMap.push_back(row);
-
-        currentY++;
+    int x, y, tileID;
+    while (file >> x >> y >> tileID) {
+        m_tiles[{x, y}] = tileID;
     }
 
-    //Assignation
-    tileMap = tempTileMap;
-    //itemMap = tempItemMap;
-    //entityMap = tempEntityMap;
-    blockedTiles = tempBlockedTiles;
-    //blockedItemTiles = tempBlockedItemTiles;
-    //chaserEnemyPositions = tempChaserEnemyPositions;
-    //patternEnemyPositions = tempPatternEnemyPosition;
-    //npcPositions = tempNpcPositions;
-    //playerStartPosition = tempPlayerStartPosition;
-    //alternativeSpawnPosition = tempAlternativeSpawnPosition;
+    file.close();
+    std::cout << "Niveau chargé depuis " << filename << std::endl;
 }
+
+    
 
 // GÉNÉRATION DES OBJETS
 
-//void Map::generateItems() {
-//    int itemsetWidth = itemSet.getSize().x / tileSize;
-//
-//    items.clear();
-//
-//    for (size_t y = 0; y < itemMap.size(); ++y) {
-//        for (size_t x = 0; x < itemMap[y].size(); ++x) {
-//            int itemIndex = itemMap[y][x];
-//
-//            //On ignore complètement les items 99 (pas de collision ni d'affichage)
-//            if (itemIndex == 99) continue;
-//
-//            int tileX = (itemIndex % itemsetWidth) * tileSize;
-//            int tileY = (itemIndex / itemsetWidth) * tileSize;
-//
-//            Sprite shape;
-//            shape.setTexture(itemSet);
-//            shape.setTextureRect(IntRect(tileX, tileY, tileSize, tileSize));
-//            shape.setPosition(x * tileSize, y * tileSize);
-//            items.push_back(shape);
-//        }
-//    }
-//}
+
 
 // GÉNÉRATION DES TUILES
 
 void Map::generateTiles() {
-    int tilesetWidth = tileSet.getSize().x / tileSize;
-
-    tiles.clear();
-
-    for (size_t y = 0; y < tileMap.size(); ++y) {
-        for (size_t x = 0; x < tileMap[y].size(); ++x) {
-            int tileIndex = tileMap[y][x];
-
-            if (tileIndex == 99) {
-                blockedTiles.push_back(Vector2i(x, y));
-                continue;
-            }
-
-            int tileX = (tileIndex % tilesetWidth) * tileSize;
-            int tileY = (tileIndex / tilesetWidth) * tileSize;
-
-            Sprite sprite;
-            sprite.setTexture(tileSet);
-            sprite.setTextureRect(IntRect(tileX, tileY, tileSize, tileSize));
-            sprite.setPosition(x * tileSize, y * tileSize);
-            tiles.push_back(sprite);
+    for (const auto& [pos, tileID] : m_tiles) {
+        m_entityTypeTile = static_cast<entityType>(tileID);
+        switch (m_entityTypeTile)
+        {
+        case GOLEM:
+            break;
+        case PLAYER:
+            break;
+        case TILE:
+            break;
+        case NOTYPE:
+            break;
+        default:
+            break;
         }
     }
 }
