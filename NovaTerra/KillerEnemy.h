@@ -8,6 +8,7 @@
 #include "RigidBody.h"
 
 using namespace sf;
+using namespace std;
 
 class KillerEnemy : public Entity {
 public:
@@ -15,24 +16,30 @@ public:
 
     KillerEnemy(float posX, float posY, bool isStatic, bool hasCollision);
 
-    void update(float deltaTime, const std::vector<Entity*>& colliders, const Player& player);
+    void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)override;
     void draw(RenderWindow& window) override;
-    int getID() override;
+    int getID()override;
+
 
 private:
-    RectangleShape shape;
+
+    void updateFSM(const vector<shared_ptr<Entity>>& colliders);
+    void dashToPlayer(const vector<shared_ptr<Entity>>& colliders);
+	void stopAndCooldown();
+
+    RectangleShape m_shape;
+	State m_KillerState;
+
     Vector2f velocity;
     Vector2f dashDirection;
 
-    State m_KillerState;
+    Texture killerTexture;
 
-    float dashSpeed = 500.f;
-    float detectionRange = 250.f;
-    float dashCooldown = 1.0f;
-    float cooldownTimer = 0.f;
+    float m_KillerDashSpeed = 500.f;
+    float m_KillerDetectionRange = 250.f;
+    float m_KillerKashCooldown = 1.0f;
+    float m_KillerCooldownClock = 0.f;
 
-    void tryDash(const Player& player);
-    void performDash(float deltaTime);
-    void handleCooldown(float deltaTime);
-    float distanceToPlayer(const Player& player);
+    RigidBody m_rigidBody; 
+
 };

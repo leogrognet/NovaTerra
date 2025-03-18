@@ -1,63 +1,87 @@
 #include "KillerEnemy.h"
 
-KillerEnemy::KillerEnemy(float posX, float posY, bool isStatic, bool hasCollision) : Entity(posX, posY, isStatic, hasCollision), m_KillerState(State::IDLE) {
-    shape.setSize(Vector2f(50.f, 50.f)); 
-    shape.setPosition(posX, posY);       
-    shape.setFillColor(Color::Green);       
+KillerEnemy::KillerEnemy(float posX, float posY, bool isStatic, bool hasCollision)
+    : Entity(posX, posY, isStatic, hasCollision),
+    m_KillerState(State::IDLE),
+    velocity(0.f, 0.f),
+    dashDirection(0.f, 0.f)
+{
+    if (!killerTexture.loadFromFile("assets/croc/killercroc.png")) {
+        std::cerr << "KillerEnemy: Failed to load texture." << std::endl;
+    }
 
+    m_shape.setSize(Vector2f(48.f, 48.f));
+    m_shape.setTexture(&killerTexture);
+    m_shape.setPosition(posX, posY);
+    m_shape.setScale(1.f, 1.f);
 }
 
-void KillerEnemy::update(float deltaTime, const std::vector<Entity*>& colliders, const Player& player) {
-    if (m_KillerState == State::COOLDOWN) {
-        handleCooldown(deltaTime);
-    }
+void KillerEnemy::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) {
+    updateFSM(colliders);
 
-    // Try to dash if the player is within range and cooldown is finished
-    if (m_KillerState == State::IDLE) {
-        tryDash(player);
-    }
-
-    // Perform dash motion if in DASHING state
-    if (m_KillerState == State::DASHING) {
-        performDash(deltaTime);
-    }
+    // Apply velocity (dash movement)
+    m_shape.move(velocity * deltaTime);
+    position = m_shape.getPosition();
 }
 
 void KillerEnemy::draw(RenderWindow& window) {
-    window.draw(shape);
+    window.draw(m_shape);
 }
 
 int KillerEnemy::getID() {
-    return 3; 
+    return 3; // Unique ID for KillerEnemy
 }
 
-void KillerEnemy::tryDash(const Player& player) {
-    if (distanceToPlayer(player) <= detectionRange && cooldownTimer <= 0.f) {
-        m_KillerState = State::DASHING;
-        dashDirection = player.getPosition() - shape.getPosition();  
-        float length = sqrt(dashDirection.x * dashDirection.x + dashDirection.y * dashDirection.y);
-        dashDirection /= length; 
+void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
+    shared_ptr<Entity> player = nullptr;
+
+    // Find the player entity (ID = 1)
+    for (const auto& entity : colliders) {
+        if (entity->getID() == 1) {
+            player = entity;
+            break;
+        }
+    }
+
+    if (!player) return;
+
+    float distanceToPlayer = std::abs(player->getSprite().getPosition().x - m_shape.getPosition().x);
+
+    switch (m_KillerState) {
+    case State::IDLE:
+        if (distanceToPlayer <= m_KillerDetectionRange) {
+            dashToPlayer(player);
+            m_KillerState = State::DASHING;
+            m_KillerCooldownClock.restart();
+        }
+        break;
+
+    case State::DASHING:
+        // Stop the dash instantly after one frame of movement
+        velocity = Vector2f(0.f, 0.f);
+        m_KillerState = State::COOLDOWN;
+        break;
+
+    case State::COOLDOWN:
+        stopAndCooldown(m_KillerCooldownClock.getElapsedTime().asSeconds());
+        break;
     }
 }
 
-void KillerEnemy::performDash(float deltaTime) {
-    shape.move(dashDirection * dashSpeed * deltaTime);
+void KillerEnemy::dashToPlayer(const shared_ptr<Entity>& player) {
+    Vector2f direction = player->getSprite().getPosition() - m_shape.getPosition();
+    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 
-    m_KillerState = State::COOLDOWN;
-    cooldownTimer = dashCooldown;
+    if (length != 0.f)
+        dashDirection = direction / length;
+    else
+        dashDirection = Vector2f(0.f, 0.f);
+
+    velocity = dashDirection * m_KillerDashSpeed;
 }
 
-void KillerEnemy::handleCooldown(float deltaTime) {
-    cooldownTimer -= deltaTime;
-    if (cooldownTimer <= 0.f) {
-        m_KillerState = State::IDLE;  
+void KillerEnemy::stopAndCooldown(float deltaTime) {
+    if (m_KillerCooldownClock.getElapsedTime().asSeconds() >= m_KillerKashCooldown) {
+        m_KillerState = State::IDLE;
     }
-}
-
-float KillerEnemy::distanceToPlayer(const Player& player) {
-    Vector2f playerPos = player.getPosition();
-    Vector2f enemyPos = shape.getPosition();
-    float dx = playerPos.x - enemyPos.x;
-    float dy = playerPos.y - enemyPos.y;
-    return sqrt(dx * dx + dy * dy);
 }

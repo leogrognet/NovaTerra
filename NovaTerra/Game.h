@@ -11,6 +11,7 @@
 #include "PlateformeTemp.h"
 #include "MovingPlatform.h"
 #include "BouncingPlatform.h"
+#include "KillerEnemy.h"
 
 class Game {
 private:
