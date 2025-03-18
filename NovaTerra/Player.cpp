@@ -22,6 +22,8 @@ Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool i
 
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
+	cout << m_rigidBody.getVelocity().x << " " << m_rigidBody.getVelocity().y << endl;
+
 	m_deltatime = deltatime;
 	if (m_state != State::DEAD) {
 

@@ -1,10 +1,16 @@
 #include "MovingPlatform.h"
 
-MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision, textureList)
+MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) :Entity(posX, posY, isStatic, asCollision, texture)
 {
-	plateformetexture.loadFromFile("C:/Users/leoam/source/repos/NovaTerra/NovaTerra/assets/map/map_tileset/test.png");
-	m_shape.setTexture(plateformetexture);
-	m_shape.setScale(size);
+	if (!textureList.empty()) {
+
+		m_shape.setTexture(*textureList.at(0).get());
+		IntRect m_textureRect(384, 384, 128, 128);
+
+		m_shape.setTextureRect(m_textureRect);
+		m_shape.setScale(1.f, 1.f);
+		m_shape.setPosition(posX, posY);
+	}
 
 	m_stockedPos = { m_shape.getPosition() };
 }

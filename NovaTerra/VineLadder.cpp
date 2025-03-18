@@ -8,8 +8,8 @@ Vine::Vine(float posX, float posY, float width, float height , bool isStatic, bo
         IntRect m_textureRect(128, 640, 128, 128);
 
         m_shape.setTextureRect(m_textureRect);
-        m_shape.setScale(1.f, 1.f);
-        m_shape.setPosition(width, height);
+        m_shape.setScale(width, height);
+        m_shape.setPosition(posX, posY);
     }
 }
 
