@@ -27,7 +27,7 @@
     <ClCompile Include="GolemEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MovingPlatform.cpp" />
-    <ClCompile Include="PlateformeTemp.cpp" />
+    <ClCompile Include="Plateform.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Map.cpp" />
   </ItemGroup>
@@ -39,7 +39,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GolemEnemy.h" />
     <ClInclude Include="MovingPlatform.h" />
-    <ClInclude Include="PlateformeTemp.h" />
+    <ClInclude Include="Plateform.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Map.h" />
   </ItemGroup>

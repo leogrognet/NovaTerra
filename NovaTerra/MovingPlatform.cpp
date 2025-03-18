@@ -1,8 +1,8 @@
 #include "MovingPlatform.h"
 
-MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision)
+MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision, textureList)
 {
-	plateformetexture.loadFromFile("../assets/Spruce.png");
+	plateformetexture.loadFromFile("C:/Users/leoam/source/repos/NovaTerra/NovaTerra/assets/map/map_tileset/test.png");
 	m_shape.setTexture(plateformetexture);
 	m_shape.setScale(size);
 

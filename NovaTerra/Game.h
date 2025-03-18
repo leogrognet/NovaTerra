@@ -8,7 +8,7 @@
 #include "Scroll.h"
 #include "Background.h"
 #include "GolemEnemy.h"
-#include "PlateformeTemp.h"
+#include "Plateform.h"
 #include "MovingPlatform.h"
 #include "BouncingPlatform.h"
 
@@ -17,7 +17,11 @@ private:
     const int WIDTH;
     const int HEIGHT;
     RenderWindow window;
+    vector<shared_ptr<Texture>> textureListTest;
+    TextureLoader loadertest;
+
 public:
+
     Game(const int _WIDTH, const int _HEIGHT);
     ~Game();
     void run();

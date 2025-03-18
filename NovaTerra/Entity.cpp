@@ -5,21 +5,12 @@ void Entity::update(float deltaTime, const vector<std::shared_ptr<Entity>>& coll
 
     vector<FloatRect> vec;
     for (auto& collider : colliders) {
-        if (&collider->m_shape == &m_shape ) {
+        if (&collider->m_shape == &m_shape || (collider->getID() == 1 && getID() == 2) || (collider->getID() == 2 && getID() == 1)) {
             continue;
         }
-        else if (collider->getID() == 1  && getID() == 2)
-        {
-            continue;
-        }
-        else if (collider->getID() == 2 && getID() == 1)
-        {
-            continue;
-        }
-
         vec.push_back(collider->m_shape.getGlobalBounds());
     }
-
+    
     m_shape.setPosition(m_rigidBody.getPosition());
     m_rigidBody.update(deltaTime, vec, m_shape.getGlobalBounds());
     m_forcedVelocity = { 0,0 };
@@ -36,7 +27,7 @@ int Entity::getID()
     return 0;
 }
 
-void Entity::ForceMove()
+void Entity::forceMove()
 {
 }
 
@@ -61,9 +52,19 @@ void Entity::setVelocity(Vector2f velocity)
     m_rigidBody.getVelocity() = velocity;
 }
 
-Entity::Entity(float posX, float posY, bool isStatic, bool asCollision) : m_rigidBody({ posX,posY }, isStatic, asCollision)
+Entity::Entity(float posX, float posY, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) : m_rigidBody({ posX,posY }, isStatic, asCollision)
 {
+    textureList = texture;
     m_shape.setPosition(posX, posY);
+}
+
+void Entity::takeDamage()
+{
+}
+
+bool Entity::isDead()
+{
+    return false;
 }
 
 Sprite& Entity::getSprite()

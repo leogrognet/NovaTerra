@@ -1,18 +1,18 @@
-#include "TextureLoader.h"
+ï»¿#include "TextureLoader.h"
 
-void TextureLoader::loadTexture(string& imagePathType)
+void TextureLoader::loadTexture(string& imagePathType, vector<shared_ptr<Texture>>& textureList)
 {
 	try {
 
-			try {
-				for (const auto& entry : fs::directory_iterator(imagePathType)) {
-					imagesPath.push_back(entry.path().string());
-				}
+		try {
+			for (const auto& entry : fs::directory_iterator(imagePathType)) {
+				imagesPath.push_back(entry.path().string());
 			}
-			catch (const fs::filesystem_error& e) {
-				std::cerr << "Erreur de système de fichiers lors de l'itération du répertoire " << imagePathType
-					<< " : " << e.what() << std::endl;
-			}
+		}
+		catch (const fs::filesystem_error& e) {
+			std::cerr << "Erreur de systï¿½me de fichiers lors de l'itï¿½ration du rï¿½pertoire " << imagePathType
+				<< " : " << e.what() << std::endl;
+		}
 
 		for (auto image : imagesPath) {
 			try {
@@ -32,9 +32,9 @@ void TextureLoader::loadTexture(string& imagePathType)
 	}
 }
 
-TextureLoader::TextureLoader(string imagePathType)
-{
-	loadTexture(imagePathType);
-}
 
+
+TextureLoader::TextureLoader()
+{
+}
 
