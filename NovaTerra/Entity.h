@@ -14,13 +14,6 @@ enum entityType
 	NOTYPE,
 };
 
-enum texturetype 
-{
-	GRASS_TILE,
-	ROAD_TILE,
-
-};
-
 class Entity {
 protected:
 
@@ -31,8 +24,11 @@ protected:
 	Vector2f m_forcedVelocity;
 	vector<shared_ptr<Texture>> textureList;
 
+	bool m_asCollision;
+
 
 public:
+
 	virtual void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders);
 	virtual void draw(RenderWindow& window);
 	virtual int getID();
@@ -46,9 +42,10 @@ public:
 
 	Entity(float posX, float posY, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture);
 
-
 	virtual void takeDamage();
 	virtual bool isDead();
+
+	virtual bool getasCollision();
 
 	Sprite& getSprite();
 

@@ -20,7 +20,6 @@ void Plateform::draw(RenderWindow& window) {
 void Plateform::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
     Entity::update(deltaTime, colliders);
-
 }
 
 int Plateform::getID()
