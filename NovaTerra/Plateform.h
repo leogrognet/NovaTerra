@@ -16,6 +16,4 @@ public:
 	int getID() override;
 
 private:
-	Texture m_texture;
-
 };

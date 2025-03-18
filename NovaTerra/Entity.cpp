@@ -5,7 +5,7 @@ void Entity::update(float deltaTime, const vector<std::shared_ptr<Entity>>& coll
 
     vector<FloatRect> vec;
     for (auto& collider : colliders) {
-        if (&collider->m_shape == &m_shape || (collider->getID() == 1 && getID() == 2) || (collider->getID() == 2 && getID() == 1)) {
+        if (&collider->m_shape == &m_shape || !collider->getasCollision()) {
             continue;
         }
         vec.push_back(collider->m_shape.getGlobalBounds());
@@ -54,17 +54,21 @@ void Entity::setVelocity(Vector2f velocity)
 
 Entity::Entity(float posX, float posY, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) : m_rigidBody({ posX,posY }, isStatic, asCollision)
 {
+    m_asCollision = asCollision;
     textureList = texture;
     m_shape.setPosition(posX, posY);
 }
 
-void Entity::takeDamage()
-{
-}
+void Entity::takeDamage(){}
 
 bool Entity::isDead()
 {
     return false;
+}
+
+bool Entity::getasCollision()
+{
+    return m_asCollision;
 }
 
 Sprite& Entity::getSprite()

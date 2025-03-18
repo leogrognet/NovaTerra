@@ -11,6 +11,7 @@
 #include "Plateform.h"
 #include "MovingPlatform.h"
 #include "BouncingPlatform.h"
+#include "VineLadder.h"
 
 class Game {
 private:
