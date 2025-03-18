@@ -9,7 +9,6 @@ Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0") {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
-
 }
 
 Game::~Game() {
