@@ -57,6 +57,7 @@ void Map::generateTiles() {
         case PLAYER:
             break;
         case TILE:
+            
             break;
         case NOTYPE:
             break;

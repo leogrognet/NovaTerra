@@ -24,8 +24,10 @@ private:
 
 
     entityType m_entityTypeTile;
-
     vector<vector<int>> tileMap; 
+
+
+    vector<shared_ptr<Entity>> m_allEntities;
     //vector<vector<int>> itemMap;
     //vector<vector<int>> entityMap;
 

@@ -1,0 +1,148 @@
+
+ok jai de grosses difficultées
+Pour mon editeur de niveau
+
+il sauvegarde pour linstant la position et le type dennemi que cest
+probleme
+cest que jai besoin de lui déclarer le type de texture que cest aussi
+
+mais mes textures ne sont pas tous gérées de la meme facon
+ou plutot mes images
+
+certaines sont des tiles set et jai besoin de les separer pour avoir une plateforme selon sa tile
+et dautre sont des images simples
+
+et je ne sais pas comment je pourrais sauvegarder ni interpreter derriere tout ca
+ChatGPT a dit :
+D'accord, je vois mieux le problème maintenant.Tu veux gérer des niveaux avec différents types de textures et images, notamment :
+
+Tilesets: Ces images contiennent plusieurs tuiles, et chaque tuile peut avoir un type spécifique dans ton jeu(ex : plateforme, ennemi, etc.).
+Images simples : Ce sont des images qui ne sont pas un tileset, mais plutôt une image unique associée à un type particulier(par exemple, une image pour un ennemi).
+Ton objectif est de pouvoir sauvegarder à la fois la position de l'objet, son type d'entité(ennemi, plateforme, etc.), et aussi la texture spécifique qui correspond à chaque tuile, ou image, utilisée dans ton éditeur de niveau.
+
+Solution de gestion des types de texture
+Une manière d’aborder cela est de garder une structure flexible dans ton éditeur, qui permet de gérer ces différents cas.Voici comment procéder :
+
+Sauvegarder les données d'une tuile : Chaque tuile devrait avoir trois informations :
+
+Position(x, y)
+Type d’entité(ex : plateforme, ennemi, etc.)
+ID de texture(qui pourrait correspondre à une texture spécifique, qu'elle soit dans un tileset ou une image simple).
+Séparer les types de textures : Tu as donc des tilesets où tu veux extraire des tuiles spécifiques et des images simples.Pour les tilesets, tu dois savoir quelle portion de l'image (c'est - à - dire quelle tuile spécifique) utiliser.Pour les images simples, tu dois simplement enregistrer un ID d'image.
+
+Structure de données : Tu peux utiliser une structure comme std::pair<int, int> pour la position de la tuile, et une autre structure pour lier l'ID de la texture et le type d'entité.
+
+Voici un modèle de structure et un exemple de sauvegarde :
+
+Structure de Données
+Tu peux créer une structure pour chaque tuile dans ton éditeur de niveau :
+
+cpp
+Copier
+struct TileData {
+    int entityType;     // Type de l'entité (plateforme, ennemi, etc.)
+    int textureID;      // L'ID de la texture, qui peut être un index dans un tableau de textures
+    sf::IntRect tileRect;  // Si c'est une tuile d'un tileset, sa position dans le tileset
+    bool isTileSet;         // Un flag pour savoir si c'est une texture d'un tileset ou une image simple
+};
+entityType: Indique si c'est une plateforme, un ennemi, etc.
+textureID : L'ID de la texture ou de l'image.
+tileRect : Si c'est un tileset, on stocke la portion de l'image à utiliser pour cette tuile.
+isTileSet : Un flag pour savoir si c'est une texture dans un tileset ou une image simple.
+Gestion de la Sauvegarde
+Ensuite, lorsque tu sauvegardes le niveau, tu dois stocker ces informations de manière structurée, par exemple :
+
+cpp
+Copier
+void LevelEditor::saveLevel(const std::string& filename) {
+    std::ofstream outFile(filename);
+    if(!outFile.is_open()) {
+        std::cerr << "Erreur : Impossible de sauvegarder le fichier " << filename << std::endl;
+        return;
+    }
+
+    for(const auto & [pos, tileData] : m_tiles) {
+        // Sauvegarder les données : position, type d'entité, texture ID, et si c'est un tileset
+        outFile << pos.first << " " << pos.second << " "
+            << tileData.entityType << " "
+            << tileData.textureID << " "
+            << tileData.isTileSet << " ";
+
+        // Si c'est une tuile d'un tileset, on sauvegarde la portion de la texture
+        if(tileData.isTileSet) {
+            outFile << tileData.tileRect.left << " "
+                << tileData.tileRect.top << " "
+                << tileData.tileRect.width << " "
+                << tileData.tileRect.height;
+        }
+        outFile << "\n";
+    }
+
+    outFile.close();
+    std::cout << "Niveau sauvegardé dans " << filename << std::endl;
+}
+Chargement des données
+Lors du chargement du fichier, tu vas récupérer les données sauvegardées et reconstituer chaque tuile en fonction de ces informations :
+
+cpp
+Copier
+void LevelEditor::loadLevel(const std::string& filename) {
+    std::ifstream inFile(filename);
+    if(!inFile.is_open()) {
+        std::cerr << "Erreur : Impossible de charger le fichier " << filename << std::endl;
+        return;
+    }
+
+    m_tiles.clear();
+
+    int x, y, entityType, textureID, isTileSet;
+    while(inFile >> x >> y >> entityType >> textureID >> isTileSet) {
+        TileData tileData;
+        tileData.entityType = entityType;
+        tileData.textureID = textureID;
+        tileData.isTileSet = isTileSet;
+
+        if(isTileSet) {
+            // Si c'est un tileset, on charge les coordonnées du rect
+            int left, top, width, height;
+            inFile >> left >> top >> width >> height;
+            tileData.tileRect = sf::IntRect(left, top, width, height);
+        }
+
+        m_tiles[{x, y}] = tileData;  // Stocke dans la map avec la position
+    }
+
+    inFile.close();
+    std::cout << "Niveau chargé depuis " << filename << std::endl;
+}
+Rendu et Application de la Texture
+Lorsque tu dessines chaque tuile, tu vérifies si c'est une tuile dans un tileset ou une image simple et tu appliques la texture en conséquence :
+
+cpp
+Copier
+void LevelEditor::draw(RenderWindow& window) {
+    for(const auto & [pos, tileData] : m_tiles) {
+        // Création d'une forme pour afficher la tuile
+        sf::RectangleShape tile(sf::Vector2f(TILE_SIZE, TILE_SIZE));
+        tile.setPosition(static_cast<float>(pos.first * TILE_SIZE), static_cast<float>(pos.second * TILE_SIZE));
+
+        if(tileData.isTileSet) {
+            // Si c'est un tileset, on applique la texture à partir de l'ID et de la portion du tileset
+            tile.setTexture(m_tileTextures.at(tileData.textureID).get());
+            tile.setTextureRect(tileData.tileRect);  // On applique la portion de la texture du tileset
+        } else{
+                // Si c'est une image simple, on applique la texture complète
+                tile.setTexture(m_tileTextures.at(tileData.textureID).get());
+        }
+
+        window.draw(tile);  // Dessine la tuile
+    }
+}
+Résumé des Étapes :
+Sauvegarder les données : Lors de la sauvegarde, tu enregistres la position, le type d'entité, l'ID de texture, et si c'est un tileset ou une image simple.
+Charger les données : Lors du chargement, tu reconstitues chaque tuile avec toutes les informations nécessaires pour l'affichage.
+Rendu : Lors du rendu, tu vérifies si la tuile provient d'un tileset ou d'une image simple et tu appliques la texture appropriée.
+Conclusion :
+    Ce système te permet de gérer de manière flexible les tilesets et les images simples.Pour chaque tuile, tu peux soit appliquer une portion d'un tileset, soit appliquer une image complète, tout en conservant les autres informations importantes (position, type d'entité).
+
+

@@ -32,6 +32,8 @@ public:
 	entityType m_entityTile;
 	MouseState m_mouseEditorState;
 
+
+	int m_textureType;
 	bool leftclick;
 	int m_currentTile;
 	string m_currentLevel;
@@ -57,7 +59,8 @@ public:
 	float viewOffsetSpeed;
 	int m_textureId;
 	vector<shared_ptr<Texture>> m_tileTextures;
-	map<pair<int, int>, int> m_tiles;
+	map<pair<int, int>, pair<int, int>> m_tiles;
+
 	RectangleShape m_tileScrollBox;
 	vector<unique_ptr<RectangleShape>> m_tilesShape;
 	vector<unique_ptr<RectangleShape>> m_tilesScrollMenu;
@@ -67,6 +70,14 @@ public:
 	TextureLoader loadTexture;
 
 	const int TILE_SIZE = 32;
+
+
+
+	bool isTileTransparent(const Texture& texture, const IntRect& rect);
+
+	void getNonTransparentTiles(int tileWidth, int tileHeight, int index);
+
+	void getNonTransparentTiles(const sf::Texture& texture, int tileWidth, int tileHeight, int index);
 
 
 

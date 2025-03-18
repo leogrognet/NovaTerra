@@ -9,9 +9,13 @@ LevelEditor::LevelEditor(RenderWindow& window)
         std::cerr << "Erreur : Impossible de charger la police" << std::endl;
     }
 
+
+
     m_textureId = 0;
     string map_tileSet = "assets\\map\\map_tileset";
     loadTexture.loadTexture(map_tileSet, m_tileTextures);
+    getNonTransparentTiles(128, 128, 0);
+
     dropDownMenu(window);
     dropDownMenu(window);
     addSelectorButton(Color::Blue, "Set");
@@ -36,9 +40,9 @@ void LevelEditor::loadLevel(const std::string& filename) {
     m_tiles.clear();
     m_tilesShape.clear(); 
 
-    int x, y, tileID;
-    while (file >> x >> y >> tileID) {
-        m_tiles[{x, y}] = tileID;
+    int x, y, tileID, tileTextureType;
+    while (file >> x >> y >> tileID >> tileTextureType) {
+        m_tiles[{x, y}] = { tileID, tileTextureType };
     }
 
     file.close();
@@ -54,8 +58,8 @@ void LevelEditor::savelevel(const string& filename)
         std::cerr << "Erreur : Impossible de sauvegarder le fichier " << filename << std::endl;
         return;
     }
-    for (auto& [pos, tileID] : m_tiles) {
-        textFile << pos.first << " " << pos.second << " " << tileID << endl;
+    for (auto& [pos, tileData] : m_tiles) {
+        textFile << pos.first << " " << pos.second << " " << tileData.first<<tileData.second << endl;
     }
 }
 
@@ -79,6 +83,50 @@ void LevelEditor::openFileExplorer() {
     }
 
 }
+
+bool LevelEditor::isTileTransparent(const Texture& texture, const IntRect& rect)
+{
+    Image image = texture.copyToImage();
+
+    for (int y = rect.top; y < rect.top + rect.height; ++y) {
+        for (int x = rect.left; x < rect.left + rect.width; ++x) {
+            sf::Color pixelColor = image.getPixel(x, y);
+            if (pixelColor.a > 0) {  
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void LevelEditor::getNonTransparentTiles( int tileWidth, int tileHeight, int index)
+{
+    int textureWidth = m_tileTextures.at(index).get()->getSize().x;
+    int textureHeight = m_tileTextures.at(index).get()->getSize().y;
+
+    // Découpe toutes les tuiles non transparentes et les ajoute
+    for (int y = 0; y < textureHeight; y += tileHeight) {
+        for (int x = 0; x < textureWidth; x += tileWidth) {
+            sf::IntRect rect(x, y, tileWidth, tileHeight);
+
+            // Vérifie si la tuile n'est pas transparente
+            if (!isTileTransparent(*m_tileTextures.at(index).get(), rect)) {
+                // Crée une nouvelle texture découpée et l'ajoute
+                auto tileTexture = std::make_shared<sf::Texture>();
+                tileTexture->loadFromImage(m_tileTextures.at(index)->copyToImage(), rect);
+                m_tileTextures.push_back(tileTexture); // Ajoute la texture découpée
+            }
+        }
+    }
+
+    // Libère la texture d'origine
+    if (index >= 0 && index < m_tileTextures.size()) {
+        m_tileTextures.at(index).reset(); 
+    }
+}
+
+
+
 
 
 void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event, float deltaTime)
@@ -196,10 +244,10 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
         case SET_TILE:
             if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) == m_tiles.end() ||
                 std::find_if(m_tiles.begin(), m_tiles.end(), [](const auto& tile) {
-                    return tile.second == entityType::NOTYPE;
+                    return tile.second.first == entityType::NOTYPE;
                     }) != m_tiles.end())
             {
-                m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = m_entityTile;
+                m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_entityTile, m_textureType};
                 auto rect = make_unique<RectangleShape>();
                 switch (m_entityTile)
                 {
@@ -367,7 +415,7 @@ void LevelEditor::tileSetter(unique_ptr<RectangleShape> tile, Vector2i MousTileP
     tile->setSize(Vector2f(TILE_SIZE, TILE_SIZE));  
     tile->setPosition(Vector2f(MousTilePos.x * TILE_SIZE, MousTilePos.y * TILE_SIZE));  
     if (!m_tileTextures.empty()) {
-        tile->setTexture(m_tileTextures.at(m_entityTile).get());
+        tile->setTexture(m_tileTextures.at(m_tiles.at().get());
     }
     m_tilesShape.push_back(move(tile));
 
@@ -382,7 +430,7 @@ void LevelEditor::updateTiles() {
     m_tilesShape.clear();
     for (const auto& [pos, tileID] : m_tiles) {
         auto rect = make_unique<RectangleShape>();
-        m_entityTile = static_cast<entityType>(tileID);
+        m_entityTile = static_cast<entityType>(tileID.first);
         tileSetter(move(rect), Vector2i(pos.first, pos.second));
     }
 }
