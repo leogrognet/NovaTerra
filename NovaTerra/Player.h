@@ -43,6 +43,13 @@ public:
 
 	void initializeBlackScreen();
 
+	void setState(Player::State newState);
+	State getState();
+
+	void setAction(Player::Action newAction);
+	Action getAction();
+
+
 private:
 
     float m_deltatime = 0;

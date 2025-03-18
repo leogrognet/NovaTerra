@@ -30,6 +30,7 @@
     <ClCompile Include="Plateform.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="VineLadder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
@@ -42,6 +43,7 @@
     <ClInclude Include="Plateform.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="VineLadder.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />

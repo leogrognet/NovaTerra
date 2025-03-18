@@ -145,7 +145,7 @@ void Player::grapplinshoot()
 	if (m_action == Action::HOOK) {
 		m_hookSize += m_deltatime * 110;
 		for (auto& vec : m_wallvec) {
-			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection)) {
+			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection) && vec->getasCollision()) {
 				m_hookCd.restart();
 				m_action = Action::REVERSEHOOK;
 				m_rigidBody.getVelocity() = { 0,0 };
@@ -186,7 +186,10 @@ void Player::grabing()
 		for (auto entity : m_wallvec) {
 			if (Keyboard::isKeyPressed(Keyboard::Z) && grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())){
 			m_rigidBody.getVelocity().y = -100.f;
-				}
+			}
+			else if(Keyboard::isKeyPressed(Keyboard::S) && grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
+				m_rigidBody.getVelocity().y = 100.f;
+			}
 		}		
 	}
 }
@@ -248,6 +251,26 @@ void Player::initializeBlackScreen()
 	m_blackscreen.setFillColor(Color(0, 0, 0, 0));
 	m_blackscreen.setSize({ 2000,2000 });
 	m_blackscreen.setPosition(0,0);
+}
+
+void Player::setState(Player::State newState)
+{
+	m_state = newState;
+}
+
+Player::State Player::getState()
+{
+	return State();
+}
+
+void Player::setAction(Player::Action newAction)
+{
+	m_action = newAction;
+}
+
+Player::Action Player::getAction()
+{
+	return Action();
 }
 
 void Player::updateDirection()
