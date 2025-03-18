@@ -16,7 +16,6 @@ public:
 	int getID() override;
 
 private:
-	Texture m_texture;  // Pointeur partagé vers la texture
-	IntRect m_textureRect;         // Section de la texture
+	Texture m_texture;
 
 };

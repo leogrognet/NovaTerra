@@ -105,16 +105,14 @@ void Player::handleInput()
 			if (y < -50) { m_direction = Direction::UP; }
 			if (y > 50) { m_direction = Direction::DOWN; }
 
-			// Direction diagonale haut
 			if (y < -50 && x > 50) { m_direction = Direction::UPRIGHT; }
 			if (y < -50 && x < -50) { m_direction = Direction::UPLEFT; }
 
-			// Direction diagonale bas
 			if (y > 50 && x > 50) { m_direction = Direction::DOWNRIGHT; }
 			if (y > 50 && x < -50) { m_direction = Direction::DOWNLEFT; }
 
 		if (Joystick::isButtonPressed(0, 0) && m_rigidBody.getIsGrounded()) {
-			m_rigidBody.getVelocity().y = -500;
+			m_rigidBody.getVelocity().y = -350;
 		}
 
 			if (Joystick::isButtonPressed(0, 1) && m_hookCd.getElapsedTime().asSeconds() > 1) { // Assuming button 1 is the dash button
@@ -145,7 +143,7 @@ void Player::dash()
 void Player::grapplinshoot()
 {
 	if (m_action == Action::HOOK) {
-		m_hookSize += m_deltatime * 85;
+		m_hookSize += m_deltatime * 110;
 		for (auto& vec : m_wallvec) {
 			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection)) {
 				m_hookCd.restart();
@@ -161,6 +159,7 @@ void Player::grapplinshoot()
 		}		
 	}
 	if (m_action == Action::REVERSEHOOK) {
+		m_rigidBody.getVelocity().y = -981.f * m_deltatime / 2;
 		m_rigidBody.getVelocity().x = 400.f * m_stockedDirection.x;
 		m_hookSize -= m_deltatime * 150;
 		m_hook.setScale(m_hookSize * m_stockedDirection.x , 2.5f );
