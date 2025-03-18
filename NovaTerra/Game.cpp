@@ -26,6 +26,7 @@ void Game::run() {
     vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true,true));
     vec.push_back(make_shared<MovePlat>(500, 100, Vector2f(1, 1), true,true, textureListTest));
     vec.push_back(make_shared<Vine>(100, 100, 1, 5, true, false,textureListTest));
+    vec.push_back(make_shared<Door>(500, 800, Vector2f(1,1), true, true, textureListTest));
 
     vec.push_back(make_shared<GolemEnemy>(500, 700, false, false));
 
@@ -43,7 +44,6 @@ void Game::run() {
         //scroll->move(1.f, 0.f);
         scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
-
 
         window.clear();
 		background.update(deltatime);

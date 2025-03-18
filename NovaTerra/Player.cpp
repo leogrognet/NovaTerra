@@ -22,8 +22,6 @@ Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool i
 
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
-	cout << m_rigidBody.getVelocity().x << " " << m_rigidBody.getVelocity().y << endl;
-
 	m_deltatime = deltatime;
 	if (m_state != State::DEAD) {
 
@@ -63,7 +61,7 @@ void Player::draw(RenderWindow& window)
 void Player::handleInput()
 {
 	// D�sactiv� les inputs si le joueur est en train de hook ou de grab
-	if (Keyboard::isKeyPressed(Keyboard::E)) {
+	if (Keyboard::isKeyPressed(Keyboard::N)) {
 		m_hp = 0;
 	}
 	if (m_action != Action::REVERSEHOOK && m_action != Action::GRABING) {
