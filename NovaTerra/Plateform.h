@@ -14,8 +14,7 @@ public:
 	int getID() override;
 
 private:
-	shared_ptr<Texture> m_texture;  // Pointeur partagé vers la texture
-	IntRect m_textureRect;         // Section de la texture
-	Sprite m_shape;
+	shared_ptr<Texture> m_texture;
+	IntRect m_textureRect;
 
 };

@@ -24,7 +24,6 @@ pair<shared_ptr<Texture>, IntRect> TextureLoader::GetTexture(int type)
     {
         loadTexture("tileset", "../assets/tiles1.png");
 
-        // Retourne la texture et le rect correspondant
         if (m_mapTextures.find("tileset") != m_mapTextures.end()) {
             return { m_mapTextures["tileset"], IntRect(128, 384, 128, 128) };
         }
