@@ -1,6 +1,6 @@
 #include "GolemEnemy.h"
 
-GolemEnemy::GolemEnemy(float posX, float posY, bool isStatic, bool asCollision): Entity(posX, posY, isStatic, asCollision),m_golemState(State::IDLE) {
+GolemEnemy::GolemEnemy(float posX, float posY, bool isStatic, bool asCollision): Entity(posX, posY, isStatic, asCollision, textureList),m_golemState(State::IDLE) {
     golemTexture.loadFromFile("../assets/fries.png");
     m_shape.setTexture(golemTexture);
     m_shape.setPosition(posX, posY);

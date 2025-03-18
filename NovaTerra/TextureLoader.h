@@ -1,22 +1,20 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <unordered_map>
-#include <string>
-#include <memory>
+#include <filesystem>
+#include <iostream>
 
-using namespace std;
+
+namespace fs = std::filesystem;
+
 using namespace sf;
+using namespace std;
 
 class TextureLoader {
-public:
-
-	bool loadTexture(const string& name, const string& filename);
-	pair<shared_ptr<Texture>, IntRect> GetTexture(int type);
-
 private:
-	unordered_map <string, shared_ptr<Texture>> m_mapTextures;
-	unordered_map<string, IntRect> m_mapTileRects;
-	unordered_map<string, string> m_mapFilePaths;
+	vector<string> imagesPath;
 
 
+public:
+	void loadTexture(string& imagePathType, vector<shared_ptr<Texture>>& textureList);
+	TextureLoader();
 };

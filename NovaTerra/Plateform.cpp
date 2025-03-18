@@ -1,20 +1,15 @@
 #include "Plateform.h"
 
-Plateform::Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, TextureLoader& textureLoader) :Entity(posX, posY, isStatic, asCollision)
+Plateform::Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) :Entity(posX, posY, isStatic, asCollision, texture)
 {
-    auto textureData = textureLoader.GetTexture(getID());
 
-    if (textureData.first) {
-        m_texture = textureData.first;
-        m_textureRect = textureData.second;
-
-        if (m_textureRect.width > 0 && m_textureRect.height > 0) {
-            m_shape.setTexture(*m_texture);
-            m_shape.setTextureRect(m_textureRect);
-            m_shape.setScale(1.f, 1.f);
-            m_shape.setPosition(posX, posY);
-        }
+    if (!textureList.empty()) {
+        m_shape.setTexture(*textureList.at(0).get());
+       // m_shape.setTextureRect(m_textureRect);
+        m_shape.setScale(1.f, 1.f);
+        m_shape.setPosition(posX, posY);
     }
+    
 }
 
 void Plateform::draw(RenderWindow& window) {
@@ -23,7 +18,8 @@ void Plateform::draw(RenderWindow& window) {
 
 void Plateform::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
-	Entity::update(deltaTime, colliders);
+    Entity::update(deltaTime, colliders);
+
 }
 
 int Plateform::getID()

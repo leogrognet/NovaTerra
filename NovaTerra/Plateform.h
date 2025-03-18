@@ -7,15 +7,16 @@ using namespace std;
 class Plateform : public Entity {
 public:
 
-	Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, TextureLoader& textureLoader);
+
+
+	Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture);
 
 	void draw(RenderWindow& window) override;
 	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;
 	int getID() override;
 
 private:
-	shared_ptr<Texture> m_texture;  // Pointeur partagé vers la texture
+	Texture m_texture;  // Pointeur partagé vers la texture
 	IntRect m_textureRect;         // Section de la texture
-	Sprite m_shape;
 
 };

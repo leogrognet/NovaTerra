@@ -17,7 +17,11 @@ private:
     const int WIDTH;
     const int HEIGHT;
     RenderWindow window;
+    vector<shared_ptr<Texture>> textureListTest;
+    TextureLoader loadertest;
+
 public:
+
     Game(const int _WIDTH, const int _HEIGHT);
     ~Game();
     void run();

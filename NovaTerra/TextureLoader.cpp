@@ -1,37 +1,40 @@
-#include "TextureLoader.h"
-#include <iostream>
+﻿#include "TextureLoader.h"
 
-bool TextureLoader::loadTexture(const string& name, const string& filename)
+void TextureLoader::loadTexture(string& imagePathType, vector<shared_ptr<Texture>>& textureList)
 {
-    if (m_mapTextures.find(name) != m_mapTextures.end()) {
-        return true;
-    }
+	try {
 
-    auto texture = make_shared<Texture>();
-    if (!texture->loadFromFile(filename)) {
-        return false;
-    }
+		try {
+			for (const auto& entry : fs::directory_iterator(imagePathType)) {
+				imagesPath.push_back(entry.path().string());
+			}
+		}
+		catch (const fs::filesystem_error& e) {
+			std::cerr << "Erreur de syst�me de fichiers lors de l'it�ration du r�pertoire " << imagePathType
+				<< " : " << e.what() << std::endl;
+		}
 
-    m_mapTextures[name] = texture;
-    m_mapFilePaths[name] = filename;
-    return true;
+		for (auto image : imagesPath) {
+			try {
+				textureList.push_back(std::make_shared<sf::Texture>());
+				if (!textureList.back()->loadFromFile(image)) {
+					std::cerr << "Erreur : impossible de charger la texture depuis " << image << std::endl;
+				}
+				textureList.back()->setSmooth(true);
+			}
+			catch (const exception& e) {
+				std::cerr << "Erreur lors du chargement de la texture " << image << " : " << e.what() << std::endl;
+			}
+		}
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Une erreur s'est produite lors du chargement des textures : " << e.what() << std::endl;
+	}
 }
 
-pair<shared_ptr<Texture>, IntRect> TextureLoader::GetTexture(int type)
-{
-    switch (type) {
-    case 3:
-    {
-        loadTexture("tileset", "../assets/tiles1.png");
 
-        // Retourne la texture et le rect correspondant
-        if (m_mapTextures.find("tileset") != m_mapTextures.end()) {
-            return { m_mapTextures["tileset"], IntRect(128, 384, 128, 128) };
-        }
-        break;
-    }
-    default:
-        return { nullptr, IntRect() };
-    }
-    return { nullptr, IntRect() };
+
+TextureLoader::TextureLoader()
+{
 }
+

@@ -1,12 +1,12 @@
 #include "Game.h"
 #include "TextureLoader.h"
 
-TextureLoader textureloader;
+//TextureLoader textureloader;
 
 Background background("assets/parallaxe/bg.png", - 50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
-    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0", Style::Fullscreen) {
+    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0") {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
@@ -20,9 +20,10 @@ void Game::run() {
     Clock clock;
 
     vector<shared_ptr<Entity>> vec;
-
-    vec.push_back(make_shared<Plateform>(100, 800, Vector2f(10, 1), true,true, textureloader));
-    vec.push_back(make_shared<Plateform>(300, 400, Vector2f(5, 5), true,true, textureloader));
+    string image =  "assets/map/map_tileset";
+    loadertest.loadTexture(image, textureListTest);
+    vec.push_back(make_shared<Plateform>(100, 800, Vector2f(10, 1), true,true, textureListTest));
+    vec.push_back(make_shared<Plateform>(300, 400, Vector2f(5, 5), true,true, textureListTest));
     vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true,true));
     vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true,true));
 

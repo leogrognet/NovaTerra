@@ -6,6 +6,16 @@ using namespace sf;
 using namespace std;
 
 
+enum entityType
+{
+
+	GOLEM,
+	PLAYER,
+	TILE,
+	NOTYPE,
+};
+
+
 class Entity {
 protected:
 
@@ -14,6 +24,7 @@ protected:
 	RigidBody m_rigidBody;
 	RectangleShape m_hitbox;
 	Vector2f m_forcedVelocity;
+	vector<shared_ptr<Texture>> textureList;
 
 
 public:
@@ -28,7 +39,8 @@ public:
 	virtual Vector2f getVelocity();
 	virtual void setVelocity(Vector2f velocity);
 
-	Entity(float posX, float posY,bool isStatic, bool asCollision);
+	Entity(float posX, float posY, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture);
+
 
 	virtual void takeDamage();
 	virtual bool isDead();
