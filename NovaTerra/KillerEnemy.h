@@ -5,7 +5,6 @@
 #include <iostream>
 #include "Entity.h"
 #include "Player.h"
-#include "RigidBody.h"
 
 using namespace sf;
 using namespace std;
@@ -37,7 +36,7 @@ private:
 
     Texture killerTexture;
 
-    RigidBody m_rigidBody; 
+    //RigidBody m_rigidBody; 
 
     float m_KillerDashSpeed = 500.f;
     float m_KillerDetectionRange = 250.f;
