@@ -6,6 +6,7 @@ KillerEnemy::KillerEnemy(float posX, float posY, bool isStatic, bool hasCollisio
     velocity(0.f, 0.f),
     dashDirection(0.f, 0.f)
 {
+
     if (!killerTexture.loadFromFile("assets/croc/killercroc.png")) {
         std::cerr << "KillerEnemy: Failed to load texture." << std::endl;
     }
@@ -68,7 +69,7 @@ void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
     }
 }
 
-void KillerEnemy::dashToPlayer(const shared_ptr<Entity>& player) {
+void KillerEnemy::dashToPlayer(const shared_ptr<Entity>& colliders) {
     Vector2f direction = player->getSprite().getPosition() - m_shape.getPosition();
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 

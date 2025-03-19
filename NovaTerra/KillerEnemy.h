@@ -35,11 +35,12 @@ private:
 
     Texture killerTexture;
 
+    RigidBody m_rigidBody; 
+
     float m_KillerDashSpeed = 500.f;
     float m_KillerDetectionRange = 250.f;
-    float m_KillerKashCooldown = 1.0f;
-    float m_KillerCooldownClock = 0.f;
+    float m_KillerDashCooldown = 1.0f;
+	Clock m_KillerCooldownClock;
 
-    RigidBody m_rigidBody; 
 
 };
