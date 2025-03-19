@@ -32,10 +32,6 @@
     <ClCompile Include="Plateform.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="test.cpp">
-      <DependentUpon>test.idl</DependentUpon>
-      <SubType>Code</SubType>
-    </ClCompile>
     <ClCompile Include="VineLadder.cpp" />
     <ClCompile Include="tinyfiledialogs.c" />
   </ItemGroup>
@@ -51,10 +47,6 @@
     <ClInclude Include="Plateform.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="test.h">
-      <DependentUpon>test.idl</DependentUpon>
-      <SubType>Code</SubType>
-    </ClInclude>
     <ClInclude Include="VineLadder.h" />
     <ClInclude Include="tinyfiledialogs.h" />
   </ItemGroup>
@@ -71,11 +63,6 @@
     <ClCompile Include="ScriptBox.cpp" />
     <ClCompile Include="Scroll.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Midl Include="test.idl">
-      <SubType>Designer</SubType>
-    </Midl>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

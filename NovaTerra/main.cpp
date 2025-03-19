@@ -32,23 +32,12 @@ int main()
                 window.close();
         }
 
-        // Appeler la fonction de gestion des entr?es (g?re aussi la molette de la souris)
-        editor.handleInput(window, tileView, event, deltaTime);
-
         // Mise ? jour du jeu (si n?cessaire)
-        editor.update();
+        editor.update(window, tileView, Ui_View, event, deltaTime);
 
-        // Effacer l'?cran
-        window.clear();
 
-        // Dessiner les ?l?ments
-        editor.draw(window, tileView, Ui_View);
 
-        // Dessiner le menu d?roulant
-
-        // Afficher la fen?tre
-        window.display();
+        
     }
-
     return 0;
 }
