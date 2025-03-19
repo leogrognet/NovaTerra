@@ -288,83 +288,87 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
 
     }
     timeClicked += deltaTime;
-    if (timeClicked > 0.1f) {
-        timeClicked = 0;
+
         if (Mouse::isButtonPressed(Mouse::Left) && find_if(m_selectorMenu.begin(), m_selectorMenu.end(), [&](const auto& button) {
             return button->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window))); }) == m_selectorMenu.end())
         {
-            switch (m_mouseEditorState)
-            {
-            case SELECT:
-                if (!m_subMenu) {
-                   m_vectorIndex = 0;
-                    for (auto& tileMenu : m_FileTilesBordersMenu) {
-                        if (tileMenu->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
-                            tileMenu->setOutlineColor(Color::White);
-                            tileMenu->setOutlineThickness(5);
-                            if (tileMenu == m_FileTilesBordersMenu.at(m_vectorIndex)) {
-                                if (m_vectorIndex < 3) {
-                                    m_entityTile = static_cast<entityType>(m_vectorIndex);
+            
+                switch (m_mouseEditorState)
+                {
+                case SELECT:
+                    if (!m_subMenu) {
+                        m_vectorIndex = 0;
+                        for (auto& tileMenu : m_FileTilesBordersMenu) {
+                            if (tileMenu->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
+                                tileMenu->setOutlineColor(Color::White);
+                                tileMenu->setOutlineThickness(5);
+                                if (tileMenu == m_FileTilesBordersMenu.at(m_vectorIndex)) {
+                                    if (m_vectorIndex < 3) {
+                                        m_entityTile = static_cast<entityType>(m_vectorIndex);
+                                    }
+                                    if (m_vectorIndex < 3) {
+                                        m_tileState = static_cast<tileState>(m_vectorIndex);
+                                    }
+                                    if (timeClicked > 0.1f) {
+                                        timeClicked = 0;
+                                        m_subMenu = true;
+                                        m_textureId = m_vectorIndex;
+                                    }
                                 }
-                                if (m_vectorIndex < 3) {
-                                    m_tileState = static_cast<tileState>(m_vectorIndex);
-                                }
-                                m_subMenu = true;
-                                m_textureId = m_vectorIndex;
+                            }
+                            else {
+                                tileMenu->setOutlineColor(Color::Transparent);
+                                tileMenu->setOutlineThickness(0);
+                            }
+                            if (m_vectorIndex < m_FileTilesScrollMenu.size()) {
+                                m_vectorIndex++;
                             }
                         }
-                        else {
-                            tileMenu->setOutlineColor(Color::Transparent);
-                            tileMenu->setOutlineThickness(0);
-                        }
-                        if (m_vectorIndex < m_FileTilesScrollMenu.size()) {
-                            m_vectorIndex++;
-                        }
                     }
-                }
-                else if (m_subMenu && m_tileState == 0) {
-                    m_vectorIndex = 1;
-                    subMenuHandler(m_SeperatedTilesBordersMenuType, window, m_vectorIndex);
-                }
-                else if (m_subMenu && m_tileState == 1) {
-                    m_vectorIndex = 1;
-                    subMenuHandler(m_SeperatedTilesBordersMenuType, window, m_vectorIndex);
-                }
+                    else if (m_subMenu && m_tileState == 0) {
+                        m_vectorIndex = 1;
+                        subMenuHandler(m_SeperatedTilesBordersMenuType, window, m_vectorIndex);
+                    }
+                    else if (m_subMenu && m_tileState == 1) {
+                        m_vectorIndex = 1;
+                        subMenuHandler(m_SeperatedTilesBordersMenuType, window, m_vectorIndex);
+                    }
 
-                break;
-            case DELETE_TILE:
-                if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) != m_tiles.end()) {
+                    break;
+                case DELETE_TILE:
+                    if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) != m_tiles.end()) {
 
-                    m_tiles.erase({ mouseTilePosition.x, mouseTilePosition.y });
+                        m_tiles.erase({ mouseTilePosition.x, mouseTilePosition.y });
 
 
-                    m_tilesShape.erase(
-                        remove_if(m_tilesShape.begin(), m_tilesShape.end(),
-                            [&](const shared_ptr<RectangleShape>& rect) {
-                                return rect->getPosition() ==
-                                    Vector2f(mouseTilePosition.x * TILE_SIZE,
-                                        mouseTilePosition.y * TILE_SIZE);
-                            }),
-                        m_tilesShape.end());
+                        m_tilesShape.erase(
+                            remove_if(m_tilesShape.begin(), m_tilesShape.end(),
+                                [&](const shared_ptr<RectangleShape>& rect) {
+                                    return rect->getPosition() ==
+                                        Vector2f(mouseTilePosition.x * TILE_SIZE,
+                                            mouseTilePosition.y * TILE_SIZE);
+                                }),
+                            m_tilesShape.end());
+                    }
+                    break;
+
+                case SET_TILE:
+                    if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) == m_tiles.end() ||
+                        std::find_if(m_tiles.begin(), m_tiles.end(), [](const auto& tile) {
+                            return tile.second.first == entityType::NOTYPE;
+                            }) != m_tiles.end())
+                    {
+                        m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_entityTile, m_textureType };
+                        auto rect = make_unique<RectangleShape>();
+                        cout << "Index" << m_textureId << m_ActualTileTexture.size() << endl;
+                        tileSetter(move(rect), mouseTilePosition, m_textureId);
+                    }
+                    break;
                 }
-                break;
-
-            case SET_TILE:
-                if (m_tiles.find({ mouseTilePosition.x, mouseTilePosition.y }) == m_tiles.end() ||
-                    std::find_if(m_tiles.begin(), m_tiles.end(), [](const auto& tile) {
-                        return tile.second.first == entityType::NOTYPE;
-                        }) != m_tiles.end())
-                {
-                    m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_entityTile, m_textureType };
-                    auto rect = make_unique<RectangleShape>();
-                    cout << "Index" << m_textureId << m_ActualTileTexture.size() << endl;
-                    tileSetter(move(rect), mouseTilePosition, m_textureId);
-                }
-                break;
             }
 
-        }
-    }
+        
+    
 
 
     if (Keyboard::isKeyPressed(Keyboard::Z)) {
@@ -397,29 +401,11 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
         {
 
         case SELECT:
-            if (event.mouseWheelScroll.delta > 0) {
-
-                if (m_FileTilesScrollMenu.back()->getPosition().y >= maxScrollY) {
-                    for (auto& tilesButton : m_FileTilesScrollMenu) {
-                        tilesButton->move(0, -scrollSpeed * deltaTime);
-                    }
-                    for (auto& tilesButton : m_FileTilesBordersMenu) {
-                        tilesButton->move(0, -scrollSpeed * deltaTime);
-                    }
-                }
-                event.mouseWheelScroll.delta = 0;
-
+            if (!m_subMenu) {
+                handleMenuScroll(event, deltaTime, m_FileTilesScrollMenu, m_FileTilesBordersMenu, scrollSpeed, minScrollY, maxScrollY);
             }
-            else if (event.mouseWheelScroll.delta < 0) {
-                if (m_FileTilesScrollMenu.front()->getPosition().y <= minScrollY) {
-                    for (auto& tilesButton : m_FileTilesScrollMenu) {
-                        tilesButton->move(0, scrollSpeed * deltaTime);
-                    }
-                    for (auto& tilesButton : m_FileTilesBordersMenu) {
-                        tilesButton->move(0, scrollSpeed * deltaTime);
-                    }
-                }
-                event.mouseWheelScroll.delta = 0;
+            else {
+                handleMenuScroll(event, deltaTime, m_SeperatedTilesScrollMenuType, m_SeperatedTilesBordersMenuType, scrollSpeed, minScrollY, maxScrollY);
             }
             break;
         default:
@@ -437,6 +423,40 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
 
     tileView.zoom(baseZoom);
 }
+
+
+void LevelEditor::handleMenuScroll(Event& event, float deltaTime,
+    std::vector<std::shared_ptr<Sprite>>& scrollMenu,
+    std::vector<std::shared_ptr<RectangleShape>>& bordersMenu,
+    float scrollSpeed, float minScrollY, float maxScrollY)
+{
+    if (event.mouseWheelScroll.delta > 0) {
+        // Défilement vers le haut
+        if (scrollMenu.back()->getPosition().y >= maxScrollY) {
+            for (auto& tilesButton : scrollMenu) {
+                tilesButton->move(0, -scrollSpeed * deltaTime);
+            }
+            for (auto& tilesButton : bordersMenu) {
+                tilesButton->move(0, -scrollSpeed * deltaTime);
+            }
+        }
+    }
+    else if (event.mouseWheelScroll.delta < 0) {
+        // Défilement vers le bas
+        if (scrollMenu.front()->getPosition().y <= minScrollY) {
+            for (auto& tilesButton : scrollMenu) {
+                tilesButton->move(0, scrollSpeed * deltaTime);
+            }
+            for (auto& tilesButton : bordersMenu) {
+                tilesButton->move(0, scrollSpeed * deltaTime);
+            }
+        }
+    }
+
+    // Réinitialisation du delta pour éviter des problèmes futurs
+    event.mouseWheelScroll.delta = 0;
+}
+
 #pragma endregion
 
 
@@ -595,25 +615,35 @@ void LevelEditor::subMenuHandler(std::vector<std::shared_ptr<RectangleShape>>& t
             // Si la souris est au-dessus de l'élément du menu
             tileMenuPtr->setOutlineColor(Color::White);
             tileMenuPtr->setOutlineThickness(5);
+            if (timeClicked > 0.1f) {
+                timeClicked = 0;
+                if (tileMenuPtr == tileMenu.at(0)) {
+                    m_subMenu = false;
+                    m_textureId = index;
+                }
+            }
+                if (tileMenuPtr == tileMenu.at(index) && index != 0) {
+                    m_textureId = index;
+                }
+                if (m_vectorIndex < m_ActualTileTexture.size()) {
+                    cout << "Index" << m_textureId << m_ActualTileTexture.size() << endl;
 
-            if (tileMenuPtr == tileMenu.at(0)) {
-                m_subMenu = false;
-                m_textureId = index;
-            }
-            if (tileMenuPtr == tileMenu.at(index) && index !=0) {
-                m_textureId = index;
-            }
+                    m_vectorIndex++;
+                }
+            
+           
         }
         else {
             // Sinon, on réinitialise l'apparence de l'élément
             tileMenuPtr->setOutlineColor(Color::Transparent);
             tileMenuPtr->setOutlineThickness(0);
-        }
-        if (m_vectorIndex < m_ActualTileTexture.size()) {
-            cout << "Index" << m_textureId << m_ActualTileTexture.size() << endl;
+            if (m_vectorIndex < m_ActualTileTexture.size()) {
+                cout << "Index" << m_textureId << m_ActualTileTexture.size() << endl;
 
-            m_vectorIndex++;
+                m_vectorIndex++;
+            }
         }
+        
     }
 }
 

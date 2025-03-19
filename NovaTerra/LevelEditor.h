@@ -103,6 +103,8 @@ private:
     // 6.3 Gestion des entrées
     void handleInput(RenderWindow& window, View& tileView, Event& event, float deltaTime);
 
+    void handleMenuScroll(Event& event, float deltaTime, std::vector<std::shared_ptr<Sprite>>& scrollMenu, std::vector<std::shared_ptr<RectangleShape>>& bordersMenu, float scrollSpeed, float minScrollY, float maxScrollY);
+
     // 6.4 Dessin des éléments
     void draw(RenderWindow& window, View& tileView, View& Ui_View);
     void updateTiles();
