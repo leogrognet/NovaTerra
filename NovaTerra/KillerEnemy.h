@@ -31,6 +31,7 @@ private:
 	State m_KillerState;
 
     Vector2f velocity;
+	Vector2f position;
     Vector2f dashDirection;
 
     Texture killerTexture;

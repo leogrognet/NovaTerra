@@ -8,7 +8,7 @@ KillerEnemy::KillerEnemy(float posX, float posY, bool isStatic, bool hasCollisio
 {
 
     if (!killerTexture.loadFromFile("assets/croc/killercroc.png")) {
-        std::cerr << "KillerEnemy: Failed to load texture." << std::endl;
+        cerr << "KillerEnemy: Failed to load texture." << endl;
     }
 
     m_shape.setSize(Vector2f(48.f, 48.f));
@@ -46,7 +46,7 @@ void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
 
     if (!player) return;
 
-    float distanceToPlayer = std::abs(player->getSprite().getPosition().x - m_shape.getPosition().x);
+    float distanceToPlayer = abs(player->getSprite().getPosition().x - m_shape.getPosition().x);
 
     switch (m_KillerState) {
     case State::IDLE:
@@ -69,7 +69,7 @@ void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
     }
 }
 
-void KillerEnemy::dashToPlayer(const shared_ptr<Entity>& colliders) {
+void KillerEnemy::dashToPlayer(const vector<shared_ptr<Entity>>& colliders) {
     Vector2f direction = player->getSprite().getPosition() - m_shape.getPosition();
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 
