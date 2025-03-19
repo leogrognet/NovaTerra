@@ -69,7 +69,7 @@ void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
     }
 }
 
-void KillerEnemy::dashToPlayer(const vector<shared_ptr<Entity>>& colliders) {
+void KillerEnemy::dashToPlayer(const shared_ptr<Entity>& player) {
     Vector2f direction = player->getSprite().getPosition() - m_shape.getPosition();
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 
@@ -82,7 +82,7 @@ void KillerEnemy::dashToPlayer(const vector<shared_ptr<Entity>>& colliders) {
 }
 
 void KillerEnemy::stopAndCooldown(float deltaTime) {
-    if (m_KillerCooldownClock.getElapsedTime().asSeconds() >= m_KillerKashCooldown) {
+    if (m_KillerCooldownClock.getElapsedTime().asSeconds() >= m_KillerDashCooldown) {
         m_KillerState = State::IDLE;
     }
 }

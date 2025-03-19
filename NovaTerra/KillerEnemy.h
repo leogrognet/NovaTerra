@@ -16,16 +16,17 @@ public:
 
     KillerEnemy(float posX, float posY, bool isStatic, bool hasCollision);
 
-    void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)override;
+    void update(float deltaTime, const vector<shared_ptr<Entity>>& player)override;
     void draw(RenderWindow& window) override;
     int getID()override;
 
 
 private:
 
-    void updateFSM(const vector<shared_ptr<Entity>>& colliders);
-    void dashToPlayer(const vector<shared_ptr<Entity>>& colliders);
-	void stopAndCooldown();
+    void updateFSM(const vector<shared_ptr<Entity>>& plqyer);
+    void dashToPlayer(const shared_ptr<Entity>& player);
+    void stopAndCooldown(float deltaTime);
+
 
     RectangleShape m_shape;
 	State m_KillerState;
