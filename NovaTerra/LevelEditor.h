@@ -25,9 +25,10 @@ enum MouseState {
 };
 
 enum tileState {
+    NORMAL_TILE,
     BIOME_1,
     BIOME_2,
-    BIOME_3
+    BIOME_3,
 };
 
 class LevelEditor {
@@ -37,6 +38,7 @@ public:
 
     // 2. Méthode principale de mise à jour
     void update(RenderWindow& window, View& tileView, View& Ui_view, Event& event, float deltaTime);
+    vector<shared_ptr<Texture>> m_SperatedTileTextures_1;
 
 private:
     // 3. Variables membres
@@ -48,7 +50,6 @@ private:
     int m_textureType;
     bool m_subMenu;
     int m_currentTile;
-    int m_vectorIndex = 0;
     string m_currentLevel;
     float viewOffsetSpeed;
     int m_textureId;
@@ -59,15 +60,14 @@ private:
     // 4. Structures de données
     vector<shared_ptr<Texture>> m_FileTileTextures;
     vector<shared_ptr<Texture>> m_ActualTileTexture;
-    vector<shared_ptr<Texture>> m_SperatedTileTextures_1;
     vector<shared_ptr<Texture>> m_SperatedTileTextures_2;
 
     map<pair<int, int>, pair<int, int>> m_tiles;
     vector<shared_ptr<RectangleShape>> m_tilesShape;
 
 
-    vector<shared_ptr<Sprite>> m_FileTilesScrollMenu;
-    vector<shared_ptr<RectangleShape>> m_FileTilesBordersMenu;
+    vector<shared_ptr<Sprite>> m_TilesScrollMenu;
+    vector<shared_ptr<RectangleShape>> m_TilesBordersMenu;
 
     
     vector<shared_ptr<RectangleShape>> m_SeperatedTilesBordersMenuType;
@@ -83,6 +83,9 @@ private:
 
     vector<shared_ptr<RectangleShape>> m_selectorMenu;
     vector<unique_ptr<Text>> m_selectorMenuTexts;
+
+
+    vector<vector<shared_ptr<Texture>>> m_allTextureVector;
 
     // 5. Objets SFML
     RectangleShape m_tileScrollBox;
@@ -110,13 +113,14 @@ private:
     void updateTiles();
     void tileSetter(shared_ptr<RectangleShape> tile, Vector2i MousTilePos, int textureIndex);
 
+    void subMenuHandler(std::vector<std::shared_ptr<RectangleShape>>& tileMenu, RenderWindow& window);
+
 
     // 6.5 Méthodes utilitaires
     bool isTileTransparent(const Texture& texture, const IntRect& rect);
     vector<shared_ptr<Texture>> getNonTransparentTiles(int tileWidth, int tileHeight, int index);
 
     
-    void subMenuHandler(std::vector<std::shared_ptr<RectangleShape>>& tileMenu, RenderWindow& window, int textureId);
 
 
 };

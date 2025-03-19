@@ -12,34 +12,22 @@ LevelEditor::LevelEditor(RenderWindow& window)
     if (!m_font.loadFromFile("assets/font/default.ttf")) {
         std::cerr << "Erreur : Impossible de charger la police" << std::endl;
     }
-    m_vectorIndex = 0;
-
-
     m_textureId = 0;
     string map_tileSet = "assets\\map\\map_tileset";
     loadTexture.loadTexture(map_tileSet, m_FileTileTextures);
 
-    
-    std::cout << "Nombre de textures : " << m_FileTileTextures.size() << std::endl;
 
     
     
     m_SperatedTileTextures_1 = getNonTransparentTiles(128, 128, 0);
-    m_SperatedTileTextures_2 = getNonTransparentTiles(485, 120, 2);
+    m_SperatedTileTextures_2 = getNonTransparentTiles(128, 128, 1);
     if (!m_FileTileTextures.empty()) {
-        auto firstElement = m_FileTileTextures.front(); 
+        m_FileTileTextures.insert(m_FileTileTextures.begin(), std::move((m_FileTileTextures.back())));
+        m_SperatedTileTextures_1.insert(m_SperatedTileTextures_1.begin(), m_FileTileTextures.front());
 
-        m_SperatedTileTextures_1.insert(m_SperatedTileTextures_1.begin(), std::move(firstElement));
-
-        m_SperatedTileTextures_2.insert(m_SperatedTileTextures_2.begin(), m_FileTileTextures.front()); // Copie du shared_ptr
+        m_SperatedTileTextures_2.insert(m_SperatedTileTextures_2.begin(), m_SperatedTileTextures_1.front());
     }
 
-    dropDownMenu(window, m_FileTilesBordersMenu, m_FileTilesScrollMenu, m_FileTileTextures);
-
-
-
-    dropDownMenu(window, m_SeperatedTilesBordersMenu_1, m_SeperatedTilesScrollMenu_1, m_SperatedTileTextures_1);
-    dropDownMenu(window, m_SeperatedTilesBordersMenu_2, m_SeperatedTilesScrollMenu_2, m_SperatedTileTextures_2);
     
     addSelectorButton(Color::Blue, "Set");
     addSelectorButton(Color::Red, "Delete");
@@ -49,6 +37,13 @@ LevelEditor::LevelEditor(RenderWindow& window)
     m_ActualTileTexture = m_SperatedTileTextures_1;
     m_SeperatedTilesBordersMenuType = m_SeperatedTilesBordersMenu_1;
     m_SeperatedTilesScrollMenuType = m_SeperatedTilesScrollMenu_1;
+
+    m_allTextureVector.push_back(m_FileTileTextures);
+    m_allTextureVector.push_back(m_SperatedTileTextures_1);
+    m_allTextureVector.push_back(m_SperatedTileTextures_2);
+    dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(0));
+
+    
 }
 #pragma endregion
 
@@ -83,7 +78,7 @@ void LevelEditor::savelevel(const string& filename)
         return;
     }
     for (auto& [pos, tileData] : m_tiles) {
-        textFile << pos.first << " " << pos.second << " " << tileData.first<<tileData.second << endl;
+        textFile << pos.first << " " << pos.second << " " << tileData.first<< " " << tileData.second << endl;
     }
 }
 
@@ -115,11 +110,13 @@ void LevelEditor::openFileExplorer() {
 
 void LevelEditor::dropDownMenu(RenderWindow& window, vector<shared_ptr<RectangleShape>>& tileBordersMenu, vector<shared_ptr<Sprite>>& tilesScrollMenu, vector<shared_ptr<Texture>>& tileTextures)
 {
+    tileBordersMenu.clear();
+    tilesScrollMenu.clear();
     const float spacing = 50.f;
     const float startX = 50.f;
     const float sizeX = 50.f;
     const float sizeY = 50.f;
-    const float startY = 100.f;
+    const float startY = 10.f;
 
     m_tileScrollBox.setSize(Vector2f(50.f, window.getSize().y));
     m_tileScrollBox.setPosition(50.f, 0.f);
@@ -134,49 +131,38 @@ void LevelEditor::dropDownMenu(RenderWindow& window, vector<shared_ptr<Rectangle
             newY = lastButton->getPosition().y + lastButton->getGlobalBounds().height + spacing;
         }
         else {
-            cout << "vide";
             newY = startY;
         }
 
-        // Vérification de la validité de texturePtr
         if (texturePtr == nullptr) {
             std::cerr << "Erreur : texturePtr est nullptr !" << std::endl;
-            continue;  // Passer à l'itération suivante si la texture est invalide
+            continue;
         }
 
-        // Créer un sprite
         auto sprite = std::make_shared<sf::Sprite>();
 
-        // Assigner la texture au sprite
         sprite->setTexture(*texturePtr);
 
-        // Positionner le sprite
         sprite->setPosition(startX, newY);
 
         float spriteWidth = sprite->getGlobalBounds().width;
         float spriteHeight = sprite->getGlobalBounds().height;
 
-        // Calculer le facteur de mise à l'échelle
         float scaleX = sizeX / spriteWidth;
         float scaleY = sizeY / spriteHeight;
 
         sprite->setScale(scaleX, scaleY);
-        // Créer un rectangle pour la bordure
         auto border = std::make_shared<sf::RectangleShape>();
 
-        // Définir la taille du rectangle comme celle du sprite
         sf::Vector2u textureSize = texturePtr->getSize();
         border->setSize(sf::Vector2f(sizeX, sizeY));
 
-        // Définir la position de la bordure (identique à celle du sprite)
         border->setPosition(startX, newY);
 
-        // Définir la couleur du contour
-        border->setFillColor(sf::Color::Transparent);  // Remplissage transparent
+        border->setFillColor(sf::Color::Transparent);  
 
-        // Ajouter le sprite et la bordure aux listes
-        tileBordersMenu.push_back(border);  // Ajouter la bordure
-        tilesScrollMenu.push_back(sprite);  // Ajouter ensuite le sprite
+        tileBordersMenu.push_back(border);  
+        tilesScrollMenu.push_back(sprite);  
     }
 }
 
@@ -287,8 +273,6 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
         }
 
     }
-    timeClicked += deltaTime;
-
         if (Mouse::isButtonPressed(Mouse::Left) && find_if(m_selectorMenu.begin(), m_selectorMenu.end(), [&](const auto& button) {
             return button->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window))); }) == m_selectorMenu.end())
         {
@@ -296,42 +280,47 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                 switch (m_mouseEditorState)
                 {
                 case SELECT:
-                    if (!m_subMenu) {
-                        m_vectorIndex = 0;
-                        for (auto& tileMenu : m_FileTilesBordersMenu) {
+                    
+                    switch (m_tileState)
+                    {
+                    case BIOME_1:
+                        subMenuHandler(m_TilesBordersMenu, window);
+                        dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
+                        break;
+                    case BIOME_2:
+                        subMenuHandler(m_TilesBordersMenu, window);
+                        dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
+                        break;
+                    case BIOME_3:
+                        break;
+                    default:
+                        timeClicked += deltaTime;
+                        for (auto& tileMenu : m_TilesBordersMenu) {
                             if (tileMenu->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
                                 tileMenu->setOutlineColor(Color::White);
                                 tileMenu->setOutlineThickness(5);
-                                if (tileMenu == m_FileTilesBordersMenu.at(m_vectorIndex)) {
-                                    if (m_vectorIndex < 3) {
-                                        m_entityTile = static_cast<entityType>(m_vectorIndex);
+                                int position = std::distance(m_TilesBordersMenu.begin(), std::find(m_TilesBordersMenu.begin(), m_TilesBordersMenu.end(), tileMenu));
+                                if (position != 0) {
+
+                                    m_entityTile = static_cast<entityType>(position);
+                                    m_tileState = static_cast<tileState>(position);
+                                    cout << m_tileState << "tile"<<endl;
+                                    if (position == 1) {
+                                        m_entityTile = static_cast<entityType>(0);
                                     }
-                                    if (m_vectorIndex < 3) {
-                                        m_tileState = static_cast<tileState>(m_vectorIndex);
-                                    }
-                                    if (timeClicked > 0.1f) {
-                                        timeClicked = 0;
-                                        m_subMenu = true;
-                                        m_textureId = m_vectorIndex;
-                                    }
+
+                                    timeClicked = 0;
+                                    m_subMenu = true;
+                                    m_textureId = position;
                                 }
+
                             }
                             else {
                                 tileMenu->setOutlineColor(Color::Transparent);
                                 tileMenu->setOutlineThickness(0);
                             }
-                            if (m_vectorIndex < m_FileTilesScrollMenu.size()) {
-                                m_vectorIndex++;
-                            }
                         }
-                    }
-                    else if (m_subMenu && m_tileState == 0) {
-                        m_vectorIndex = 1;
-                        subMenuHandler(m_SeperatedTilesBordersMenuType, window, m_vectorIndex);
-                    }
-                    else if (m_subMenu && m_tileState == 1) {
-                        m_vectorIndex = 1;
-                        subMenuHandler(m_SeperatedTilesBordersMenuType, window, m_vectorIndex);
+                        break;
                     }
 
                     break;
@@ -358,10 +347,17 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                             return tile.second.first == entityType::NOTYPE;
                             }) != m_tiles.end())
                     {
-                        m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_entityTile, m_textureType };
+                        if (m_tileState != 0) {
+                            m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_tileState, m_textureId };
+                        }
+                        else {
+                            m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_entityTile, m_textureId };
+                        }
                         auto rect = make_unique<RectangleShape>();
-                        cout << "Index" << m_textureId << m_ActualTileTexture.size() << endl;
-                        tileSetter(move(rect), mouseTilePosition, m_textureId);
+                        if (m_subMenu) {
+
+                            tileSetter(move(rect), mouseTilePosition, m_textureId);
+                        }
                     }
                     break;
                 }
@@ -393,20 +389,17 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
     float scrollSpeed = 100000;
     float baseZoom = 1.0f;
     float zoomAmont = 0.3f;
-    float minScrollY = 50;
-    float maxScrollY = window.getSize().y - m_FileTilesScrollMenu.back()->getGlobalBounds().height - 50;
+    float minScrollY = 10;
+    float maxScrollY = window.getSize().y - m_TilesScrollMenu.back()->getGlobalBounds().height - 10;
     if (event.type == Event::MouseWheelScrolled) {
 
         switch (m_mouseEditorState)
         {
 
         case SELECT:
-            if (!m_subMenu) {
-                handleMenuScroll(event, deltaTime, m_FileTilesScrollMenu, m_FileTilesBordersMenu, scrollSpeed, minScrollY, maxScrollY);
-            }
-            else {
-                handleMenuScroll(event, deltaTime, m_SeperatedTilesScrollMenuType, m_SeperatedTilesBordersMenuType, scrollSpeed, minScrollY, maxScrollY);
-            }
+
+            handleMenuScroll(event, deltaTime, m_TilesScrollMenu, m_TilesBordersMenu, scrollSpeed, minScrollY, maxScrollY);
+            
             break;
         default:
             if (event.mouseWheelScroll.delta > 0) {
@@ -462,50 +455,50 @@ void LevelEditor::handleMenuScroll(Event& event, float deltaTime,
 
 #pragma region 5. Méthodes de gestion des textures
 
-bool LevelEditor::isTileTransparent(const Texture& texture, const IntRect& rect)
+bool LevelEditor::isTileTransparent(const sf::Texture& texture, const sf::IntRect& rect)
 {
-    Image image = texture.copyToImage();
+    sf::Image image = texture.copyToImage();
+
+    // Vérification pour éviter un dépassement des limites de l'image
+    int imgWidth = image.getSize().x;
+    int imgHeight = image.getSize().y;
 
     // Nombre total de pixels dans le rectangle
     int totalPixels = rect.width * rect.height;
     int nonTransparentPixels = 0;
 
-    for (int y = rect.top; y < rect.top + rect.height; ++y) {
-        for (int x = rect.left; x < rect.left + rect.width; ++x) {
-            sf::Color pixelColor = image.getPixel(x, y);
-            if (pixelColor.a > 0) {  // Si le pixel est non transparent
+    for (int y = rect.top; y < std::min(rect.top + rect.height, imgHeight); ++y) {
+        for (int x = rect.left; x < std::min(rect.left + rect.width, imgWidth); ++x) {
+            sf::Color pixelColor = image.getPixel(x, y); 
+            if (pixelColor.a > 10) {  // Prendre en compte les pixels quasi-transparents
                 nonTransparentPixels++;
             }
         }
     }
 
-
-    // Vérifier si le nombre de pixels non transparents est supérieur à la moitié du total
-    return nonTransparentPixels < totalPixels / 2;
+    // Vérifier si plus de 50% des pixels sont opaques
+    return nonTransparentPixels < (totalPixels / 2);
 }
 
-vector<shared_ptr<Texture>> LevelEditor::getNonTransparentTiles( int tileWidth, int tileHeight, int index)
+vector<shared_ptr<Texture>> LevelEditor::getNonTransparentTiles(int tileWidth, int tileHeight, int index)
 {
-
 
     vector<shared_ptr<Texture>> tiles;
     int textureWidth = m_FileTileTextures.at(index).get()->getSize().x;
     int textureHeight = m_FileTileTextures.at(index).get()->getSize().y;
 
-    // Découpe toutes les tuiles non transparentes et les ajoute
     for (int y = 0; y < textureHeight; y += tileHeight) {
         for (int x = 0; x < textureWidth; x += tileWidth) {
             sf::IntRect rect(x, y, tileWidth, tileHeight);
 
-            // Vérifie si la tuile n'est pas transparente
             if (!isTileTransparent(*m_FileTileTextures.at(index).get(), rect)) {
-                // Crée une nouvelle texture découpée et l'ajoute
                 auto tileTexture = std::make_shared<sf::Texture>();
                 tileTexture->loadFromImage(m_FileTileTextures.at(index)->copyToImage(), rect);
-                tiles.push_back(tileTexture); // Ajoute la texture découpée
+                tiles.push_back(tileTexture); 
             }
         }
     }
+
     return tiles;
 }
 #pragma endregion
@@ -517,28 +510,30 @@ vector<shared_ptr<Texture>> LevelEditor::getNonTransparentTiles( int tileWidth, 
 void LevelEditor::update(RenderWindow& window, View& tileView, View& Ui_view, Event& event, float deltaTime)
 {
 
-    if (m_FileTilesScrollMenu.empty()) {
-        return;
-    }
-    switch (m_tileState)
-    {
-    case BIOME_1:
-        m_ActualTileTexture = m_SperatedTileTextures_1;
-        m_SeperatedTilesBordersMenuType = m_SeperatedTilesBordersMenu_1;
-        m_SeperatedTilesScrollMenuType = m_SeperatedTilesScrollMenu_1;
-        break;
-    case BIOME_2:
-        m_ActualTileTexture = m_SperatedTileTextures_2;
-        m_SeperatedTilesBordersMenuType = m_SeperatedTilesBordersMenu_2;
-        m_SeperatedTilesScrollMenuType = m_SeperatedTilesScrollMenu_2;
+    //if (m_TilesScrollMenu.empty()) {
+    //    return;
+    //}
 
-        break;
-    case BIOME_3:
-        break;
-    default:
-        break;
-    }
+ 
 
+    //switch (m_tileState)
+    //{
+    //case BIOME_1:
+    //    m_ActualTileTexture = m_SperatedTileTextures_1;
+    //
+    //    break;
+    //case BIOME_2:
+    //    m_ActualTileTexture = m_SperatedTileTextures_2;
+    //
+    //    break;
+    //case BIOME_3:
+    //
+    //    break;
+    //default:
+    //    m_ActualTileTexture = m_FileTileTextures;
+    //
+    //    break;
+    //}
 
     handleInput(window, tileView, event, deltaTime);
     window.clear();
@@ -557,21 +552,12 @@ void LevelEditor::draw(RenderWindow& window, View& tileView, View& Ui_view) {
     window.setView(Ui_view);
     window.draw(m_tileScrollBox);
 
-    if (!m_subMenu) {
-        for (auto& tileButton : m_FileTilesBordersMenu) {
-            window.draw(*tileButton);
-        }
-        for (auto& tileButton : m_FileTilesScrollMenu) {
-            window.draw(*tileButton);
-        }
+
+    for (auto& tileButton : m_TilesBordersMenu) {
+        window.draw(*tileButton);
     }
-    else if (m_subMenu) {
-        for (auto& tileButton : m_SeperatedTilesBordersMenuType) {
-            window.draw(*tileButton);
-        }
-        for (auto& tileButton : m_SeperatedTilesScrollMenuType) {
-            window.draw(*tileButton);
-        }
+    for (auto& tileButton : m_TilesScrollMenu) {
+        window.draw(*tileButton);
     }
 
     for (auto& menuButton : m_selectorMenu) {
@@ -588,6 +574,9 @@ void LevelEditor::updateTiles() {
     for (const auto& [pos, tileID] : m_tiles) {
         auto rect = make_unique<RectangleShape>();
         m_entityTile = static_cast<entityType>(tileID.first);
+        m_tileState = static_cast<tileState>(tileID.first);
+        m_textureId = tileID.second;
+        //cout << "Entity :" << m_entityTile << endl << "TileType :" << m_tileState << endl << "TextureId :" << m_textureId<< endl;
         tileSetter(move(rect), Vector2i(pos.first, pos.second), tileID.second);
     }
 }
@@ -597,8 +586,8 @@ void LevelEditor::tileSetter(shared_ptr<RectangleShape> tile, Vector2i MousTileP
 
     tile->setSize(Vector2f(TILE_SIZE, TILE_SIZE));
     tile->setPosition(Vector2f(MousTilePos.x * TILE_SIZE, MousTilePos.y * TILE_SIZE));
-    if (!m_ActualTileTexture.empty()) {
-        tile->setTexture(m_ActualTileTexture.at(textureIndex).get());
+    if (!m_allTextureVector.at(m_tileState).empty()) {
+        tile->setTexture(m_allTextureVector.at(m_tileState).at(textureIndex).get());
     }
     m_tilesShape.push_back(move(tile));
 
@@ -608,43 +597,28 @@ void LevelEditor::tileSetter(shared_ptr<RectangleShape> tile, Vector2i MousTileP
 
 
 #pragma region 7. Fonction de Menu de Tiles
-void LevelEditor::subMenuHandler(std::vector<std::shared_ptr<RectangleShape>>& tileMenu, RenderWindow& window, int index) {
+void LevelEditor::subMenuHandler(std::vector<std::shared_ptr<RectangleShape>>& tileMenu, RenderWindow& window) {
     for (auto& tileMenuPtr : tileMenu) {
-
+        
         if (tileMenuPtr->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
-            // Si la souris est au-dessus de l'élément du menu
+            int position = std::distance(tileMenu.begin(), std::find(tileMenu.begin(), tileMenu.end(), tileMenuPtr));
             tileMenuPtr->setOutlineColor(Color::White);
             tileMenuPtr->setOutlineThickness(5);
-            if (timeClicked > 0.1f) {
-                timeClicked = 0;
-                if (tileMenuPtr == tileMenu.at(0)) {
-                    m_subMenu = false;
-                    m_textureId = index;
+                if (position == 0) {  
+                    dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
+                    m_tileState = NORMAL_TILE;
                 }
-            }
-                if (tileMenuPtr == tileMenu.at(index) && index != 0) {
-                    m_textureId = index;
+                else {
+                    m_textureId = position;
                 }
-                if (m_vectorIndex < m_ActualTileTexture.size()) {
-                    cout << "Index" << m_textureId << m_ActualTileTexture.size() << endl;
 
-                    m_vectorIndex++;
-                }
-            
-           
         }
         else {
-            // Sinon, on réinitialise l'apparence de l'élément
             tileMenuPtr->setOutlineColor(Color::Transparent);
             tileMenuPtr->setOutlineThickness(0);
-            if (m_vectorIndex < m_ActualTileTexture.size()) {
-                cout << "Index" << m_textureId << m_ActualTileTexture.size() << endl;
-
-                m_vectorIndex++;
-            }
         }
-        
     }
 }
+
 
 #pragma endregion
