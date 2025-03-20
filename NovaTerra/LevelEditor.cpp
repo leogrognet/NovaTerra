@@ -281,11 +281,11 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                     {
                     case BIOME_1:
                         subMenuHandler(m_TilesBordersMenu, window);
-                        dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
+                        //dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
                         break;
                     case BIOME_2:
                         subMenuHandler(m_TilesBordersMenu, window);
-                        dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
+                       // dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
                         break;
                     case BIOME_3:
                         break;
@@ -316,6 +316,9 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                                 tileMenu->setOutlineColor(Color::Transparent);
                                 tileMenu->setOutlineThickness(0);
                             }
+                        }
+                        if (m_subMenu == true) {
+                            dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
                         }
                         break;
                     }
@@ -348,11 +351,11 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                             m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_tileState, m_textureId };
                         }
                         else {
-                            m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_entityTile, m_textureId };
+                            m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_entityTile, 0 };
                         }
                         auto rect = make_unique<RectangleShape>();
                         if (m_subMenu) {
-                            tileSetter(move(rect), mouseTilePosition, m_textureId, m_tileState);
+                            tileSetter(move(rect), mouseTilePosition,  m_tileState,m_textureId);
                         }
                         else {
                             tileSetter(move(rect), mouseTilePosition,0, m_entityTile);
@@ -549,7 +552,7 @@ void LevelEditor::updateTiles() {
         m_entityTile = static_cast<entityType>(tileID.first);
         m_tileState = static_cast<tileState>(tileID.first);
         m_textureId = tileID.second;
-        if (tileID.second > 0) {
+        if (tileID.first > 0 && tileID.first < 3) {
             tileSetter(move(rect), Vector2i(pos.first, pos.second), tileID.first, tileID.second);
         }
         else {
@@ -563,7 +566,6 @@ void LevelEditor::tileSetter(shared_ptr<RectangleShape> tile, Vector2i MousTileP
 
     tile->setSize(Vector2f(TILE_SIZE, TILE_SIZE));
     tile->setPosition(Vector2f(MousTilePos.x * TILE_SIZE, MousTilePos.y * TILE_SIZE));
-    cout << vectorIndex;
     if (!m_allTextureVector.at(vectorIndex).empty()) {
         tile->setTexture(m_allTextureVector.at(vectorIndex).at(textureIndex).get());
     }
@@ -583,7 +585,6 @@ void LevelEditor::subMenuHandler(std::vector<std::shared_ptr<RectangleShape>>& t
             tileMenuPtr->setOutlineColor(Color::White);
             tileMenuPtr->setOutlineThickness(5);
                 if (position == 0) {  
-                    dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
                     m_tileState = NORMAL_TILE;
                 }
                 else {
@@ -595,6 +596,9 @@ void LevelEditor::subMenuHandler(std::vector<std::shared_ptr<RectangleShape>>& t
             tileMenuPtr->setOutlineColor(Color::Transparent);
             tileMenuPtr->setOutlineThickness(0);
         }
+    }
+    if (m_tileState == NORMAL_TILE) {
+        dropDownMenu(window, m_TilesBordersMenu, m_TilesScrollMenu, m_allTextureVector.at(m_tileState));
     }
 }
 
