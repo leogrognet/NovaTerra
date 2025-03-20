@@ -2,9 +2,11 @@
 
 MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision)
 {
-	m_shapeTexture.loadFromFile("../assets/Deepslate.png");
-	m_shape.setScale(size);
 	m_shape.setPosition(posX, posY);
+	m_shapeTexture.loadFromFile("../assets/cat1.jpg");
+	m_shape.setTexture(m_shapeTexture);
+
+	m_shape.setScale(size);
 
 	m_stockedPos = { m_shape.getPosition() };
 }
@@ -16,7 +18,6 @@ void MovePlat::draw(RenderWindow& window)
 
 void MovePlat::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
-	cout << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
 	Entity::update(deltaTime, colliders); 
 	move(deltaTime,colliders);
 }

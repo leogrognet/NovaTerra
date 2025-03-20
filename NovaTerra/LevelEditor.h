@@ -16,12 +16,12 @@ using namespace sf;
 namespace fs = std::filesystem;
 
 enum MouseState {
-	
-	SET_TILE,
-	DELETE_TILE,
-	SAVE_FILE,
-	LOAD_FILE,
-	SELECT,
+
+    SET_TILE,
+    DELETE_TILE,
+    SAVE_FILE,
+    LOAD_FILE,
+    SELECT,
 };
 
 enum tileState {
@@ -37,7 +37,7 @@ public:
     LevelEditor(RenderWindow& window);
 
     // 2. Méthode principale de mise à jour
-    void update(RenderWindow& window, View& tileView, View& Ui_view, Event& event, float deltaTime);
+    bool update(RenderWindow& window, View& tileView, View& Ui_view, Event& event, float deltaTime);
     vector<shared_ptr<Texture>> m_SperatedTileTextures_1;
     vector<shared_ptr<Texture>> m_SperatedTileTextures_2;
     vector<shared_ptr<Texture>> m_FileTileTextures;
@@ -53,6 +53,7 @@ private:
 
     int m_textureType;
     bool m_subMenu;
+    bool m_isOpen;
     int m_currentTile;
     string m_currentLevel;
     float viewOffsetSpeed;
@@ -109,7 +110,7 @@ private:
     bool isTileTransparent(const Texture& texture, const IntRect& rect);
     vector<shared_ptr<Texture>> getNonTransparentTiles(int tileWidth, int tileHeight, int index);
 
-    
+
 
 
 };
