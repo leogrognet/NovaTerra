@@ -6,13 +6,57 @@
 Background background("assets/parallaxe/bg.png", - 50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
-    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0") {
+    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0"), menuState(MenuState::MENU), menu(window), settingsMenu(window) {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 }
 
 Game::~Game() {
     cout << "Le jeu est détruit\n";
+}
+
+void Game::processMenu() {
+    Vector2i mousePos = Mouse::getPosition(window);
+    int selected = menu.handleMouseClick(mousePos);
+
+    cout << "Selected Menu Index: " << selected << endl;
+
+    switch (selected) {
+    case 0:
+        cout << "Switching to PLAY mode!" << endl;
+        menuState = MenuState::PLAY;
+        break;
+    case 1:
+        cout << "Switching to SETTINGS mode!" << endl;
+        menuState = MenuState::SETTINGS;
+        break;
+    case 2:
+        cout << "Exiting game!" << endl;
+        window.close();
+        break;
+    default:
+        break;
+    }
+}
+
+void Game::processSettingsMenu() {
+    Vector2i mousePos = Mouse::getPosition(window);
+    int selected = settingsMenu.handleMouseClick(mousePos);
+
+    switch (selected) {
+    case 0:
+        cout << "Ouverture du menu de réglages" << endl;
+        break;
+    case 1:
+        cout << "Ouverture du menu du son" << endl;
+        break;
+    case 2:
+        menuState = MenuState::MENU;
+        break;
+    default:
+        break;
+    }
+
 }
 
 void Game::run() {
@@ -39,22 +83,47 @@ void Game::run() {
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed)
                 window.close();
-        }
-        //scroll->move(1.f, 0.f);
-        scroll->applyView(window);
-        float deltatime = clock.restart().asSeconds();
+            if (menuState == MenuState::MENU && event.type == Event::MouseButtonPressed) {
+                processMenu();
+            }
+            else if (menuState == MenuState::SETTINGS && event.type == Event::MouseButtonPressed) {
+                processSettingsMenu();
+            }
 
-
-        window.clear();
-		background.update(deltatime);
-        //player.update(deltatime, vec);
-        background.draw(window);
-        map->draw(window);
-        for (auto entityvec : vec) {
-            entityvec->update(deltatime, vec);
-            entityvec->draw(window);
-            entityvec->update(deltatime, vec);
         }
+
+		window.clear();
+
+        if (menuState == MenuState::MENU) {
+            menu.draw();
+		}
+        else if (menuState == MenuState::PLAY) {
+			float deltaTime = clock.restart().asSeconds();
+			scroll->applyView(window);
+			background.update(deltaTime);
+            background.draw(window);
+			map->draw(window);
+
+			for (auto& entity : vec) {
+				entity->update(deltaTime, vec);
+				entity->draw(window);
+			}
+        }
+		else if (menuState == MenuState::SETTINGS) {
+            cout << "Drawing SETTINGS Menu" << endl;
+			settingsMenu.draw();
+		}
+        else if (menuState == MenuState::CREDITS) {
+        
+        }
+		else if (menuState == MenuState::EXIT) {
+			window.close();
+		}
+        
         window.display();
     }
+    
+    delete map;
+    delete scroll;
+
 }
