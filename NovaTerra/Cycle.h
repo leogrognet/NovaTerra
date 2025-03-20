@@ -11,6 +11,7 @@ public:
     };
 
     Cycle();
+    ~Cycle();
 
     void changeState();
     void displayState();

@@ -19,22 +19,42 @@ void Game::run() {
     Clock clock;
 
     vector<shared_ptr<Entity>> vec;
+
     string image =  "assets/map/map_tileset";
     loadertest.loadTexture(image, textureListTest);
-    vec.push_back(make_shared<Plateform>(100, 800, Vector2f(10, 1), true,true, textureListTest));
-    vec.push_back(make_shared<Plateform>(300, 400, Vector2f(5, 5), true,true, textureListTest));
-    vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true,true));
-    vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true,true));
-    vec.push_back(make_shared<Vine>(100, 600, 50, 50, true, false,textureListTest));
-
-    vec.push_back(make_shared<GolemEnemy>(500, 700, false, false));
+    while (true) {
+        vec.push_back(make_shared<Plateform>(100, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(200, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(300, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(400, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(500, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(600, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(700, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(800, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(900, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(1000, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(1100, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(1200, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(1300, 800, Vector2f(10, 1), true, true, textureListTest));
+        vec.push_back(make_shared<Plateform>(1400, 800, Vector2f(10, 1), true, true, textureListTest));
+        break;
+    }
 
     vec.push_back(make_shared<Player>(vec, 100, 600, false, true));
 
-    Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
+    Cycle* cycle = new Cycle();
+    vec.push_back(make_shared<Firecamp>(800, 700, true, true));
+
+    //Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
+    shared_ptr<Player> playerPtr = nullptr;
+    for (auto& entity : vec) {
+        playerPtr = dynamic_pointer_cast<Player>(entity);
+        if (playerPtr) break;
+    }
 
     Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
+
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed)
@@ -44,17 +64,24 @@ void Game::run() {
         scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
 
-
         window.clear();
 		background.update(deltatime);
         //player.update(deltatime, vec);
         background.draw(window);
-        map->draw(window);
+        //map->draw(window);
+        for (auto& entity : vec) {
+            playerPtr = dynamic_pointer_cast<Player>(entity);
+            if (playerPtr) break;
+        }
         for (auto entityvec : vec) {
             entityvec->update(deltatime, vec);
+            if (Keyboard::isKeyPressed(Keyboard::O)) {
+                entityvec->interact(*cycle, *playerPtr);
+            }
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
         }
+
         window.display();
     }
 }
