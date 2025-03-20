@@ -504,36 +504,10 @@ vector<shared_ptr<Texture>> LevelEditor::getNonTransparentTiles(int tileWidth, i
 #pragma endregion
 
 
-
 #pragma region 6. Méthodes Update
 
 void LevelEditor::update(RenderWindow& window, View& tileView, View& Ui_view, Event& event, float deltaTime)
 {
-
-    //if (m_TilesScrollMenu.empty()) {
-    //    return;
-    //}
-
- 
-
-    //switch (m_tileState)
-    //{
-    //case BIOME_1:
-    //    m_ActualTileTexture = m_SperatedTileTextures_1;
-    //
-    //    break;
-    //case BIOME_2:
-    //    m_ActualTileTexture = m_SperatedTileTextures_2;
-    //
-    //    break;
-    //case BIOME_3:
-    //
-    //    break;
-    //default:
-    //    m_ActualTileTexture = m_FileTileTextures;
-    //
-    //    break;
-    //}
 
     handleInput(window, tileView, event, deltaTime);
     window.clear();
@@ -576,7 +550,6 @@ void LevelEditor::updateTiles() {
         m_entityTile = static_cast<entityType>(tileID.first);
         m_tileState = static_cast<tileState>(tileID.first);
         m_textureId = tileID.second;
-        //cout << "Entity :" << m_entityTile << endl << "TileType :" << m_tileState << endl << "TextureId :" << m_textureId<< endl;
         tileSetter(move(rect), Vector2i(pos.first, pos.second), tileID.second);
     }
 }

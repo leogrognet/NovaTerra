@@ -8,8 +8,13 @@
 #include <iostream>
 #include <sstream>
 #include "Entity.h";
-
-
+#include "MovingPlatform.h"
+#include "Plateform.h"
+#include "GolemEnemy.h"
+#include "BouncingPlatform.h"
+#include "VineLadder.h"
+#include "LevelEditor.h"
+ 
 
 using namespace sf;
 using namespace std;
@@ -20,7 +25,8 @@ class Map {
 private:
     //Calques de la carte
 
-    map<pair<int, int>, int> m_tiles;
+    map<pair<int, int>, pair<int, int>> m_tiles;
+
 
 
     entityType m_entityTypeTile;
@@ -57,13 +63,16 @@ private:
 
     int tileSize;
 
+
     //Fonctions de chargement
     void loadFromFile(const string& filename);
-
+    
 public:
     //Constructeur
-    Map(const string& filename, const string& tilesetPath, int tileSize, vector<int> blockedTileValues);
-    void generateTiles();
+    Map(const string& filename, const string& tilesetPath, int tileSize, vector<int> blockedTileValues, RenderWindow& window);
+
+    LevelEditor m_levelEditor;
+    vector<shared_ptr<Entity>> generateTiles(vector<shared_ptr<Texture>> textureList, vector<shared_ptr<Entity>> collideVec);
     //void generateItems();
 
     //Guetters

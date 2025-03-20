@@ -39,6 +39,10 @@ public:
     // 2. Méthode principale de mise à jour
     void update(RenderWindow& window, View& tileView, View& Ui_view, Event& event, float deltaTime);
     vector<shared_ptr<Texture>> m_SperatedTileTextures_1;
+    vector<shared_ptr<Texture>> m_SperatedTileTextures_2;
+    vector<shared_ptr<Texture>> m_FileTileTextures;
+
+
 
 private:
     // 3. Variables membres
@@ -58,9 +62,7 @@ private:
     float timeClicked;
 
     // 4. Structures de données
-    vector<shared_ptr<Texture>> m_FileTileTextures;
     vector<shared_ptr<Texture>> m_ActualTileTexture;
-    vector<shared_ptr<Texture>> m_SperatedTileTextures_2;
 
     map<pair<int, int>, pair<int, int>> m_tiles;
     vector<shared_ptr<RectangleShape>> m_tilesShape;

@@ -9,7 +9,8 @@ public:
 
 
 
-	Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture);
+
+	Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, shared_ptr<Texture>& texture);
 
 	void draw(RenderWindow& window) override;
 	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;

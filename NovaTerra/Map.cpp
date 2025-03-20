@@ -3,8 +3,8 @@
 //Map::Map(const string& filename, const string& tilesetPath, const string& itemsetPath, int tileSize, vector<int> blockedTileValues, vector<int> blockedItemValues)
 //    : tileSize(tileSize), blockedTileValues(blockedTileValues), blockedItemValues(blockedItemValues) {
 
-Map::Map(const string& filename, const string& tilesetPath, int tileSize, vector<int> blockedTileValues)
-    : tileSize(tileSize), blockedTileValues(blockedTileValues) {
+Map::Map(const string& filename, const string& tilesetPath, int tileSize, vector<int> blockedTileValues, RenderWindow& window)
+    : tileSize(tileSize), blockedTileValues(blockedTileValues), m_levelEditor(window) {
 
     if (!tileSet.loadFromFile(tilesetPath)) {
         cerr << "Erreur de chargement du tileset principal" << endl;
@@ -13,11 +13,10 @@ Map::Map(const string& filename, const string& tilesetPath, int tileSize, vector
     //    cerr << "Erreur de chargement du tileset des items" << endl;
     //}
 
-    loadFromFile(filename);
-
-    generateTiles();
+    loadFromFile("C:/Users/leoam/source/repos/NovaTerra/NovaTerra/assets/map/lobby.txt");
     //generateItems();
 }
+
 
 // CHARGEMENT DU FICHIER DE LA CARTE
 
@@ -30,13 +29,15 @@ void Map::loadFromFile(const string& filename) {
 
     m_tiles.clear();
 
-    int x, y, tileID;
-    while (file >> x >> y >> tileID) {
-        m_tiles[{x, y}] = tileID;
+
+    int x, y, tileID, textureIndex;
+    while (file >> x >> y >> tileID >> textureIndex) {
+        m_tiles[{x, y}] = { tileID, textureIndex };
     }
 
     file.close();
     std::cout << "Niveau chargé depuis " << filename << std::endl;
+
 }
 
     
@@ -47,24 +48,51 @@ void Map::loadFromFile(const string& filename) {
 
 // GÉNÉRATION DES TUILES
 
-void Map::generateTiles() {
+vector<shared_ptr<Entity>> Map::generateTiles(vector<shared_ptr<Texture>> textureList, vector<shared_ptr<Entity>> collideVec)
+{
+    vector<shared_ptr<Entity>> allEntities;
     for (const auto& [pos, tileID] : m_tiles) {
-        m_entityTypeTile = static_cast<entityType>(tileID);
-        switch (m_entityTypeTile)
+        entityType entity;
+        entity = static_cast<entityType>(tileID.first);
+        auto rect = make_unique<RectangleShape>();
+        switch (entity)
         {
+        case BIOME_1_PLAT:
+            allEntities.push_back(make_shared<Plateform>(float(pos.first * 128), float(pos.second * 128), Vector2f(1, 1), true, true, m_levelEditor.m_SperatedTileTextures_1.at(tileID.second)));
+            break;
+        case BIOME_2_PLAT:
+            allEntities.push_back(make_shared<Plateform>(float(pos.first * 128), float(pos.second * 128), Vector2f(1, 1), true, true, m_levelEditor.m_SperatedTileTextures_2.at(tileID.second)));
+            break;
+        case BIOME_3_PLAT:
+            allEntities.push_back(make_shared<Plateform>(float(pos.first * 128), float(pos.second * 128), Vector2f(1, 1), true, true, m_levelEditor.m_SperatedTileTextures_1.at(tileID.second)));
+            break;
         case GOLEM:
+            allEntities.push_back(make_shared<GolemEnemy>(float(pos.first * 128), float(pos.second * 128), false,false));
             break;
         case PLAYER:
+            allEntities.push_back(make_shared<Player>(collideVec,float(pos.first*128),float(pos.second*128),false,true));
             break;
-        case TILE:
-            
+        case CROC:
+            //allEntities.push_back(make_shared<>());
             break;
-        case NOTYPE:
+        case MOVE_PLAT:
+            allEntities.push_back(make_shared<MovePlat>(float(pos.first*128),float(pos.second*128),Vector2f(1,1),true,true));
+            break;
+        case BOUNCE_PLAT:
+            allEntities.push_back(make_shared<Bounce>(float(pos.first * 128), float(pos.second * 128), Vector2f(1, 1), true, true));
+            break;
+        case GRIND_VINE:
+            allEntities.push_back(make_shared<Vine>(float(pos.first * 128), float(pos.second * 128), 50, 50, true, false));
+            break;
+        case DOOR:
+            //allEntities.push_back(make_shared<Plateform>());
             break;
         default:
             break;
         }
+        
     }
+    return allEntities;
 }
 
 // COLLISIONS
@@ -91,20 +119,20 @@ bool Map::isWalkable(Vector2f position, Vector2f playerSize, FloatRect hitboxBou
 
 // AFFICHAGE DE LA CARTE
 
-void Map::draw(RenderWindow& window) {
-    if (tiles.empty()) {
-        cerr << "Erreur : Aucun tile à afficher !" << endl;
-        return;
-    }
-
-    for (const auto& tile : tiles) {
-        window.draw(tile);
-    }
-
-    //for (const auto& item : items) {
-    //    window.draw(item);
-    //}
-}
+//void Map::draw(RenderWindow& window) {
+//    if (tiles.empty()) {
+//        cerr << "Erreur : Aucun tile à afficher !" << endl;
+//        return;
+//    }
+//
+//    for (const auto& tile : tiles) {
+//        window.draw(tile);
+//    }
+//
+//    //for (const auto& item : items) {
+//    //    window.draw(item);
+//    //}
+//}
 
 
 
