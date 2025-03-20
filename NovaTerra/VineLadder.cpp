@@ -1,15 +1,12 @@
 #include "VineLadder.h"
 
-Vine::Vine(float posX, float posY, float width, float height , bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision)
+Vine::Vine(float posX, float posY, float width, float height, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision)
 {
 
-        m_shape.setTexture(*textureList.at(0));
-        IntRect m_textureRect(128, 640, 128, 128);
-
-        m_shape.setTextureRect(m_textureRect);
-        m_shape.setScale(width, height);
-        m_shape.setPosition(posX, posY);
-    }
+    m_shapeTexture.loadFromFile("../assets/Spruce.png");
+    m_shape.setTexture(m_shapeTexture);
+    m_shape.setScale(width, height);
+    m_shape.setPosition(posX, posY);
 }
 
 void Vine::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)

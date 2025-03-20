@@ -1,17 +1,10 @@
 #include "MovingPlatform.h"
 
-MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) :Entity(posX, posY, isStatic, asCollision, texture)
-
+MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision)
 {
-	if (!textureList.empty()) {
-
-		m_shape.setTexture(*textureList.at(0).get());
-		IntRect m_textureRect(384, 384, 128, 128);
-
-		m_shape.setTextureRect(m_textureRect);
-		m_shape.setScale(1.f, 1.f);
-		m_shape.setPosition(posX, posY);
-	}
+	m_shapeTexture.loadFromFile("../assets/Deepslate.png");
+	m_shape.setScale(size);
+	m_shape.setPosition(posX, posY);
 
 	m_stockedPos = { m_shape.getPosition() };
 }
@@ -23,7 +16,8 @@ void MovePlat::draw(RenderWindow& window)
 
 void MovePlat::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
-	Entity::update(deltaTime, colliders);
+	cout << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
+	Entity::update(deltaTime, colliders); 
 	move(deltaTime,colliders);
 }
 

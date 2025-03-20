@@ -6,7 +6,7 @@ using namespace std;
 class MovePlat : public Entity {
 public:
 
-	MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture);
+	MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision);
 
 	void draw(RenderWindow& window) override;
 	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;
