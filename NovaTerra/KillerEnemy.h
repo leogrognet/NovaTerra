@@ -27,7 +27,6 @@ private:
     void stopAndCooldown(float deltaTime);
 
 
-    RectangleShape m_shape;
 	State m_KillerState;
 
     Vector2f velocity;

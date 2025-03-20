@@ -11,18 +11,14 @@ KillerEnemy::KillerEnemy(float posX, float posY, bool isStatic, bool hasCollisio
         cerr << "KillerEnemy: Failed to load texture." << endl;
     }
 
-    m_shape.setSize(Vector2f(48.f, 48.f));
-    m_shape.setTexture(&killerTexture);
+    m_shape.setTexture(killerTexture);
     m_shape.setPosition(posX, posY);
-    m_shape.setScale(1.f, 1.f);
+    m_shape.setScale(0.1f, 0.1f);
 }
 
 void KillerEnemy::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) {
     updateFSM(colliders);
-
-    // Apply velocity (dash movement)
-    m_shape.move(velocity * deltaTime);
-    position = m_shape.getPosition();
+    Entity::update(deltaTime, colliders);
 }
 
 void KillerEnemy::draw(RenderWindow& window) {
@@ -58,7 +54,7 @@ void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
         break;
 
     case State::DASHING:
-        velocity = Vector2f(0.f, 0.f);
+        m_rigidBody.getVelocity() = Vector2f(0, 0);
         m_KillerState = State::COOLDOWN;
         break;
 
@@ -77,7 +73,7 @@ void KillerEnemy::dashToPlayer(const shared_ptr<Entity>& player) {
     else
         dashDirection = Vector2f(0.f, 0.f);
 
-    velocity = dashDirection * m_KillerDashSpeed;
+    m_rigidBody.getVelocity() += dashDirection * m_KillerDashSpeed;
 }
 
 void KillerEnemy::stopAndCooldown(float deltaTime) {
