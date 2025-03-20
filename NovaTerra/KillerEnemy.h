@@ -37,7 +37,7 @@ private:
 
     float m_KillerDashSpeed = 2000.f;
     float m_KillerDetectionRange = 250.f;
-    float m_KillerDashCooldown = 1.0f;
+    float m_KillerDashCooldown = 1.5f;
 	Clock m_KillerCooldownClock;
 
 

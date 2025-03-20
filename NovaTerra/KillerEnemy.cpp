@@ -54,8 +54,15 @@ void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
         break;
 
     case State::DASHING:
-        m_rigidBody.getVelocity() = Vector2f(0, 0);
-        m_KillerState = State::COOLDOWN;
+         // Apply dash movement continuously
+        m_rigidBody.getVelocity() = dashDirection * m_KillerDashSpeed;
+
+        // Check for collision with player
+        if (m_shape.getGlobalBounds().intersects(player->getSprite().getGlobalBounds())) {
+            m_rigidBody.getVelocity() = Vector2f(0.f, 0.f);
+            m_KillerState = State::COOLDOWN;
+            m_KillerCooldownClock.restart();
+        }
         break;
 
     case State::COOLDOWN:
@@ -77,7 +84,9 @@ void KillerEnemy::dashToPlayer(const shared_ptr<Entity>& player) {
 }
 
 void KillerEnemy::stopAndCooldown(float deltaTime) {
-    if (m_KillerCooldownClock.getElapsedTime().asSeconds() >= m_KillerDashCooldown) {
+    m_rigidBody.getVelocity() = Vector2f(0.f, 0.f); 
+    if (deltaTime >= m_KillerDashCooldown) {
         m_KillerState = State::IDLE;
     }
 }
+
