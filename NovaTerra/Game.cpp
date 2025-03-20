@@ -27,7 +27,7 @@ void Game::run() {
 
     vec.push_back(make_shared<Player>(vec, 100, 600, false, true));
 
-    vec.push_back(make_shared<KillerEnemy>(200, 500, false, true));
+    vec.push_back(make_shared<KillerEnemy>(600, 700, false, false));
 
     Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
 

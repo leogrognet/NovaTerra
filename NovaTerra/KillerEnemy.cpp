@@ -11,7 +11,7 @@ KillerEnemy::KillerEnemy(float posX, float posY, bool isStatic, bool hasCollisio
         cerr << "KillerEnemy: Failed to load texture." << endl;
     }
 
-    m_shape.setSize(Vector2f(48.f, 48.f));
+    m_shape.setSize(Vector2f(150.f, 150.f));
     m_shape.setTexture(&killerTexture);
     m_shape.setPosition(posX, posY);
     m_shape.setScale(1.f, 1.f);
@@ -23,6 +23,8 @@ void KillerEnemy::update(float deltaTime, const vector<shared_ptr<Entity>>& coll
     // Apply velocity (dash movement)
     m_shape.move(velocity * deltaTime);
     position = m_shape.getPosition();
+
+    Entity::update(deltaTime, colliders);
 }
 
 void KillerEnemy::draw(RenderWindow& window) {
