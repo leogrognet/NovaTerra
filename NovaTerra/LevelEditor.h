@@ -70,18 +70,6 @@ private:
     vector<shared_ptr<Sprite>> m_TilesScrollMenu;
     vector<shared_ptr<RectangleShape>> m_TilesBordersMenu;
 
-    
-    vector<shared_ptr<RectangleShape>> m_SeperatedTilesBordersMenuType;
-    vector<shared_ptr<Sprite>> m_SeperatedTilesScrollMenuType;
-
-
-
-    vector<shared_ptr<Sprite>> m_SeperatedTilesScrollMenu_1;
-    vector<shared_ptr<RectangleShape>> m_SeperatedTilesBordersMenu_1;
-
-    vector<shared_ptr<Sprite>> m_SeperatedTilesScrollMenu_2;
-    vector<shared_ptr<RectangleShape>> m_SeperatedTilesBordersMenu_2;
-
     vector<shared_ptr<RectangleShape>> m_selectorMenu;
     vector<unique_ptr<Text>> m_selectorMenuTexts;
 

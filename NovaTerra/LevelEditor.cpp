@@ -426,7 +426,6 @@ void LevelEditor::handleMenuScroll(Event& event, float deltaTime,
     float scrollSpeed, float minScrollY, float maxScrollY)
 {
     if (event.mouseWheelScroll.delta > 0) {
-        // Défilement vers le haut
         if (scrollMenu.back()->getPosition().y >= maxScrollY) {
             for (auto& tilesButton : scrollMenu) {
                 tilesButton->move(0, -scrollSpeed * deltaTime);
@@ -437,7 +436,6 @@ void LevelEditor::handleMenuScroll(Event& event, float deltaTime,
         }
     }
     else if (event.mouseWheelScroll.delta < 0) {
-        // Défilement vers le bas
         if (scrollMenu.front()->getPosition().y <= minScrollY) {
             for (auto& tilesButton : scrollMenu) {
                 tilesButton->move(0, scrollSpeed * deltaTime);
@@ -448,7 +446,6 @@ void LevelEditor::handleMenuScroll(Event& event, float deltaTime,
         }
     }
 
-    // Réinitialisation du delta pour éviter des problèmes futurs
     event.mouseWheelScroll.delta = 0;
 }
 
