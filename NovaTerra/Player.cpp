@@ -23,6 +23,7 @@ Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool i
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
 	m_deltatime = deltatime;
+
 	if (m_state != State::DEAD) {
 
 		isDead();
@@ -48,7 +49,6 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 
 void Player::draw(RenderWindow& window) 
 { 
-	//window.draw(m_hitbox);
 	window.draw(m_shape); 
 	if (m_action == Action::HOOK || m_action == Action::REVERSEHOOK){ 
 		window.draw(m_hook); 
@@ -60,67 +60,66 @@ void Player::draw(RenderWindow& window)
 
 void Player::handleInput()
 {
-	// D�sactiv� les inputs si le joueur est en train de hook ou de grab
-	if (Keyboard::isKeyPressed(Keyboard::N)) {
-		m_hp = 0;
-	}
-	if (m_action != Action::REVERSEHOOK && m_action != Action::GRABING) {
-	// Keyboard input
+	if (m_action == Action::REVERSEHOOK || m_action == Action::GRABING) { return; }
+
+	//Clavier
 	if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -250; }
 	else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 250;}
 	else { m_rigidBody.getVelocity().x = 0; }
 
-		if (Keyboard::isKeyPressed(Keyboard::Z)) { m_direction = Direction::UP; }
-		if (Keyboard::isKeyPressed(Keyboard::S)) { m_direction = Direction::DOWN; }
+	if (Keyboard::isKeyPressed(Keyboard::Z)) { m_direction = Direction::UP; }
+	if (Keyboard::isKeyPressed(Keyboard::S)) { m_direction = Direction::DOWN; }
 
-		// Direction diagonale haut
-		if (Keyboard::isKeyPressed(Keyboard::Z) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::UPRIGHT; }
-		if (Keyboard::isKeyPressed(Keyboard::Z) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::UPLEFT; }
+	if (Keyboard::isKeyPressed(Keyboard::Z) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::UPRIGHT; }
+	if (Keyboard::isKeyPressed(Keyboard::Z) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::UPLEFT; }
 
-		// Direction diagonale bas
-		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::DOWNRIGHT; }
-		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::DOWNLEFT; }
+	if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::DOWNRIGHT; }
+	if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::DOWNLEFT; }
 
 	if (Keyboard::isKeyPressed(Keyboard::Space) && m_rigidBody.getIsGrounded()) {
 		m_rigidBody.getVelocity().y = -350;
 	}
-
-		if (Keyboard::isKeyPressed(Keyboard::F) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
+	if (Keyboard::isKeyPressed(Keyboard::F) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
 			m_action = Action::HOOK;
 			m_hookSize = 0;
-		}
+	}
 
-		if (Keyboard::isKeyPressed(Keyboard::LShift) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
+	if (Keyboard::isKeyPressed(Keyboard::LShift) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
 			m_hookCd.restart();
 			m_action = Action::DASHING;
 		}
 
-		if (Joystick::isConnected(0)) {
-			float x = Joystick::getAxisPosition(0, Joystick::X);
-			float y = Joystick::getAxisPosition(0, Joystick::Y);
+	//Manette
+	if (Joystick::isConnected(0)) {
+		float x = Joystick::getAxisPosition(0, Joystick::X);
+		float y = Joystick::getAxisPosition(0, Joystick::Y);
 
-		if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -500; }
-		if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 500; }
+		if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -250; }
+		if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 250; }
 
-			if (y < -50) { m_direction = Direction::UP; }
-			if (y > 50) { m_direction = Direction::DOWN; }
+		if (y < -50) { m_direction = Direction::UP; }
+		if (y > 50) { m_direction = Direction::DOWN; }
 
-			if (y < -50 && x > 50) { m_direction = Direction::UPRIGHT; }
-			if (y < -50 && x < -50) { m_direction = Direction::UPLEFT; }
+		if (y < -50 && x > 50) { m_direction = Direction::UPRIGHT; }
+		if (y < -50 && x < -50) { m_direction = Direction::UPLEFT; }
 
-			if (y > 50 && x > 50) { m_direction = Direction::DOWNRIGHT; }
-			if (y > 50 && x < -50) { m_direction = Direction::DOWNLEFT; }
+		if (y > 50 && x > 50) { m_direction = Direction::DOWNRIGHT; }
+		if (y > 50 && x < -50) { m_direction = Direction::DOWNLEFT; }
 
 		if (Joystick::isButtonPressed(0, 0) && m_rigidBody.getIsGrounded()) {
 			m_rigidBody.getVelocity().y = -350;
 		}
 
-			if (Joystick::isButtonPressed(0, 1) && m_hookCd.getElapsedTime().asSeconds() > 1) { // Assuming button 1 is the dash button
-				m_hookCd.restart();
-				m_state = State::DASHING;
-			}
+		if (Joystick::isButtonPressed(0, 1) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
+			m_hookCd.restart();
+			m_action = Action::DASHING;
+		}
+		if (Joystick::isButtonPressed(0, 5) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
+			m_action = Action::HOOK;
+			m_hookSize = 0;
 		}
 	}
+	
 }
 
 void Player::dash()
@@ -174,22 +173,20 @@ void Player::grabing()
 {
 	if (m_action == Action::GRABING) {
 		m_rigidBody.getVelocity().y = -981.f * m_deltatime / 2;
-		if (Keyboard::isKeyPressed(Keyboard::Space)) {
+		if (Keyboard::isKeyPressed(Keyboard::Space) || Joystick::isConnected(0) && Joystick::isButtonPressed(0, 0)) {
 			m_action = Action::NONE; 
 			m_rigidBody.getVelocity().y = -200;
 		}
-		if (Joystick::isConnected(0) && Joystick::isButtonPressed(0,0)) {
-			m_action = Action::NONE;
-			m_rigidBody.getVelocity().y = -200;
-		}
-
 		for (auto entity : m_wallvec) {
-			if (Keyboard::isKeyPressed(Keyboard::Z) && grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())){
-			m_rigidBody.getVelocity().y = -100.f;
+			if ((Keyboard::isKeyPressed(Keyboard::Z) || (Joystick::isConnected(0) && Joystick::getAxisPosition(0, Joystick::Y) < -50))
+				&& grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
+				m_rigidBody.getVelocity().y = -100.f;
 			}
-			else if(Keyboard::isKeyPressed(Keyboard::S) && grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
+			else if ((Keyboard::isKeyPressed(Keyboard::S) || (Joystick::isConnected(0) && Joystick::getAxisPosition(0, Joystick::Y) > 50))
+				&& grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
 				m_rigidBody.getVelocity().y = 100.f;
 			}
+
 		}		
 	}
 }

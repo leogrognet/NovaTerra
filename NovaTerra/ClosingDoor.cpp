@@ -51,7 +51,10 @@ void Door::closeDoor(float deltaTime)
 bool Door::collisionButton(const vector<shared_ptr<Entity>>& colliders)
 {
 	for (auto& entity : colliders) {
-		if (entity->getID() == 1 && entity->getSprite().getGlobalBounds().intersects(m_buttonShape.getGlobalBounds()) && Keyboard::isKeyPressed(Keyboard::E)) {
+		if (entity->getID() == 1
+			&& entity->getSprite().getGlobalBounds().intersects(m_buttonShape.getGlobalBounds())
+			&& (Keyboard::isKeyPressed(Keyboard::E) || (Joystick::isConnected(0) && Joystick::isButtonPressed(0, 2)))) { // Bouton X = ID 2
+
 			openDoor();
 			m_state = State::CLOSING;
 			m_doorSize = 0;
@@ -59,4 +62,5 @@ bool Door::collisionButton(const vector<shared_ptr<Entity>>& colliders)
 		}
 	}
 	return false;
+
 }

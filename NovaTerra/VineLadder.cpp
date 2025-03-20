@@ -16,13 +16,14 @@ Vine::Vine(float posX, float posY, float width, float height , bool isStatic, bo
 void Vine::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
     for (auto& entity : colliders) {
-        if (entity->getID() == 1 && Keyboard::isKeyPressed(Keyboard::Z) && entity->getSprite().getGlobalBounds().intersects(m_shape.getGlobalBounds())) {
+        if (entity->getID() == 1 && (Keyboard::isKeyPressed(Keyboard::Z) || (Joystick::isConnected(0) && Joystick::getAxisPosition(0, Joystick::Y) < -50))
+            && entity->getSprite().getGlobalBounds().intersects(m_shape.getGlobalBounds())) {
+
             if (auto player = dynamic_cast<Player*>(entity.get())) {
                 player->setAction(Player::Action::GRABING);
-           }
+            }
         }
     }
-
     Entity::update(deltaTime,colliders);
 }
 
