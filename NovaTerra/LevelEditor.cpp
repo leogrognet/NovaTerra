@@ -406,7 +406,7 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
         default:
             if (event.mouseWheelScroll.delta > 0) {
                 baseZoom *= baseZoom - zoomAmont;
-                event.mouseWheelScroll.delta = 0;
+                event.mouseWheelScroll.delta = 0; 
             }
             else if (event.mouseWheelScroll.delta < 0) {
                 baseZoom *= baseZoom + zoomAmont;

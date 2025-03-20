@@ -59,7 +59,7 @@ private:
     int m_textureId;
     int m_lastState;
     const int TILE_SIZE = 32;
-    float timeClicked;
+
 
     // 4. Structures de données
 
