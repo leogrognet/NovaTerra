@@ -3,7 +3,7 @@
 Plateform::Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, shared_ptr<Texture>& texture) :Entity(posX, posY, isStatic, asCollision)
 {
 	m_shape.setTexture(*texture);
-	m_shape.setScale(1.f, 1.f);
+	m_shape.setScale(size);
 	m_shape.setPosition(posX, posY);
 }
 

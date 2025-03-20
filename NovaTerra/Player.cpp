@@ -1,14 +1,12 @@
-#include "Player.h"
+﻿#include "Player.h"
 #include <SFML/Window/Joystick.hpp>
 
-Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),
+Player::Player(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),
 	m_hp(3), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE)
 {
-	m_wallvec = shape;
-
 	m_texture.loadFromFile("../assets/player.png");
 	m_shape.setTexture(m_texture);
-	m_shape.setScale({ 1.f,1.f });
+	m_shape.setScale({ 0.5f,0.75f });
 	m_shape.setPosition(posX, posY);
 
 	m_hook.setSize({ 2.5f,2.5f });
@@ -22,6 +20,7 @@ Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool i
 
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
+	cout << "Player Pos : " << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
 	m_deltatime = deltatime;
 
 	if (m_state != State::DEAD) {
@@ -32,8 +31,8 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 		handleInput();
 		dash();
 
-		grapplinshoot();
-		grabing();
+		grapplinshoot(colliders);
+		grabing(colliders);
 
 		forceMove();
 
@@ -50,6 +49,7 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 void Player::draw(RenderWindow& window) 
 { 
 	window.draw(m_shape); 
+	window.draw(m_hook);
 	if (m_action == Action::HOOK || m_action == Action::REVERSEHOOK){ 
 		window.draw(m_hook); 
 	} 
@@ -87,7 +87,7 @@ void Player::handleInput()
 	if (Keyboard::isKeyPressed(Keyboard::LShift) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
 			m_hookCd.restart();
 			m_action = Action::DASHING;
-		}
+	}
 
 	//Manette
 	if (Joystick::isConnected(0)) {
@@ -139,23 +139,23 @@ void Player::dash()
 	}
 }
 
-void Player::grapplinshoot()
+void Player::grapplinshoot(const vector<shared_ptr<Entity>>& colliders)
 {
 	if (m_action == Action::HOOK) {
 		m_hookSize += m_deltatime * 110;
-		for (auto& vec : m_wallvec) {
-			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection) && vec->getasCollision()) {
+		for (auto& vec : colliders) {
+			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection) && vec->getasCollision() && vec->getID() != 1) {
+				cout << "COLLIDE" << endl;
 				m_hookCd.restart();
 				m_action = Action::REVERSEHOOK;
 				m_rigidBody.getVelocity() = { 0,0 };
 			}
-
 			m_hook.setScale({ m_hookSize * m_stockedDirection.x,2.5f });
 
 			if (m_hookSize >= 100) {
 				m_action = Action::NONE;
 			}
-		}		
+		}
 	}
 	if (m_action == Action::REVERSEHOOK) {
 		m_rigidBody.getVelocity().y = -981.f * m_deltatime / 2;
@@ -169,7 +169,7 @@ void Player::grapplinshoot()
 	}
 }
 
-void Player::grabing()
+void Player::grabing(const vector<shared_ptr<Entity>>& colliders)
 {
 	if (m_action == Action::GRABING) {
 		m_rigidBody.getVelocity().y = -981.f * m_deltatime / 2;
@@ -177,7 +177,7 @@ void Player::grabing()
 			m_action = Action::NONE; 
 			m_rigidBody.getVelocity().y = -200;
 		}
-		for (auto entity : m_wallvec) {
+		for (auto entity : colliders) {
 			if ((Keyboard::isKeyPressed(Keyboard::Z) || (Joystick::isConnected(0) && Joystick::getAxisPosition(0, Joystick::Y) < -50))
 				&& grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
 				m_rigidBody.getVelocity().y = -100.f;
