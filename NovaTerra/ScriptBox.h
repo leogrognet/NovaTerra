@@ -42,7 +42,9 @@ private:
 	int m_line;
 	int m_char;
 
+	bool m_isScipting;
 	bool m_isTyping;
 	float m_typingCoolDown;
 	float m_typingIncr;
+	float m_timeChange;
 };
