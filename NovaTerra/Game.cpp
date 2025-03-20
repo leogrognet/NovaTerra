@@ -47,7 +47,6 @@ void Game::run() {
         scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
 
-
         window.clear();
         background.update(deltatime);
         //player.update(deltatime, vec);
