@@ -34,13 +34,11 @@ private:
 	Vector2f position;
     Vector2f dashDirection;
 
-    Texture killerTexture;
+    Texture killerTexture; 
 
-    //RigidBody m_rigidBody; 
-
-    float m_KillerDashSpeed = 500.f;
+    float m_KillerDashSpeed = 1600.f;
     float m_KillerDetectionRange = 250.f;
-    float m_KillerDashCooldown = 1.0f;
+    float m_KillerDashCooldown = 0.5f;
 	Clock m_KillerCooldownClock;
 
 

@@ -58,7 +58,6 @@ void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
         break;
 
     case State::DASHING:
-        // Stop the dash instantly after one frame of movement
         velocity = Vector2f(0.f, 0.f);
         m_KillerState = State::COOLDOWN;
         break;
@@ -71,7 +70,7 @@ void KillerEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
 
 void KillerEnemy::dashToPlayer(const shared_ptr<Entity>& player) {
     Vector2f direction = player->getSprite().getPosition() - m_shape.getPosition();
-    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+    float length = sqrt(direction.x * direction.x + direction.y * direction.y);
 
     if (length != 0.f)
         dashDirection = direction / length;
