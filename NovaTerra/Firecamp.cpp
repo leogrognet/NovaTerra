@@ -18,7 +18,7 @@ void Firecamp::update(float deltaTime, const vector<shared_ptr<Entity>>& collide
 }
 
 void Firecamp::interact(Cycle& cycle, Player& player) {
-	if (CD.getElapsedTime().asSeconds() > 1.0f && player.m_shape.getGlobalBounds().intersects(detectionRange.getGlobalBounds())) {
+	if (CD.getElapsedTime().asSeconds() > 1.0f && player.getSprite().getGlobalBounds().intersects(detectionRange.getGlobalBounds())) {
 		cycle.changeState();
 		CD.restart();
 	}

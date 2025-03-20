@@ -22,3 +22,7 @@ void Cycle::displayState() {
         std::cout << "C'est actuellement la nuit\n";
     }
 }
+
+Cycle::State Cycle::getState() {
+    return currentState;
+}

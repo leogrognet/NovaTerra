@@ -19,7 +19,7 @@ class Player;
 
 class Entity {
 protected:
-
+	Sprite m_shape;
 	Texture m_shapeTexture;
 	RigidBody m_rigidBody;
 	RectangleShape m_hitbox;
@@ -31,7 +31,7 @@ protected:
 
 public:
 
-	Sprite m_shape;
+
 	virtual void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders);
 	virtual void draw(RenderWindow& window);
 	virtual int getID();

@@ -15,6 +15,7 @@ public:
 
     void changeState();
     void displayState();
+    State getState();
 
 private:
     State currentState;

@@ -9,6 +9,8 @@ Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0") {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
+    night.setFillColor(sf::Color(0, 0, 0, 200));
+    night.setSize(sf::Vector2f(2000, 2000));
 }
 
 Game::~Game() {
@@ -68,6 +70,9 @@ void Game::run() {
 		background.update(deltatime);
         //player.update(deltatime, vec);
         background.draw(window);
+        if (cycle->getState() == Cycle::State::Night) {
+            window.draw(night);
+        }
         //map->draw(window);
         for (auto& entity : vec) {
             playerPtr = dynamic_pointer_cast<Player>(entity);

@@ -19,6 +19,7 @@ class Game {
 private:
     const int WIDTH;
     const int HEIGHT;
+    sf::RectangleShape night;
     RenderWindow window;
     vector<shared_ptr<Texture>> textureListTest;
     TextureLoader loadertest;
