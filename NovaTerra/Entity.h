@@ -8,18 +8,18 @@ using namespace std;
 
 enum entityType
 {	
-	NOTYPE,
-	BIOME_1_PLAT,
-	BIOME_2_PLAT,
-	BIOME_3_PLAT,
-	GOLEM,
-	PUNGUS = 420,
+	NOTYPE  = 0,
+	BIOME_1_PLAT = 1,
+	BIOME_2_PLAT = 2,
+	BIOME_3_PLAT = 3,
+	PUNGUS = 4,
+	CROC = 5,
+	GOLEM = 6,
+	GRIND_VINE = 7,
 	PLAYER = 8,
-	CROC = 60,
 	MOVE_PLAT = 9,
 	BOUNCE_PLAT = 10,
-	GRIND_VINE = 7,
-	DOOR = 50,
+	FALL_PLAT = 11,
 	
 };
 

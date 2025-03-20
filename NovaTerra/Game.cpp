@@ -39,12 +39,10 @@ void Game::run() {
             if (event.type == Event::Closed)
                 window.close();
         }
-        //scroll->move(1.f, 0.f);
-        //scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
 
         window.clear();
-        background.update(deltatime);
+       
         //player.update(deltatime, vec);
         background.draw(window);
         for (auto entityvec : vec) {
@@ -52,7 +50,8 @@ void Game::run() {
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
             if (entityvec->getID() == 1) {
-                view.setCenter(entityvec->getSprite().getPosition());
+                background.update(deltatime, entityvec->getSprite().getPosition());
+                view.setCenter(entityvec->getSprite().getPosition().x +200,entityvec->getSprite().getPosition().y);
             }
         }
         window.setView(view);

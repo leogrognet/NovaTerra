@@ -2,10 +2,13 @@
 
 Pungus::Pungus(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision) {
 	rng = new Random(0, 4);
-	pungusTexture.loadFromFile("../assets/slimet.png");
+	pungusTexture.loadFromFile("../NovaTerra/assets/Image/Boss/MOB.png");
 	m_shape.setTexture(pungusTexture);
 	m_shape.setPosition(posX, posY);
-	m_shape.setScale(1.f, 1.f);
+	float scaleFactorX = 128 / m_shape.getGlobalBounds().width / 4;
+	float scaleFactorY = 256 / m_shape.getGlobalBounds().height / 4;
+
+	m_shape.setScale({ scaleFactorX,scaleFactorY });
 	direction = Direction::WEST;
 }
 

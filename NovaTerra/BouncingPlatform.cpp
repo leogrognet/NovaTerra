@@ -3,10 +3,14 @@
 Bounce::Bounce(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision)
 {
 	m_shape.setPosition(posX, posY);
-	m_shapeTexture.loadFromFile("../assets/cat1.jpg");
+	m_shapeTexture.loadFromFile("../NovaTerra/assets/Image/Bounce and Move/PR.png");
+
 	m_shape.setTexture(m_shapeTexture);
 
-	m_shape.setScale(size);
+	float scaleFactorX = 128 / m_shape.getGlobalBounds().width / 4;
+	float scaleFactorY = 128 / m_shape.getGlobalBounds().height / 4;
+
+	m_shape.setScale({ scaleFactorX,scaleFactorY });
 }
 
 void Bounce::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
