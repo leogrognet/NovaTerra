@@ -35,9 +35,9 @@ private:
 
     Texture killerTexture; 
 
-    float m_KillerDashSpeed = 1700.f;
+    float m_KillerDashSpeed = 2000.f;
     float m_KillerDetectionRange = 250.f;
-    float m_KillerDashCooldown = 0.5f;
+    float m_KillerDashCooldown = 1.0f;
 	Clock m_KillerCooldownClock;
 
 

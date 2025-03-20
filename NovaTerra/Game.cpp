@@ -23,7 +23,7 @@ void Game::run() {
     vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true,true));
     vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true,true));
 
-    vec.push_back(make_shared<GolemEnemy>(500, 700, false, false));
+    //vec.push_back(make_shared<GolemEnemy>(500, 700, false, false));
 
     vec.push_back(make_shared<Player>(vec, 100, 600, false, true));
 
