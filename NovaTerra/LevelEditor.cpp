@@ -34,10 +34,6 @@ LevelEditor::LevelEditor(RenderWindow& window)
     addSelectorButton(Color::Green, "Save");
     addSelectorButton(Color::Yellow, "Load");
 
-    m_ActualTileTexture = m_SperatedTileTextures_1;
-    m_SeperatedTilesBordersMenuType = m_SeperatedTilesBordersMenu_1;
-    m_SeperatedTilesScrollMenuType = m_SeperatedTilesScrollMenu_1;
-
     m_allTextureVector.push_back(m_FileTileTextures);
     m_allTextureVector.push_back(m_SperatedTileTextures_1);
     m_allTextureVector.push_back(m_SperatedTileTextures_2);
@@ -294,23 +290,24 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                     case BIOME_3:
                         break;
                     default:
-                        timeClicked += deltaTime;
                         for (auto& tileMenu : m_TilesBordersMenu) {
                             if (tileMenu->getGlobalBounds().contains(Vector2f(Mouse::getPosition(window)))) {
                                 tileMenu->setOutlineColor(Color::White);
                                 tileMenu->setOutlineThickness(5);
                                 int position = std::distance(m_TilesBordersMenu.begin(), std::find(m_TilesBordersMenu.begin(), m_TilesBordersMenu.end(), tileMenu));
-                                if (position != 0) {
+                                if (position > 0 && position < 3) {
 
                                     m_entityTile = static_cast<entityType>(position);
                                     m_tileState = static_cast<tileState>(position);
-                                    cout << m_tileState << "tile"<<endl;
                                     if (position == 1) {
                                         m_entityTile = static_cast<entityType>(0);
                                     }
-
-                                    timeClicked = 0;
                                     m_subMenu = true;
+                                    m_textureId = position;
+                                }
+                                else {
+                                    m_entityTile = static_cast<entityType>(position);
+                                    m_subMenu = false;
                                     m_textureId = position;
                                 }
 
@@ -347,7 +344,7 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                             return tile.second.first == entityType::NOTYPE;
                             }) != m_tiles.end())
                     {
-                        if (m_tileState != 0) {
+                        if (m_tileState >0 && m_tileState < 3) {
                             m_tiles[{mouseTilePosition.x, mouseTilePosition.y}] = { m_tileState, m_textureId };
                         }
                         else {
@@ -355,8 +352,10 @@ void LevelEditor::handleInput(RenderWindow& window, View& tileView, Event& event
                         }
                         auto rect = make_unique<RectangleShape>();
                         if (m_subMenu) {
-
-                            tileSetter(move(rect), mouseTilePosition, m_textureId);
+                            tileSetter(move(rect), mouseTilePosition, m_textureId, m_tileState);
+                        }
+                        else {
+                            tileSetter(move(rect), mouseTilePosition,0, m_entityTile);
                         }
                     }
                     break;
@@ -550,17 +549,23 @@ void LevelEditor::updateTiles() {
         m_entityTile = static_cast<entityType>(tileID.first);
         m_tileState = static_cast<tileState>(tileID.first);
         m_textureId = tileID.second;
-        tileSetter(move(rect), Vector2i(pos.first, pos.second), tileID.second);
+        if (tileID.second > 0) {
+            tileSetter(move(rect), Vector2i(pos.first, pos.second), tileID.first, tileID.second);
+        }
+        else {
+            tileSetter(move(rect), Vector2i(pos.first, pos.second),0, tileID.first);
+        }
     }
 }
 
-void LevelEditor::tileSetter(shared_ptr<RectangleShape> tile, Vector2i MousTilePos, int textureIndex)
+void LevelEditor::tileSetter(shared_ptr<RectangleShape> tile, Vector2i MousTilePos,int vectorIndex, int textureIndex )
 {
 
     tile->setSize(Vector2f(TILE_SIZE, TILE_SIZE));
     tile->setPosition(Vector2f(MousTilePos.x * TILE_SIZE, MousTilePos.y * TILE_SIZE));
-    if (!m_allTextureVector.at(m_tileState).empty()) {
-        tile->setTexture(m_allTextureVector.at(m_tileState).at(textureIndex).get());
+    cout << vectorIndex;
+    if (!m_allTextureVector.at(vectorIndex).empty()) {
+        tile->setTexture(m_allTextureVector.at(vectorIndex).at(textureIndex).get());
     }
     m_tilesShape.push_back(move(tile));
 

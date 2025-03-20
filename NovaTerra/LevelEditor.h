@@ -62,7 +62,6 @@ private:
     float timeClicked;
 
     // 4. Structures de données
-    vector<shared_ptr<Texture>> m_ActualTileTexture;
 
     map<pair<int, int>, pair<int, int>> m_tiles;
     vector<shared_ptr<RectangleShape>> m_tilesShape;
@@ -113,7 +112,7 @@ private:
     // 6.4 Dessin des éléments
     void draw(RenderWindow& window, View& tileView, View& Ui_View);
     void updateTiles();
-    void tileSetter(shared_ptr<RectangleShape> tile, Vector2i MousTilePos, int textureIndex);
+    void tileSetter(shared_ptr<RectangleShape> tile, Vector2i MousTilePos, int textureIndex, int vectorIndex);
 
     void subMenuHandler(std::vector<std::shared_ptr<RectangleShape>>& tileMenu, RenderWindow& window);
 
