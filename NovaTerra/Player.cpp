@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <SFML/Window/Joystick.hpp>
 
-Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision, textureList),
+Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),
 	m_hp(3), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE)
 {
 	m_wallvec = shape;

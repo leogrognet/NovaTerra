@@ -1,10 +1,9 @@
 #include "VineLadder.h"
 
-Vine::Vine(float posX, float posY, float width, float height , bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) : Entity(posX, posY, isStatic, asCollision, texture)
+Vine::Vine(float posX, float posY, float width, float height , bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision)
 {
-    if (!textureList.empty()) {
 
-        m_shape.setTexture(*textureList.at(0).get());
+        m_shape.setTexture(*textureList.at(0));
         IntRect m_textureRect(128, 640, 128, 128);
 
         m_shape.setTextureRect(m_textureRect);

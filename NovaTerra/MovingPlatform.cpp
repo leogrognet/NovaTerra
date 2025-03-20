@@ -1,6 +1,7 @@
 #include "MovingPlatform.h"
 
 MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) :Entity(posX, posY, isStatic, asCollision, texture)
+
 {
 	if (!textureList.empty()) {
 
