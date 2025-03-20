@@ -24,9 +24,13 @@ void Game::run() {
     View view;
     view.zoom(0.9f);
 
-    Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 },window);
 
-    vec = map->generateTiles(textureListTest,vec);
+    string mapFile = "../NovaTerra/assets/map/lobby.txt";
+
+    Map map(mapFile, window);
+
+
+    vec = map.generateTiles(textureListTest, vec);
 
     Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
