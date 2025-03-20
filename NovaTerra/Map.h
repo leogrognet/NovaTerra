@@ -11,6 +11,7 @@
 #include "MovingPlatform.h"
 #include "Plateform.h"
 #include "GolemEnemy.h"
+#include "Pungus.h"
 #include "BouncingPlatform.h"
 #include "VineLadder.h"
 #include "LevelEditor.h"

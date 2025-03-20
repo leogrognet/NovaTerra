@@ -13,6 +13,7 @@ enum entityType
 	BIOME_2_PLAT,
 	BIOME_3_PLAT,
 	GOLEM,
+	PUNGUS,
 	PLAYER = 8,
 	CROC = 60,
 	MOVE_PLAT = 9,
