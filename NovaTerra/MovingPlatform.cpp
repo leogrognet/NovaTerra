@@ -34,8 +34,7 @@ void MovePlat::move(float deltatime, const vector<shared_ptr<Entity>>& colliders
 				entity->setForcedVelocity({ 5000 * deltatime,0 });
 			}
 		}
-		if (m_shape.getPosition().x >= m_stockedPos.x + 300) {
-			m_stockedPos = { m_shape.getPosition() };
+		if (m_shape.getPosition().x >= m_stockedPos.x + 150) {
 			reverseMove = true;
 		}
 	} else {
@@ -45,8 +44,7 @@ void MovePlat::move(float deltatime, const vector<shared_ptr<Entity>>& colliders
 				entity->setForcedVelocity({ -5000 * deltatime,0 });
 			}
 		}
-		if (m_shape.getPosition().x <= m_stockedPos.x - 300) {
-			m_stockedPos = { m_shape.getPosition() };
+		if (m_shape.getPosition().x <= m_stockedPos.x - 150) {
 			reverseMove = false;
 		}
 	}

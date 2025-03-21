@@ -72,6 +72,11 @@ bool Entity::getasCollision()
     return m_asCollision;
 }
 
+CircleShape& Entity::getCircleShape()
+{
+    return projectile;
+}
+
 Sprite& Entity::getSprite()
 {
     return m_shape;

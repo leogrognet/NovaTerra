@@ -13,8 +13,7 @@ private:
 
 public:
     Texture texture;
-    Sprite sprite;
-    Sprite sprite2;
+    vector<shared_ptr<Sprite>> sprites;
 
     Background(const string& texturePath, float speed);
     void update(float deltaTime, Vector2f position);

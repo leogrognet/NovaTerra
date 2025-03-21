@@ -17,7 +17,7 @@ enum entityType
 	CROC = 5,
 	GOLEM = 6,
 	GRIND_VINE = 7,
-	FIRECAMP = 69,
+	FIRECAMP = 12,
 	PLAYER = 8,
 	MOVE_PLAT = 9,
 	BOUNCE_PLAT = 10,
@@ -36,6 +36,8 @@ protected:
 	RectangleShape m_hitbox;
 	Vector2f m_forcedVelocity;
 	vector<shared_ptr<Texture>> textureList;
+
+	CircleShape projectile;
 
 	bool m_asCollision;
 
@@ -61,6 +63,8 @@ public:
 	virtual bool isDead();
 
 	virtual bool getasCollision();
+
+	virtual CircleShape& getCircleShape();
 
 	Sprite& getSprite();
 

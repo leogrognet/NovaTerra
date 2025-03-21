@@ -55,7 +55,7 @@ vector<shared_ptr<Entity>> Map::generateTiles(vector<shared_ptr<Texture>> textur
             allEntities.push_back(make_shared<Firecamp>(float(pos.first * 32), float(pos.second * 32), true, false));
             break;
         case CROC:
-            //allEntities.push_back(make_shared<>());a
+            allEntities.push_back(make_shared<KillerEnemy>(float(pos.first * 32), float(pos.second * 32), false, false));
             break;
         case MOVE_PLAT:
             allEntities.push_back(make_shared<MovePlat>(float(pos.first *32), float(pos.second * 32), Vector2f(2.f, 2.f), true, true));

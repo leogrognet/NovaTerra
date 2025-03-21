@@ -13,16 +13,23 @@ enum class Direction { WEST, EAST };
 
 class Pungus : public Entity {
 private:
+	int m_hp = 5;
+
 	Random* rng;
 	int temp_rng;
-	std::vector<Projectile> projectiles;
+	vector<Projectile> projectiles;
 	Direction direction;
-	sf::Texture pungusTexture;
-	sf::Clock attackCD;
-	sf::Clock poison;
+	Texture pungusTexture;
+	Clock attackCD;
+	Clock poison;
+	Clock damageCD;
 
-	void attack(sf::Vector2f playerPos);
-	sf::Vector2f calculateProjectileVelocity(sf::Vector2f startPos, sf::Vector2f targetPos, float timeToReach, float gravity);
+	CircleShape m_detectionRange;
+
+	bool isDead = false;
+
+	void attack(Vector2f playerPos, const vector<shared_ptr<Entity>>& colliders);
+	Vector2f calculateProjectileVelocity(Vector2f startPos, Vector2f targetPos, float timeToReach, float gravity);
 public:
 	Pungus(float posX, float posY, bool isStatic, bool asCollision);
 
@@ -30,6 +37,6 @@ public:
 	void changeDirection(int playerPosX);
 	int getID() override;
 	void draw(RenderWindow& window) override;
-
+	void checkAtk(const vector<shared_ptr<Entity>>& colliders);
 
 };

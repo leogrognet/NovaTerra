@@ -17,6 +17,7 @@
 #include "LevelEditor.h"
 #include "Firecamp.h"
 #include "FallingPlatform.h"
+#include "KillerEnemy.h"
 
 
 using namespace sf;
