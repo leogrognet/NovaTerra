@@ -3,7 +3,6 @@
 void TextureLoader::loadTexture(string& imagePathType, vector<shared_ptr<Texture>>& textureList)
 {
 	try {
-
 		try {
 			for (const auto& entry : fs::directory_iterator(imagePathType)) {
 				imagesPath.push_back(entry.path().string());

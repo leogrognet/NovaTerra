@@ -3,8 +3,11 @@
 Plateform::Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, shared_ptr<Texture>& texture) :Entity(posX, posY, isStatic, asCollision)
 {
 	m_shape.setTexture(*texture);
-	m_shape.setScale(size);
 	m_shape.setPosition(posX, posY);
+	float scaleFactorX = 32 / m_shape.getGlobalBounds().width ;
+	float scaleFactorY = 32 / m_shape.getGlobalBounds().height ;
+	m_shape.setScale({ scaleFactorX,scaleFactorY });
+
 }
 
 void Plateform::draw(RenderWindow& window) {

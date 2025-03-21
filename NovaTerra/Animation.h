@@ -7,14 +7,19 @@ using namespace sf;
 
 class Animation {
 private:
-	int xPos, yPos, frameSize, xSizeMax, ySizeMax;
+	int xPos, yPos, xSizeMax, ySizeMax;
 	float animTime, animSwitch;
+	bool invert;
 
 
-	void animationSwitch(Sprite& sprite,float deltaTime);
 
-	void animationChange(Sprite& sprite, Texture& texture);
+
 public :
-	Animation(Sprite& sprite, Texture& texture);
+	void animationSwitch(Sprite& sprite, float deltaTime, Vector2f frameSize);
+	void animationChange(Sprite& sprite, Texture& texture);
+
+	Animation(Sprite& sprite,  Vector2f size, int maxSize, float time);
+
+
 
 };

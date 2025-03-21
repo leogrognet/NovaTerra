@@ -3,10 +3,11 @@
 Vine::Vine(float posX, float posY, float width, float height, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision)
 {
 
-    m_shapeTexture.loadFromFile("../assets/Spruce.png");
+    m_shapeTexture.loadFromFile("../NovaTerra/assets/Image/Bounce and Move/L.png");
     m_shape.setTexture(m_shapeTexture);
-    m_shape.setScale(width, height);
-    m_shape.setPosition(posX, posY);
+    float scaleFactorX = 32 / m_shape.getGlobalBounds().width;
+    float scaleFactorY = 32 / m_shape.getGlobalBounds().height;
+    m_shape.setScale({ scaleFactorX,scaleFactorY });
 }
 
 void Vine::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)

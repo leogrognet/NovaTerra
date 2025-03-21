@@ -17,7 +17,7 @@ public:
     Sprite sprite2;
 
     Background(const string& texturePath, float speed);
-    void update(float deltaTime);
+    void update(float deltaTime, Vector2f position);
     void draw(RenderWindow& window);
 
 };

@@ -16,7 +16,6 @@ void Map::loadFromFile(const string& filename) {
 
     m_tiles.clear();
 
-
     int x, y, tileID, textureIndex;
     while (file >> x >> y >> tileID >> textureIndex) {
         m_tiles[{x, y}] = { tileID, textureIndex };
@@ -38,32 +37,33 @@ vector<shared_ptr<Entity>> Map::generateTiles(vector<shared_ptr<Texture>> textur
         switch (entity)
         {
         case BIOME_1_PLAT:
-            allEntities.push_back(make_shared<Plateform>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), Vector2f(0.5f, 1.f), true, true, m_levelEditor.m_SperatedTileTextures_1.at(tileID.second)));
+            allEntities.push_back(make_shared<Plateform>(float(pos.first * 32), float(pos.second * 32), Vector2f(0.5f, 1.f), true, true, m_levelEditor.m_SperatedTileTextures_1.at(tileID.second)));
             break;
         case BIOME_2_PLAT:
-            allEntities.push_back(make_shared<Plateform>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), Vector2f(0.5f, 1.f), true, true, m_levelEditor.m_SperatedTileTextures_2.at(tileID.second)));
+            allEntities.push_back(make_shared<Plateform>(float(pos.first * 32), float(pos.second * 32), Vector2f(0.5f, 1.f), true, true, m_levelEditor.m_SperatedTileTextures_2.at(tileID.second)));
             break;
         case BIOME_3_PLAT:
-            allEntities.push_back(make_shared<Plateform>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), Vector2f(0.5f, 1.f), true, true, m_levelEditor.m_SperatedTileTextures_1.at(tileID.second)));
+            allEntities.push_back(make_shared<Plateform>(float(pos.first * 32), float(pos.second * 32), Vector2f(0.5f, 1.f), true, true, m_levelEditor.m_SperatedTileTextures_1.at(tileID.second)));
             break;
         case GOLEM:
-            allEntities.push_back(make_shared<GolemEnemy>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), false, false));
+            allEntities.push_back(make_shared<GolemEnemy>(float(pos.first * 32), float(pos.second * 32), false, false));
             break;
         case PUNGUS:
-            allEntities.push_back(make_shared<Pungus>(400, 500, false, false));
+            allEntities.push_back(make_shared<Pungus>(float(pos.first * 32), float(pos.second * 32), false, false));
+            break;
         case CROC:
             //allEntities.push_back(make_shared<>());a
             break;
         case MOVE_PLAT:
-            allEntities.push_back(make_shared<MovePlat>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), Vector2f(0.5f, 1.f), true, true));
+            allEntities.push_back(make_shared<MovePlat>(float(pos.first *32), float(pos.second * 32), Vector2f(1.f, 1.f), true, true));
             break;
         case BOUNCE_PLAT:
-            allEntities.push_back(make_shared<Bounce>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), Vector2f(0.5f, 1.f), true, true));
+            allEntities.push_back(make_shared<Bounce>(float(pos.first * 32), float(pos.second * 32), Vector2f(1.f, 1.f), true, true));
             break;
         case GRIND_VINE:
-            allEntities.push_back(make_shared<Vine>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), 1, 1, true, false));
+            allEntities.push_back(make_shared<Vine>(float(pos.first * 32), float(pos.second * 32), 1, 1, true, false));
             break;
-        case DOOR:
+        case FALL_PLAT:
             //allEntities.push_back(make_shared<Plateform>());
             break;
         case FALLING_PLAT:
@@ -81,7 +81,7 @@ vector<shared_ptr<Entity>> Map::generateTiles(vector<shared_ptr<Texture>> textur
         switch (entity)
         {
         case PLAYER:
-            allEntities.push_back(make_shared<Player>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), false, true));
+            allEntities.push_back(make_shared<Player>(float(pos.first * 32), float(pos.second * 32-100), false, true));
             break;
         default:
             break;

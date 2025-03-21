@@ -2,18 +2,24 @@
 #include <SFML/Window/Joystick.hpp>
 
 Player::Player(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),
-	m_hp(3), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE)
+m_hp(3), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE), animation(m_shape, { 416,656 },2,0.2f)
 {
-	m_texture.loadFromFile("../assets/player.png");
+
+	m_texture.loadFromFile("../NovaTerra/assets/Image/Player/sprite_Sheet_Player.png");
 	m_shape.setTexture(m_texture);
-	m_shape.setScale({ 0.5f,0.75f });
+	float scaleFactorX = 96 / m_shape.getGlobalBounds().width ;
+	float scaleFactorY = 96 / m_shape.getGlobalBounds().height ;
+
+
+	m_shape.setScale({ scaleFactorX,scaleFactorY });
+	
 	m_shape.setPosition(posX, posY);
 
 	m_hook.setSize({ 2.5f,2.5f });
 	m_hook.setFillColor(Color::White);
 	m_hook.setOrigin(0, 1.75f);
 
-	m_hitbox.setSize({ 75,75 });
+	m_hitbox.setSize({ m_shape.getGlobalBounds().width/3 , m_shape.getGlobalBounds().height/2+10});
 	m_hitbox.setPosition(posX, posY);
 	m_hitbox.setFillColor(Color::Red);
 }
@@ -21,6 +27,21 @@ Player::Player(float posX, float posY, bool isStatic, bool asCollision) : Entity
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
 	m_deltatime = deltatime;
+
+	switch (m_direction)
+	{
+	case Player::Direction::LEFT:
+		animation.animationSwitch(m_shape, deltatime, { -416,656 });
+		
+
+		break;
+	case Player::Direction::RIGHT:
+
+		animation.animationSwitch(m_shape, deltatime, { 416,656 });
+
+		break;
+	}
+	
 
 	if (m_state != State::DEAD) {
 

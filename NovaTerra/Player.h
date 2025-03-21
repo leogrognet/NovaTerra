@@ -6,18 +6,22 @@
 #include <vector>
 #include "RigidBody.h"
 #include "Entity.h"
+#include "Animation.h"
+#include "TextureLoader.h"
+
 
 using namespace std;
 using namespace sf;
 
 class Player : public Entity {
 public:
-
+	Animation animation;
 	enum class State { JUMPING, IDLE, MIDAIR, DASHING, DEAD };
 	enum class Action { DASHING, HOOK, REVERSEHOOK, GRABING, NONE };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
-    Player(float posX, float posY, bool isStatic, bool asCollision);
+
+	Player(float posX, float posY, bool isStatic, bool asCollision);
 
 	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;
 	void updateDirection();
@@ -56,10 +60,15 @@ private:
 	float m_hookSize = 0;
 	float m_rotationAngle = 0;
 	float m_fadeValue = 0;
+	float animTime = 0;
     int m_hp;
+	int m_animIterator = 0;
 	
 	RectangleShape m_hook;
 	RectangleShape m_blackscreen;
+
+
+	vector<string> framePath;
 
 	Clock m_hookCd;
 	Clock m_grabCd;
@@ -74,6 +83,8 @@ private:
 
 	Texture m_texture;
 	Vector2f m_stockedPos = { 0,0 };
+
+	vector<shared_ptr<Texture>> m_frames;
 
 	vector<shared_ptr<Entity>> m_wallvec;
 

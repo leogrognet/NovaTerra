@@ -508,6 +508,8 @@ vector<shared_ptr<Texture>> LevelEditor::getNonTransparentTiles(int tileWidth, i
 
 bool LevelEditor::update(RenderWindow& window, View& tileView, View& Ui_view, Event& event, float deltaTime)
 {
+    cout << m_entityTile<<endl;
+
     if (m_isOpen) {
         handleInput(window, tileView, event, deltaTime);
         window.clear();

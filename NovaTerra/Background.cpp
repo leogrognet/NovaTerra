@@ -3,7 +3,7 @@
 
 Background::Background(const string& texturePath, float speed) : scrollSpeed(speed) {
 
-    if (!texture.loadFromFile("assets/parallaxe/bg.png")) {
+    if (!texture.loadFromFile("../NovaTerra/assets/Image/BackGround/Fond_Biome_2.png")) {
         throw runtime_error("Failed to load texture");
     }
 
@@ -19,18 +19,30 @@ Background::Background(const string& texturePath, float speed) : scrollSpeed(spe
     sprite2.setScale(scaleX, scaleY);
 }
 
-void Background::update(float deltaTime) {
-    sprite.move(scrollSpeed * deltaTime, 0);
-    sprite2.move(scrollSpeed * deltaTime, 0);
+void Background::update(float deltaTime, Vector2f position) {
+    float movementX = scrollSpeed * deltaTime; 
+    float movementY = 0; 
 
-    // Réinitialiser la position des sprites lorsqu'ils sortent de l'écran
-    if (sprite.getPosition().x + sprite.getGlobalBounds().width <= 0) {
-        sprite.setPosition(sprite2.getPosition().x + sprite2.getGlobalBounds().width, 0);
+    float offsetX = position.x*0.01;
+    float offsetY = position.y;
+
+
+    sprite.move(movementX, movementY);
+    sprite2.move(movementX, movementY);
+
+
+    sprite.setPosition(sprite.getPosition().x, position.y-500 );
+    sprite2.setPosition(sprite2.getPosition().x, position.y-500 );
+
+
+    if (sprite.getPosition().x + sprite.getGlobalBounds().width <= position.x - 500) {
+        sprite.setPosition(sprite2.getPosition().x + sprite2.getGlobalBounds().width, sprite.getPosition().y);
     }
-    if (sprite2.getPosition().x + sprite2.getGlobalBounds().width <= 0) {
-        sprite2.setPosition(sprite.getPosition().x + sprite.getGlobalBounds().width, 0);
+    if (sprite2.getPosition().x + sprite2.getGlobalBounds().width <= position.x - 960) {
+        sprite2.setPosition(sprite.getPosition().x + sprite.getGlobalBounds().width, sprite2.getPosition().y);
     }
 }
+
 
 void Background::draw(RenderWindow& window) {
     window.draw(sprite);
