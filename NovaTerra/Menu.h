@@ -13,8 +13,8 @@ using namespace sf;
 
 class Menu {
 private:
-	Texture backgroundTexture, playTexture, settingsTexture, exitTexture, creditsTexture, editTexture;
-	Sprite backgroundSprite, playSprite, settingsSprite, exitSprite, creditsSprite, editSprite;
+	Texture backgroundTexture, playTexture, settingsTexture, exitTexture, creditsTexture;
+	Sprite backgroundSprite, playSprite, settingsSprite, exitSprite, creditsSprite;
 	RenderWindow& window;
 	int selectedItemIndex;
 public:
@@ -34,6 +34,19 @@ public:
 	void draw();
 	int handleMouseClick(Vector2i mousePos);
 };
+
+class MenuPlay {
+private:
+	Texture backgroundTexture, backTexture, lvl1Texture, editTexture;
+	Sprite backgroundSprite, backSprite, lvl1Sprite, editSprite;
+	RenderWindow& window;
+	int selectedItemIndex;
+public:
+	MenuPlay(RenderWindow& win);
+	void draw();
+	int handleMouseClick(Vector2i mousePos);
+};
+
 
 
 #endif // MENU_H

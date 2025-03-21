@@ -1,31 +1,34 @@
 #include "Game.h"
 #include "Menu.h"
-#include "LevelEditor.h"
 
 enum class MenuState {
     MENU,
+    MENU_PLAY,
+    MENU_SELECT_LEVEL,
     PLAY,
+
     SETTINGS,
     EXIT,
     CREDITS
 };
 
 int main() {
-	RenderWindow window(VideoMode(1920, 1080), "NovaTerra 1.0");
+    RenderWindow window(VideoMode(1920, 1080), "NovaTerra 1.0");
     Menu* menu = new Menu(window);
-	MenuSettings settingsMenu(window);
+    MenuPlay menuPlay(window);
+    MenuSettings settingsMenu(window);
 
-	Game* game = nullptr;
+    Game* game = nullptr;
 
-	MenuState menuState = MenuState::MENU;
-    
-	while (window.isOpen()) {
+    MenuState menuState = MenuState::MENU;
 
-		Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == Event::Closed)
-				window.close();
-		}
+    while (window.isOpen()) {
+
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed)
+                window.close();
+        }
 
         window.clear();
 
@@ -33,19 +36,17 @@ int main() {
         case MenuState::MENU:
             menu->draw();
             break;
+        case MenuState::MENU_PLAY:
+            menuPlay.draw();
+            break;
         case MenuState::PLAY:
-            if(!game){
-				game = new Game(1920, 1080);
-				game->run();
+            if (!game) {
+                game = new Game(1920, 1080);
+                game->run();
                 delete game;
-				game = nullptr;
+                game = nullptr;
             }
             break;
-        case MenuState::EDIT:
-        {
-            LevelEditor editor(window);
-            editor.run();
-        }
         case MenuState::SETTINGS:
             settingsMenu.draw();
             break;
@@ -59,11 +60,11 @@ int main() {
             break;
         }
 
-		window.display();
+        window.display();
 
-	}
+    }
 
-	delete game;
-	return 0;
+    delete game;
+    return 0;
 
 }

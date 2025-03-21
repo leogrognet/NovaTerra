@@ -1,3 +1,4 @@
+
 #include "Game.h"
 #include "TextureLoader.h"
 
@@ -6,7 +7,7 @@
 Background background("assets/parallaxe/bg.png", -50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
-    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0"), menuState(MenuState::MENU), menu(window), settingsMenu(window) {
+    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0"), menuState(MenuState::MENU), menu(window), settingsMenu(window), menuPlay(window) {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 }
@@ -24,20 +25,16 @@ void Game::processMenu() {
     switch (selected) {
     case 0:
         cout << "Switching to PLAY mode!" << endl;
-        menuState = MenuState::PLAY;
+        menuState = MenuState::MENU_PLAY;
         break;
     case 1:
         cout << "Switching to SETTINGS mode!" << endl;
         menuState = MenuState::SETTINGS;
         break;
     case 2:
-        cout << "Switching to EDIT mode!" << endl;
-        menuState = MenuState::EDIT;
-        break;
-    case 3:
         cout << "Exiting game!" << endl;
         window.close();
-        break;	
+        break;
     default:
         break;
     }
@@ -63,7 +60,25 @@ void Game::processSettingsMenu() {
 
 }
 
+void Game::processPlayMenu() {
+    Vector2i mousePos = Mouse::getPosition(window);
+    int selected = menuPlay.handleMouseClick(mousePos);
 
+    switch (selected) {
+    case 0:
+        menuState = MenuState::PLAY;
+        break;
+    case 1:
+        cout << "Ouverture du menu du son" << endl;
+        break;
+    case 2:
+        menuState = MenuState::MENU;
+        break;
+    default:
+        break;
+    }
+
+}
 
 void Game::run() {
     Clock clock;
@@ -83,9 +98,8 @@ void Game::run() {
     vec.push_back(make_shared<Player>(vec, 100, 600, false, true));
 
     Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
-    LevelEditor editor(window);
-    Scroll* scroll = new Scroll(WIDTH, HEIGHT);
 
+    Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
 
         Event event;
@@ -97,10 +111,10 @@ void Game::run() {
             }
             else if (menuState == MenuState::SETTINGS && event.type == Event::MouseButtonPressed) {
                 processSettingsMenu();
-			}
-            else if (menuState == MenuState::EDIT) {
-                editor.run();
-            }			
+            }
+            else if (menuState == MenuState::MENU_PLAY && event.type == Event::MouseButtonPressed) {
+                processPlayMenu();
+            }
         }
 
         window.clear();
@@ -108,6 +122,9 @@ void Game::run() {
         switch (menuState) {
         case MenuState::MENU:
             menu.draw();
+            break;
+        case MenuState::MENU_PLAY:
+            menuPlay.draw();
             break;
         case MenuState::PLAY:
             float deltaTime = clock.restart().asSeconds();
@@ -124,12 +141,9 @@ void Game::run() {
         case MenuState::SETTINGS:
             settingsMenu.draw();
             break;
-		case MenuState::EDIT:
-			// Afficher l'éditeur ici
-			break;
-		case MenuState::CREDITS:
-			// Afficher les crédits ici
-			break;  
+        case MenuState::CREDITS:
+            // Afficher les crédits ici
+            break;
         case MenuState::EXIT:
             window.close();
             break;
