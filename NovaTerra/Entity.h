@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "RigidBody.h"
+#include "Cycle.h"
 using namespace sf;
 using namespace std;
 
@@ -25,6 +26,7 @@ enum entityType
 	FALLING_PLAT = 11,
 };
 
+class Player;
 
 class Entity {
 protected:
@@ -51,6 +53,7 @@ public:
 
 	virtual Vector2f getVelocity();
 	virtual void setVelocity(Vector2f velocity);
+	virtual void interact(Cycle& cycle, Player& player);
 
 	Entity(float posX, float posY, bool isStatic, bool asCollision);
 

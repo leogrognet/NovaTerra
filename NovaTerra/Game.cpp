@@ -29,8 +29,15 @@ void Game::run() {
 
     Map map(mapFile, window);
 
-
     vec = map.generateTiles(textureListTest, vec);
+
+    Cycle* cycle = new Cycle();
+
+    shared_ptr<Player> playerPtr = nullptr;
+    for (auto& entity : vec) {
+        playerPtr = dynamic_pointer_cast<Player>(entity);
+        if (playerPtr) break;
+    }
 
     Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
@@ -47,8 +54,15 @@ void Game::run() {
        
         //player.update(deltatime, vec);
         background.draw(window);
+        for (auto& entity : vec) {
+            playerPtr = dynamic_pointer_cast<Player>(entity);
+            if (playerPtr) break;
+        }
         for (auto entityvec : vec) {
             entityvec->update(deltatime, vec);
+            if (Keyboard::isKeyPressed(Keyboard::O)) {
+                entityvec->interact(*cycle, *playerPtr);
+            }
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
             if (entityvec->getID() == 1) {
