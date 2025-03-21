@@ -17,21 +17,27 @@ Menu::Menu(RenderWindow& win) : window(win), selectedItemIndex(0) {
 	if (!creditsTexture.loadFromFile("assets/menu/credits.png")) {
 		cerr << "Erreur de chargement de la texture du bouton credits" << endl;
 	}
+	if (!editTexture.loadFromFile("assets/menu/edit.png")) {
+		cerr << "Erreur de chargement de la texture du bouton edit" << endl;
+	}
 
 	backgroundSprite.setTexture(backgroundTexture);
 	playSprite.setTexture(playTexture);
 	settingsSprite.setTexture(settingsTexture);
 	exitSprite.setTexture(exitTexture);
 	creditsSprite.setTexture(creditsTexture);
+	editSprite.setTexture(editTexture);
 
 	playSprite.setScale(0.3, 0.3);
 	settingsSprite.setScale(0.3, 0.3);
 	exitSprite.setScale(0.3, 0.3);
 	creditsSprite.setScale(0.1, 0.1);
+	editSprite.setScale(0.3, 0.3);
 
 	backgroundSprite.setPosition(0, 0);
 
 	playSprite.setPosition(450, 275);
+	editSprite.setPosition(450, 350);
 	settingsSprite.setPosition(450, 450);
 	exitSprite.setPosition(450, 600);
 }
@@ -43,6 +49,7 @@ void Menu::draw() {
 	window.draw(settingsSprite);
 	window.draw(exitSprite);
 	window.draw(creditsSprite);
+	window.draw(editSprite);
 }
 
 int Menu::handleMouseClick(Vector2i mousePos) {
@@ -56,10 +63,15 @@ int Menu::handleMouseClick(Vector2i mousePos) {
 		cout << "Settings button clicked!" << endl;
 		return 1; // Settings
 	}
+	if (editSprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
+		cout << "Edit button clicked!" << endl;
+		return 2; // Edit
+	}
 	if (exitSprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
 		cout << "Exit button clicked!" << endl;
-		return 2; // Exit
+		return 3; // Exit
 	}
+	
 
 	cout << "No button clicked!" << endl;
 	return -1; // Aucun bouton cliqué
@@ -108,58 +120,6 @@ int MenuSettings::handleMouseClick(Vector2i mousePos) {
 	}
 	if (soundSprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
 		return 1; // Sound
-	}
-	if (backSprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
-		return 2; // Back
-	}
-	return -1;
-
-}
-
-MenuPlay::MenuPlay(RenderWindow& win) : window(win), selectedItemIndex(0) {
-	if (!backgroundTexture.loadFromFile("assets/menu/background.png")) {
-		cerr << "Erreur de chargement du background" << endl;
-	}
-	if (!backTexture.loadFromFile("assets/menu/exit.png")) {
-		cerr << "Erreur de chargement de la texture du bouton back" << endl;
-	}
-	if (!lvl1Texture.loadFromFile("assets/menu/play.png")) {
-		cerr << "Erreur de chargement de la texture du bouton lvl1" << endl;
-	}
-	if (!editTexture.loadFromFile("assets/menu/options.png")) {
-		cerr << "Erreur de chargement de la texture du bouton edit" << endl;
-	}
-
-	backgroundSprite.setTexture(backgroundTexture);
-	backSprite.setTexture(backTexture);
-	lvl1Sprite.setTexture(lvl1Texture);
-	editSprite.setTexture(editTexture);
-
-	backSprite.setScale(0.3, 0.3);
-
-	backgroundSprite.setPosition(0, 0);
-	backSprite.setPosition(450, 450);
-	lvl1Sprite.setPosition(450, 275);
-	editSprite.setPosition(450, 600);
-
-}
-
-void MenuPlay::draw() {
-
-	window.draw(backgroundSprite);
-	window.draw(backSprite);
-	window.draw(lvl1Sprite);
-	window.draw(editSprite);
-
-}
-
-int MenuPlay::handleMouseClick(Vector2i mousePos) {
-
-	if (lvl1Sprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
-		return 0; // Lvl1
-	}
-	if (editSprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
-		return 1; // Edit
 	}
 	if (backSprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
 		return 2; // Back

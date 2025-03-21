@@ -1,12 +1,10 @@
 #include "Game.h"
 #include "Menu.h"
+#include "LevelEditor.h"
 
 enum class MenuState {
     MENU,
-    MENU_PLAY,
-    MENU_SELECT_LEVEL,
     PLAY,
-
     SETTINGS,
     EXIT,
     CREDITS
@@ -15,7 +13,6 @@ enum class MenuState {
 int main() {
 	RenderWindow window(VideoMode(1920, 1080), "NovaTerra 1.0");
     Menu* menu = new Menu(window);
-	MenuPlay menuPlay(window);
 	MenuSettings settingsMenu(window);
 
 	Game* game = nullptr;
@@ -36,9 +33,6 @@ int main() {
         case MenuState::MENU:
             menu->draw();
             break;
-        case MenuState::MENU_PLAY:
-            menuPlay.draw();
-            break;
         case MenuState::PLAY:
             if(!game){
 				game = new Game(1920, 1080);
@@ -47,6 +41,11 @@ int main() {
 				game = nullptr;
             }
             break;
+        case MenuState::EDIT:
+        {
+            LevelEditor editor(window);
+            editor.run();
+        }
         case MenuState::SETTINGS:
             settingsMenu.draw();
             break;

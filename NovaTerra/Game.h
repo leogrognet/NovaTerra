@@ -13,14 +13,15 @@
 #include "BouncingPlatform.h"
 #include "VineLadder.h"
 #include "Menu.h"
+#include "LevelEditor.h"
 
 enum class MenuState {
     MENU,
-    MENU_PLAY,
     PLAY,
     SETTINGS,
     EXIT,
-    CREDITS
+    CREDITS,
+	EDIT
 };
 
 class Game {
@@ -29,7 +30,6 @@ private:
     const int HEIGHT;
 	MenuState menuState;
 	MenuSettings settingsMenu;
-    MenuPlay menuPlay;
     Menu menu;
     RenderWindow window;
     vector<shared_ptr<Texture>> textureListTest;
@@ -42,6 +42,5 @@ public:
     void run();
 	void processMenu();
 	void processSettingsMenu();
-	void processPlayMenu();    
 };
 #endif
