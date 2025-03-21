@@ -2,6 +2,7 @@
 
 Cycle::Cycle() : currentState(State::Day) {}
 
+Cycle::~Cycle() {}
 void Cycle::changeState() {
     if (currentState == State::Day) {
         currentState = State::Night;
@@ -20,4 +21,8 @@ void Cycle::displayState() {
     else {
         std::cout << "C'est actuellement la nuit\n";
     }
+}
+
+Cycle::State Cycle::getState() {
+    return currentState;
 }

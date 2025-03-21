@@ -21,7 +21,6 @@ enum entityType
 	GRIND_VINE = 7,
 	DOOR = 50,
 	FALLING_PLAT = 11,
-	
 };
 
 

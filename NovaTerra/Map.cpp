@@ -50,7 +50,7 @@ vector<shared_ptr<Entity>> Map::generateTiles(vector<shared_ptr<Texture>> textur
             allEntities.push_back(make_shared<GolemEnemy>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), false, false));
             break;
         case PUNGUS:
-            allEntities.push_back(make_shared<Pungus>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), false, false));
+            allEntities.push_back(make_shared<Pungus>(400, 500, false, false));
         case CROC:
             //allEntities.push_back(make_shared<>());a
             break;

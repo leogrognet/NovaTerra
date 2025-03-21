@@ -50,7 +50,7 @@ void Pungus::changeDirection(int playerPosX) {
 }
 
 void Pungus::attack(sf::Vector2f playerPos) {
-	if (attackCD.getElapsedTime().asSeconds() > 1.0f) {
+	if (attackCD.getElapsedTime().asSeconds() > 0.0f) {
 		temp_rng = rng->getRandomNumber();
 		attackCD.restart();
 
