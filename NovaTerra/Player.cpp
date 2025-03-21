@@ -113,8 +113,8 @@ void Player::handleInput()
 		float x = Joystick::getAxisPosition(0, Joystick::X);
 		float y = Joystick::getAxisPosition(0, Joystick::Y);
 
-		if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -150; }
-		if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 150; }
+		if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -100; }
+		if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 100; }
 
 		if (y < -50) { m_direction = Direction::UP; }
 		if (y > 50) { m_direction = Direction::DOWN; }

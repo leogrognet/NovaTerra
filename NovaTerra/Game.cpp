@@ -93,7 +93,7 @@ void Game::run() {
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed)
                 window.close();
-            if (Keyboard::isKeyPressed(Keyboard::L)) {
+            if (Keyboard::isKeyPressed(Keyboard::L) || Joystick::isConnected(0) && Joystick::isButtonPressed(0,0)) {
                 isMainMenu = false;
             }
 
