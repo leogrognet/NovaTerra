@@ -1,4 +1,3 @@
-
 #include "Game.h"
 #include "TextureLoader.h"
 
@@ -7,7 +6,7 @@
 Background background("assets/parallaxe/bg.png", -50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
-    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0"), menuState(MenuState::MENU), menu(window), settingsMenu(window), menuPlay(window) {
+    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0"), menuState(MenuState::MENU), menu(window), settingsMenu(window) {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 }
@@ -25,7 +24,7 @@ void Game::processMenu() {
     switch (selected) {
     case 0:
         cout << "Switching to PLAY mode!" << endl;
-        menuState = MenuState::MENU_PLAY;
+        menuState = MenuState::PLAY;
         break;
     case 1:
         cout << "Switching to SETTINGS mode!" << endl;
@@ -34,6 +33,10 @@ void Game::processMenu() {
     case 2:
         cout << "Exiting game!" << endl;
         window.close();
+        break;
+    case 3:
+        cout << "Switching to EDITOR mode!" << endl;
+        menuState = MenuState::EDIT;
         break;
     default:
         break;
@@ -52,26 +55,6 @@ void Game::processSettingsMenu() {
         cout << "Ouverture du menu du son" << endl;
         break;
     case 2:
-        menuState = MenuState::EXIT;
-        break;
-    default:
-        break;
-    }
-
-}
-
-void Game::processPlayMenu() {
-    Vector2i mousePos = Mouse::getPosition(window);
-    int selected = menuPlay.handleMouseClick(mousePos);
-
-    switch (selected) {
-    case 0:
-        menuState = MenuState::PLAY;
-        break;
-    case 1:
-        cout << "Ouverture du menu du son" << endl;
-        break;
-    case 2:
         menuState = MenuState::MENU;
         break;
     default:
@@ -84,7 +67,6 @@ void Game::run() {
     Clock clock;
 
     vector<shared_ptr<Entity>> vec;
-
     string image = "assets/map/map_tileset";
     loadertest.loadTexture(image, textureListTest);
     vec.push_back(make_shared<Plateform>(100, 800, Vector2f(10, 1), true, true, textureListTest));
@@ -101,7 +83,6 @@ void Game::run() {
 
     Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
-
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed)
@@ -112,21 +93,15 @@ void Game::run() {
             else if (menuState == MenuState::SETTINGS && event.type == Event::MouseButtonPressed) {
                 processSettingsMenu();
             }
-            else if (menuState == MenuState::MENU_PLAY && event.type == Event::MouseButtonPressed) {
-                processPlayMenu();
-            }
+
         }
 
         window.clear();
 
-        switch (menuState) {
-        case MenuState::MENU:
+        if (menuState == MenuState::MENU) {
             menu.draw();
-            break;
-        case MenuState::MENU_PLAY:
-            menuPlay.draw();
-            break;
-        case MenuState::PLAY:
+        }
+        else if (menuState == MenuState::PLAY) {
             float deltaTime = clock.restart().asSeconds();
             scroll->applyView(window);
             background.update(deltaTime);
@@ -137,18 +112,16 @@ void Game::run() {
                 entity->update(deltaTime, vec);
                 entity->draw(window);
             }
-            break;
-        case MenuState::SETTINGS:
+        }
+        else if (menuState == MenuState::SETTINGS) {
+            cout << "Drawing SETTINGS Menu" << endl;
             settingsMenu.draw();
-            break;
-        case MenuState::CREDITS:
-            // Afficher les crédits ici
-            break;
-        case MenuState::EXIT:
+        }
+        else if (menuState == MenuState::CREDITS) {
+
+        }
+        else if (menuState == MenuState::EXIT) {
             window.close();
-            break;
-        default:
-            break;
         }
 
         window.display();
