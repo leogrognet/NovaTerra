@@ -2,7 +2,9 @@
 
 Pungus::Pungus(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision) {
 	rng = new Random(0, 4);
-	pungusTexture.loadFromFile("../assets/slimet.png");
+	if (!pungusTexture.loadFromFile("../assets/slime.png")) {
+		std::cout << "Baise tes mort\n";
+	}
 	m_shape.setTexture(pungusTexture);
 	m_shape.setPosition(posX, posY);
 	m_shape.setScale(1.f, 1.f);
@@ -50,7 +52,7 @@ void Pungus::changeDirection(int playerPosX) {
 }
 
 void Pungus::attack(sf::Vector2f playerPos) {
-	if (attackCD.getElapsedTime().asSeconds() > 0.0f) {
+	if (attackCD.getElapsedTime().asSeconds() > 1.0f) {
 		temp_rng = rng->getRandomNumber();
 		attackCD.restart();
 
