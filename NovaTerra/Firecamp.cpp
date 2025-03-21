@@ -1,6 +1,6 @@
 #include "Firecamp.h"
 
-Firecamp::Firecamp(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision, textureList) {
+Firecamp::Firecamp(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision) {
 	firecampTexture.loadFromFile("../assets/firecamp.png");
 	m_shape.setTexture(firecampTexture);
 	m_shape.setPosition(posX, posY);
@@ -17,12 +17,12 @@ void Firecamp::update(float deltaTime, const vector<shared_ptr<Entity>>& collide
 	Entity::update(deltaTime, colliders);
 }
 
-void Firecamp::interact(Cycle& cycle, Player& player) {
-	if (CD.getElapsedTime().asSeconds() > 1.0f && player.getSprite().getGlobalBounds().intersects(detectionRange.getGlobalBounds())) {
-		cycle.changeState();
-		CD.restart();
-	}
-}
+//void Firecamp::interact(Cycle& cycle, Player& player) {
+//	if (CD.getElapsedTime().asSeconds() > 1.0f && player.getSprite().getGlobalBounds().intersects(detectionRange.getGlobalBounds())) {
+//		cycle.changeState();
+//		CD.restart();
+//	}
+//}
 
 void Firecamp::draw(sf::RenderWindow& window) {
 	window.draw(m_shape);
