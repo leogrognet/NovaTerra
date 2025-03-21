@@ -65,7 +65,7 @@ void Game::run() {
         }
         for (auto entityvec : vec) {
             entityvec->update(deltatime, vec);
-            if (Keyboard::isKeyPressed(Keyboard::O)) {
+            if (Keyboard::isKeyPressed(Keyboard::E)) {
                 entityvec->interact(*cycle, *playerPtr);
             }
 
