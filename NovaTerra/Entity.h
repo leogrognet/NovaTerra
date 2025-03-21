@@ -16,11 +16,13 @@ enum entityType
 	CROC = 5,
 	GOLEM = 6,
 	GRIND_VINE = 7,
+	FIRECAMP = 69,
 	PLAYER = 8,
 	MOVE_PLAT = 9,
 	BOUNCE_PLAT = 10,
-	FALL_PLAT = 11,
-	
+	GRIND_VINE = 7,
+	DOOR = 50,
+	FALLING_PLAT = 11,
 };
 
 

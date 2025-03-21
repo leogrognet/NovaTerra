@@ -15,6 +15,7 @@
 #include "BouncingPlatform.h"
 #include "VineLadder.h"
 #include "LevelEditor.h"
+#include "FallingPlatform.h"
 
 
 using namespace sf;

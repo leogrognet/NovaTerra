@@ -16,7 +16,6 @@ Bounce::Bounce(float posX, float posY, Vector2f size, bool isStatic, bool asColl
 void Bounce::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
 	propulse(colliders);
-
 	Entity::update(deltaTime, colliders);
 }
 

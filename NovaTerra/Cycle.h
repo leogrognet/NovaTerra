@@ -11,9 +11,11 @@ public:
     };
 
     Cycle();
+    ~Cycle();
 
     void changeState();
     void displayState();
+    State getState();
 
 private:
     State currentState;
