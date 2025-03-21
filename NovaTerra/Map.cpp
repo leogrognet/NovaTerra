@@ -66,6 +66,9 @@ vector<shared_ptr<Entity>> Map::generateTiles(vector<shared_ptr<Texture>> textur
         case DOOR:
             //allEntities.push_back(make_shared<Plateform>());
             break;
+        case FALLING_PLAT:
+            allEntities.push_back(make_shared<FallingPlat>(float(pos.first * 128 / 2), float(pos.second * 128 / 2), Vector2f(0.25f, 0.25f), true, true));
+            break;
         default:
             break;
         }
