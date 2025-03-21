@@ -72,7 +72,6 @@ vector<shared_ptr<Entity>> Map::generateTiles(vector<shared_ptr<Texture>> textur
         default:
             break;
         }
-
     }
     for (const auto& [pos, tileID] : m_tiles) {
         entityType entity;
@@ -81,7 +80,7 @@ vector<shared_ptr<Entity>> Map::generateTiles(vector<shared_ptr<Texture>> textur
         switch (entity)
         {
         case PLAYER:
-            allEntities.push_back(make_shared<Player>(float(pos.first * 32), float(pos.second * 32-500), false, true));
+            allEntities.push_back(make_shared<Player>(float(pos.first * 32), float(pos.second * 32), false, true));
             break;
         default:
             break;

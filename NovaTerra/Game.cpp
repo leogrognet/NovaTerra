@@ -1,12 +1,10 @@
 #include "Game.h"
 #include "TextureLoader.h"
 
-//TextureLoader textureloader;
-
 Background background("assets/parallaxe/bg.png", -50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
-    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0") {
+    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0"),menu(window), menuState(MenuState::MENU),settingsMenu(window) {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
     night.setSize(sf::Vector2f(2000, 2000));
@@ -15,6 +13,54 @@ Game::Game(const int _WIDTH, const int _HEIGHT)
 
 Game::~Game() {
     cout << "Le jeu est détruit\n";
+}
+
+void Game::processMenu() {
+    Vector2i mousePos = Mouse::getPosition(window);
+    int selected = menu.handleMouseClick(mousePos);
+
+    cout << "Selected Menu Index: " << selected << endl;
+
+    switch (selected) {
+    case 0:
+        cout << "Switching to PLAY mode!" << endl;
+        menuState = MenuState::PLAY;
+        break;
+    case 1:
+        cout << "Switching to SETTINGS mode!" << endl;
+        menuState = MenuState::SETTINGS;
+        break;
+    case 2:
+        cout << "Exiting game!" << endl;
+        window.close();
+        break;
+    case 3:
+        cout << "Switching to EDITOR mode!" << endl;
+        menuState = MenuState::EDIT;
+        break;
+    default:
+        break;
+    }
+}
+
+void Game::processSettingsMenu() {
+    Vector2i mousePos = Mouse::getPosition(window);
+    int selected = settingsMenu.handleMouseClick(mousePos);
+
+    switch (selected) {
+    case 0:
+        cout << "Ouverture du menu de réglages" << endl;
+        break;
+    case 1:
+        cout << "Ouverture du menu du son" << endl;
+        break;
+    case 2:
+        menuState = MenuState::MENU;
+        break;
+    default:
+        break;
+    }
+
 }
 
 void Game::run() {
@@ -47,14 +93,39 @@ void Game::run() {
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed)
                 window.close();
+            if (Keyboard::isKeyPressed(Keyboard::L)) {
+                isMainMenu = false;
+            }
+
+            if (menuState == MenuState::MENU && event.type == Event::MouseButtonPressed) {
+                processMenu();
+            }
+            else if (menuState == MenuState::SETTINGS && event.type == Event::MouseButtonPressed) {
+                processSettingsMenu();
+            }
         }
-        //scroll->move(1.f, 0.f);
-        //scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
 
         window.clear();
-       
-        //player.update(deltatime, vec);
+        if (isMainMenu) {
+            if (menuState == MenuState::MENU) {
+                menu.draw();
+            }
+            else if (menuState == MenuState::PLAY) {
+                isMainMenu = false;
+            }
+            else if (menuState == MenuState::SETTINGS) {
+                settingsMenu.draw();
+            }
+            else if (menuState == MenuState::CREDITS) {
+            }
+            else if (menuState == MenuState::EXIT) {
+                window.close();
+            }
+            window.display();
+            continue;
+        }
+
         background.draw(window);
         if (cycle->getState() == Cycle::State::Night) {
             window.draw(night);
@@ -68,11 +139,9 @@ void Game::run() {
             if (Keyboard::isKeyPressed(Keyboard::O)) {
                 entityvec->interact(*cycle, *playerPtr);
             }
-
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
             if (entityvec->getID() == 1) {
-                //background.update(deltatime, entityvec->getSprite().getPosition());
                 view.setCenter(entityvec->getSprite().getPosition().x +200,entityvec->getSprite().getPosition().y);
             }
         }

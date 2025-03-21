@@ -33,6 +33,7 @@
     <ClCompile Include="KillerEnemy.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MovingPlatform.cpp" />
     <ClCompile Include="Plateform.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="GolemEnemy.h" />
     <ClInclude Include="KillerEnemy.h" />
     <ClInclude Include="LevelEditor.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="MovingPlatform.h" />
     <ClInclude Include="Plateform.h" />
     <ClInclude Include="Player.h" />
