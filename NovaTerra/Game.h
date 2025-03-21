@@ -16,6 +16,7 @@
 #include "VineLadder.h"
 #include "Firecamp.h"
 #include "Cycle.h"
+#include "ClosingDoor.h"
 
 class Game {
 private:

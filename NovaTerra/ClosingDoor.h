@@ -5,7 +5,7 @@ class Door : public Entity {
 public:
 	enum class State{CLOSING,IDLE};
 
-	Door(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture);
+	Door(float posX, float posY, bool isStatic, bool asCollision);
 
 	void draw(RenderWindow& window) override;
 	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;

@@ -25,6 +25,7 @@ m_hp(3), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::N
 
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
+	cout << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
 	m_deltatime = deltatime;
 
 	switch (m_direction)

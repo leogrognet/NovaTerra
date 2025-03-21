@@ -79,6 +79,8 @@ void Game::run() {
 
     vec = map.generateTiles(textureListTest, vec);
 
+    vec.push_back(make_shared<Door>(5537.5f, 95.f, true, true));
+
     Cycle* cycle = new Cycle();
 
     shared_ptr<Player> playerPtr = nullptr;

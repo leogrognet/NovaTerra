@@ -1,20 +1,15 @@
 #include "ClosingDoor.h"
 
-Door::Door(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) :Entity(posX, posY, isStatic, asCollision), m_state(State::IDLE)
+Door::Door(float posX, float posY, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision), m_state(State::IDLE)
 {
-	if (!textureList.empty()) {
-
-		m_shape.setTexture(*textureList.at(0).get());
-		IntRect m_textureRect(128, 384, 128, 128);
-
-		m_shape.setTextureRect(m_textureRect);
-		m_shape.setScale(1.f, 1.f);
-		m_shape.setPosition(posX, posY);
-	}
+	m_shapeTexture.loadFromFile("../assets/Tiles/tiles1test.png");
+	m_shape.setTexture(m_shapeTexture);
+	m_shape.setScale(0.50f, 0.50f);
+	m_shape.setPosition(posX, posY);
 
 	m_buttonShape.setFillColor(Color::Red);
-	m_buttonShape.setSize({ 400,100 });
-	m_buttonShape.setPosition(600, 600);
+	m_buttonShape.setSize({ 20,20 });
+	m_buttonShape.setPosition(5288.86f, 123.077);
 }
 
 void Door::draw(RenderWindow& window)
@@ -41,7 +36,7 @@ void Door::closeDoor(float deltaTime)
 {
 	if (m_shape.getGlobalBounds().height <= 128) {
 		m_doorSize += deltaTime * 0.01f;
-		m_shape.setScale(1.f, m_doorSize);
+		m_shape.setScale(0.5f, m_doorSize);
 	}
 	else {
 		m_state = State::IDLE;

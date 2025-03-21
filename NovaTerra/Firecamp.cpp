@@ -4,7 +4,7 @@ Firecamp::Firecamp(float posX, float posY, bool isStatic, bool asCollision) : En
 	firecampTexture.loadFromFile("../assets/firecamp.png");
 	m_shape.setTexture(firecampTexture);
 	m_shape.setPosition(posX, posY);
-	m_shape.setScale(0.5f, 0.5f);
+	m_shape.setScale(0.1f, 0.1f);
 	detectionRange.setRadius(200);
 	detectionRange.setFillColor(sf::Color(255, 0, 0, 128));
 	detectionRange.setPosition(posX-125, posY-100);
