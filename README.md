@@ -1,3 +1,1 @@
 # NovaTerra
-
-kk
