@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "RigidBody.h"
+#include "Cycle.h"
 using namespace sf;
 using namespace std;
 
@@ -23,10 +24,10 @@ enum entityType
 	
 };
 
+class Player;
 
 class Entity {
 protected:
-
 	Sprite m_shape;
 	Texture m_shapeTexture;
 	RigidBody m_rigidBody;
@@ -39,10 +40,12 @@ protected:
 
 public:
 
+
 	virtual void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders);
 	virtual void draw(RenderWindow& window);
 	virtual int getID();
 	virtual void forceMove();
+	virtual void interact(Cycle& cycle, Player& player);
 
 	virtual RectangleShape getHitBox();
 	virtual void setForcedVelocity(Vector2f velocity);

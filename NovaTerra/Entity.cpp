@@ -27,6 +27,8 @@ int Entity::getID()
     return 0;
 }
 
+void Entity::interact(Cycle& cycle, Player& player) {}
+
 void Entity::forceMove()
 {
 }
