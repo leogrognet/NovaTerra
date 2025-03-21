@@ -4,14 +4,13 @@
 Player::Player(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),
 m_hp(3), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE), animation(m_shape, { 416,656 },2,0.2f)
 {
-
 	m_texture.loadFromFile("../NovaTerra/assets/Image/Player/sprite_Sheet_Player.png");
 	m_shape.setTexture(m_texture);
 	float scaleFactorX = 96 / m_shape.getGlobalBounds().width ;
 	float scaleFactorY = 96 / m_shape.getGlobalBounds().height ;
 
 
-	m_shape.setScale({ scaleFactorX,scaleFactorY });
+	m_shape.setScale({ scaleFactorX / 1.3f,scaleFactorY / 1.3f });
 	
 	m_shape.setPosition(posX, posY);
 
@@ -83,8 +82,8 @@ void Player::handleInput()
 	if (m_action == Action::REVERSEHOOK || m_action == Action::GRABING) { return; }
 
 	//Clavier
-	if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -250; }
-	else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 250;}
+	if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -100; }
+	else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 100;}
 	else { m_rigidBody.getVelocity().x = 0; }
 
 	if (Keyboard::isKeyPressed(Keyboard::Z)) { m_direction = Direction::UP; }
@@ -114,8 +113,8 @@ void Player::handleInput()
 		float x = Joystick::getAxisPosition(0, Joystick::X);
 		float y = Joystick::getAxisPosition(0, Joystick::Y);
 
-		if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -250; }
-		if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 250; }
+		if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -150; }
+		if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 150; }
 
 		if (y < -50) { m_direction = Direction::UP; }
 		if (y > 50) { m_direction = Direction::DOWN; }

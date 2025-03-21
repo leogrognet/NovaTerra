@@ -22,7 +22,7 @@ void Game::run() {
     string image = "assets/map/map_tileset";
     loadertest.loadTexture(image, textureListTest);
     View view;
-    view.zoom(0.9f);
+    view.zoom(0.65f);
 
 
     string mapFile = "../NovaTerra/assets/map/lobby.txt";

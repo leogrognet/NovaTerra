@@ -27,8 +27,8 @@ void Background::update(float deltaTime, Vector2f position) {
     float offsetY = position.y;
 
 
-    sprite.move(movementX, movementY);
-    sprite2.move(movementX, movementY);
+    //sprite.move(movementX, movementY);
+    //sprite2.move(movementX, movementY);
 
 
     sprite.setPosition(sprite.getPosition().x, position.y-500 );
