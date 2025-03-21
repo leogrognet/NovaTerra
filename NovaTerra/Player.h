@@ -29,6 +29,8 @@ public:
 	void draw(RenderWindow& window) override;
 	void handleInput();
 
+	Vector2f getPosition() const;
+
 	void dash();
 	void grapplinshoot(const vector<shared_ptr<Entity>>& colliders);
 	void grabing(const vector<shared_ptr<Entity>>& colliders);

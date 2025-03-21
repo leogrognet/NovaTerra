@@ -38,7 +38,7 @@ int GolemEnemy::getID()
 }
 
 void GolemEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
-    float distance;
+    float distance{};
     for (auto entity : colliders) {
         // Le player a un ID = 1
         if (entity->getID() == 1) {

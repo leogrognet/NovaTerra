@@ -12,10 +12,10 @@
 #include "Plateform.h"
 #include "MovingPlatform.h"
 #include "BouncingPlatform.h"
+#include "KillerEnemy.h"
 #include "VineLadder.h"
 #include "Firecamp.h"
 #include "Cycle.h"
-
 
 class Game {
 private:

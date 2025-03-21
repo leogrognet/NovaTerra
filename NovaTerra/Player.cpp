@@ -1,4 +1,4 @@
-﻿#include "Player.h"
+#include "Player.h"
 #include <SFML/Window/Joystick.hpp>
 
 Player::Player(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),

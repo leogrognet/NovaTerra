@@ -66,6 +66,9 @@
     <ClInclude Include="BouncingPlatform.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="KillerEnemy.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp">
@@ -102,6 +105,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="BouncingPlatform.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="KillerEnemy.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

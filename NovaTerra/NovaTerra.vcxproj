@@ -30,6 +30,7 @@
     <ClCompile Include="Firecamp.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GolemEnemy.cpp" />
+    <ClCompile Include="KillerEnemy.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MovingPlatform.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="Firecamp.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GolemEnemy.h" />
+    <ClInclude Include="KillerEnemy.h" />
     <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="MovingPlatform.h" />
     <ClInclude Include="Plateform.h" />
