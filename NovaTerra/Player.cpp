@@ -1,22 +1,24 @@
 #include "Player.h"
 #include <SFML/Window/Joystick.hpp>
 
-Player::Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),
-m_hp(5), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE)
+Player::Player(float posX, float posY, bool isStatic, bool asCollision) : Entity(posX, posY, isStatic, asCollision),
+m_hp(3), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::NONE), animation(m_shape, { 416,656 },2,0.2f)
 {
-
-	m_wallvec = shape;
-
-	m_texture.loadFromFile("../assets/player.png");
+	m_texture.loadFromFile("../NovaTerra/assets/Image/Player/sprite_Sheet_Player.png");
 	m_shape.setTexture(m_texture);
-	m_shape.setScale({ 1.f,1.f });
+	float scaleFactorX = 96 / m_shape.getGlobalBounds().width ;
+	float scaleFactorY = 96 / m_shape.getGlobalBounds().height ;
+
+
+	m_shape.setScale({ scaleFactorX / 1.3f,scaleFactorY / 1.3f });
+	
 	m_shape.setPosition(posX, posY);
 
 	m_hook.setSize({ 2.5f,2.5f });
 	m_hook.setFillColor(Color::White);
 	m_hook.setOrigin(0, 1.75f);
 
-	m_hitbox.setSize({ 75,75 });
+	m_hitbox.setSize({ m_shape.getGlobalBounds().width/3 , m_shape.getGlobalBounds().height/2+10});
 	m_hitbox.setPosition(posX, posY);
 	m_hitbox.setFillColor(Color::Red);
 }
@@ -24,108 +26,119 @@ m_hp(5), m_state(State::IDLE), m_direction(Direction::RIGHT), m_action(Action::N
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
 	m_deltatime = deltatime;
-	cout << m_rigidBody.getVelocity().x << " " << m_rigidBody.getVelocity().y << endl;
 
-	updateDirection();
-	handleInput();
-	dash();
+	switch (m_direction)
+	{
+	case Player::Direction::LEFT:
+		animation.animationSwitch(m_shape, deltatime, { -416,656 });
+		
 
-	grapplinshoot();
-	grabing();
+		break;
+	case Player::Direction::RIGHT:
 
-	ForceMove();
+		animation.animationSwitch(m_shape, deltatime, { 416,656 });
 
-	Entity::update(deltatime, colliders);
+		break;
+	}
+	
 
-	//Cout du player pos si besoin de debug
-	//cout << "Shape joueur : " << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
-	//cout << "RigiBody : " <<m_rigidBody.getPosition().x << " " << m_rigidBody.getPosition().y << endl;
-	//cout << m_shape.getScale().x << " " << m_shape.getScale().y << endl;
+	if (m_state != State::DEAD) {
 
-	m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
-	m_hitbox.setPosition(m_shape.getPosition().x - 5, m_shape.getPosition().y - 5);
+		isDead();
+
+		updateDirection();
+		handleInput();
+		dash();
+
+		grapplinshoot(colliders);
+		grabing(colliders);
+
+		forceMove();
+
+		Entity::update(deltatime, colliders);
+
+		m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
+		m_hitbox.setPosition(m_shape.getPosition().x - 5, m_shape.getPosition().y - 5);
+		m_blackscreen.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
+	}
+	else {
+		deathAnim();
+	}
 }
 
-void Player::draw(RenderWindow& window)
-{
-	window.draw(m_hitbox);
-	window.draw(m_shape);
-	if (m_action == Action::HOOK || m_action == Action::REVERSEHOOK) {
-		window.draw(m_hook);
+void Player::draw(RenderWindow& window) 
+{ 
+	window.draw(m_shape); 
+	if (m_action == Action::HOOK || m_action == Action::REVERSEHOOK){ 
+		window.draw(m_hook); 
+	} 
+	if (m_state == State::DEAD) {
+		window.draw(m_blackscreen);
 	}
 }
 
 void Player::handleInput()
 {
-	// D�sactiv� les inputs si le joueur est en train de hook ou de grab
-	if (m_action != Action::REVERSEHOOK && m_action != Action::GRABING) {
-		// Keyboard input
-		if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -250; }
-		else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 250; }
-		else { m_rigidBody.getVelocity().x = 0; }
+	if (m_action == Action::REVERSEHOOK || m_action == Action::GRABING) { return; }
 
-		if (Keyboard::isKeyPressed(Keyboard::Z)) { m_direction = Direction::UP; }
-		if (Keyboard::isKeyPressed(Keyboard::S)) { m_direction = Direction::DOWN; }
+	//Clavier
+	if (Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::LEFT;  m_rigidBody.getVelocity().x = -100; }
+	else if (Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 100;}
+	else { m_rigidBody.getVelocity().x = 0; }
 
-		// Direction diagonale haut
-		if (Keyboard::isKeyPressed(Keyboard::Z) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::UPRIGHT; }
-		if (Keyboard::isKeyPressed(Keyboard::Z) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::UPLEFT; }
+	if (Keyboard::isKeyPressed(Keyboard::Z)) { m_direction = Direction::UP; }
+	if (Keyboard::isKeyPressed(Keyboard::S)) { m_direction = Direction::DOWN; }
 
-		// Direction diagonale bas
-		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::DOWNRIGHT; }
-		if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::DOWNLEFT; }
+	if (Keyboard::isKeyPressed(Keyboard::Z) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::UPRIGHT; }
+	if (Keyboard::isKeyPressed(Keyboard::Z) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::UPLEFT; }
 
-		if (Keyboard::isKeyPressed(Keyboard::Space) && m_rigidBody.getIsGrounded()) {
+	if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::D)) { m_direction = Direction::DOWNRIGHT; }
+	if (Keyboard::isKeyPressed(Keyboard::S) && Keyboard::isKeyPressed(Keyboard::Q)) { m_direction = Direction::DOWNLEFT; }
+
+	if (Keyboard::isKeyPressed(Keyboard::Space) && m_rigidBody.getIsGrounded()) {
+		m_rigidBody.getVelocity().y = -350;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::F) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
+			m_action = Action::HOOK;
+			m_hookSize = 0;
+	}
+
+	if (Keyboard::isKeyPressed(Keyboard::LShift) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
+			m_hookCd.restart();
+			m_action = Action::DASHING;
+	}
+
+	//Manette
+	if (Joystick::isConnected(0)) {
+		float x = Joystick::getAxisPosition(0, Joystick::X);
+		float y = Joystick::getAxisPosition(0, Joystick::Y);
+
+		if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -150; }
+		if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 150; }
+
+		if (y < -50) { m_direction = Direction::UP; }
+		if (y > 50) { m_direction = Direction::DOWN; }
+
+		if (y < -50 && x > 50) { m_direction = Direction::UPRIGHT; }
+		if (y < -50 && x < -50) { m_direction = Direction::UPLEFT; }
+
+		if (y > 50 && x > 50) { m_direction = Direction::DOWNRIGHT; }
+		if (y > 50 && x < -50) { m_direction = Direction::DOWNLEFT; }
+
+		if (Joystick::isButtonPressed(0, 0) && m_rigidBody.getIsGrounded()) {
 			m_rigidBody.getVelocity().y = -350;
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::F) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
-			m_action = Action::HOOK;
-			m_hookSize = 0;
-		}
-
-		if (Keyboard::isKeyPressed(Keyboard::LShift) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
+		if (Joystick::isButtonPressed(0, 1) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
 			m_hookCd.restart();
 			m_action = Action::DASHING;
 		}
-
-		if (Joystick::isConnected(0)) {
-			float x = Joystick::getAxisPosition(0, Joystick::X);
-			float y = Joystick::getAxisPosition(0, Joystick::Y);
-
-			if (x < -50) { m_direction = Direction::LEFT; m_rigidBody.getVelocity().x = -350; }
-			if (x > 50) { m_direction = Direction::RIGHT; m_rigidBody.getVelocity().x = 350; }
-
-			if (y < -50) { m_direction = Direction::UP; }
-			if (y > 50) { m_direction = Direction::DOWN; }
-
-			// Direction diagonale haut
-			if (y < -50 && x > 50) { m_direction = Direction::UPRIGHT; }
-			if (y < -50 && x < -50) { m_direction = Direction::UPLEFT; }
-
-			// Direction diagonale bas
-			if (y > 50 && x > 50) { m_direction = Direction::DOWNRIGHT; }
-			if (y > 50 && x < -50) { m_direction = Direction::DOWNLEFT; }
-
-			if (Joystick::isButtonPressed(0, 0) && m_rigidBody.getIsGrounded()) {
-				m_rigidBody.getVelocity().y = -350;
-			}
-
-			if (Joystick::isButtonPressed(0, 2) && m_hookCd.getElapsedTime().asSeconds() > 1 && m_action != Action::REVERSEHOOK) {
-				m_hookCd.restart();
-				m_action = Action::DASHING;
-			}
-
-			if (Joystick::isButtonPressed(0, 5) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
-				m_action = Action::HOOK;
-				m_hookSize = 0;
-			}
+		if (Joystick::isButtonPressed(0, 5) && m_hookCd.getElapsedTime().asSeconds() >= 2) {
+			m_action = Action::HOOK;
+			m_hookSize = 0;
 		}
 	}
-}
-
-Vector2f Player::getPosition() const {
-	return m_shape.getPosition();
+	
 }
 
 void Player::dash()
@@ -145,17 +158,16 @@ void Player::dash()
 	}
 }
 
-void Player::grapplinshoot()
+void Player::grapplinshoot(const vector<shared_ptr<Entity>>& colliders)
 {
 	if (m_action == Action::HOOK) {
-		m_hookSize += m_deltatime * 85;
-		for (auto& vec : m_wallvec) {
-			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection)) {
+		m_hookSize += m_deltatime * 110;
+		for (auto& vec : colliders) {
+			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection) && vec->getasCollision() && vec->getID() != 1) {
 				m_hookCd.restart();
 				m_action = Action::REVERSEHOOK;
 				m_rigidBody.getVelocity() = { 0,0 };
 			}
-
 			m_hook.setScale({ m_hookSize * m_stockedDirection.x,2.5f });
 
 			if (m_hookSize >= 100) {
@@ -164,9 +176,10 @@ void Player::grapplinshoot()
 		}
 	}
 	if (m_action == Action::REVERSEHOOK) {
+		m_rigidBody.getVelocity().y = -981.f * m_deltatime / 2;
 		m_rigidBody.getVelocity().x = 400.f * m_stockedDirection.x;
 		m_hookSize -= m_deltatime * 150;
-		m_hook.setScale(m_hookSize * m_stockedDirection.x, 2.5f);
+		m_hook.setScale(m_hookSize * m_stockedDirection.x , 2.5f );
 
 		if (m_hookSize <= 0) {
 			m_action = Action::GRABING;
@@ -174,24 +187,24 @@ void Player::grapplinshoot()
 	}
 }
 
-void Player::grabing()
+void Player::grabing(const vector<shared_ptr<Entity>>& colliders)
 {
 	if (m_action == Action::GRABING) {
 		m_rigidBody.getVelocity().y = -981.f * m_deltatime / 2;
-		if (Keyboard::isKeyPressed(Keyboard::Space)) {
-			m_action = Action::NONE;
+		if (Keyboard::isKeyPressed(Keyboard::Space) || Joystick::isConnected(0) && Joystick::isButtonPressed(0, 0)) {
+			m_action = Action::NONE; 
 			m_rigidBody.getVelocity().y = -200;
 		}
-		if (Joystick::isConnected(0) && Joystick::isButtonPressed(0, 0)) {
-			m_action = Action::NONE;
-			m_rigidBody.getVelocity().y = -200;
-		}
-
-		for (auto entity : m_wallvec) {
-			if (Keyboard::isKeyPressed(Keyboard::Z) && grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
+		for (auto entity : colliders) {
+			if ((Keyboard::isKeyPressed(Keyboard::Z) || (Joystick::isConnected(0) && Joystick::getAxisPosition(0, Joystick::Y) < -50))
+				&& grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
 				m_rigidBody.getVelocity().y = -100.f;
 			}
-		}
+			else if ((Keyboard::isKeyPressed(Keyboard::S) || (Joystick::isConnected(0) && Joystick::getAxisPosition(0, Joystick::Y) > 50))
+				&& grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
+				m_rigidBody.getVelocity().y = 100.f;
+			}
+		}		
 	}
 }
 
@@ -205,7 +218,7 @@ int Player::getID()
 	return 1;
 }
 
-void Player::ForceMove()
+void Player::forceMove()
 {
 	m_rigidBody.getVelocity() += m_forcedVelocity;
 }
@@ -215,16 +228,76 @@ RectangleShape Player::getHitBox()
 	return m_hitbox;
 }
 
+bool Player::isDead()
+{
+	if (m_hp <= 0 || m_shape.getPosition().y >= 1080) {
+		m_stockedPos = m_shape.getPosition();
+		m_shape.setColor(Color(255, 255, 255, 128));
+		initializeBlackScreen();
+		m_state = State::DEAD;
+		return true;
+	}
+	return false;
+}
+
+void Player::deathAnim()
+{
+	if (m_fadeValue <= 255) {
+		m_fadeValue += m_deltatime * 60;
+		m_blackscreen.setFillColor(Color(7, 7, 7, m_fadeValue));
+
+		m_rotationAngle += m_deltatime * 20;
+		m_shape.move(0, -3);
+		m_shape.setRotation(-m_rotationAngle);
+	}
+}
+
+void Player::takeDamage()
+{
+	if (m_invincibleFrame.getElapsedTime().asSeconds() >= 1) {
+		m_invincibleFrame.restart();
+		m_hp--;
+	}
+}
+
+void Player::initializeBlackScreen()
+{
+	m_blackscreen.setFillColor(Color(0, 0, 0, 0));
+	m_blackscreen.setSize({ 3000,3000 });
+	m_blackscreen.setOrigin(1500, 1500);
+	m_blackscreen.setPosition(0,0);
+}
+
+void Player::setState(Player::State newState)
+{
+	m_state = newState;
+}
+
+Player::State Player::getState()
+{
+	return State();
+}
+
+void Player::setAction(Player::Action newAction)
+{
+	m_action = newAction;
+}
+
+Player::Action Player::getAction()
+{
+	return Action();
+}
+
 void Player::updateDirection()
 {
 	switch (m_direction) {
 	case Direction::UP: m_stockedDirection = { 0,-1 };
-					  break;
+		break;
 	case Direction::RIGHT: m_stockedDirection = { 1,0 };
-						 break;
+		break;
 	case Direction::DOWN: m_stockedDirection = { 0,1 };
-						break;
+		break;
 	case Direction::LEFT: m_stockedDirection = { -1,0 };
-						break;
+		break;
 	}
 }

@@ -1,12 +1,16 @@
 #include "Game.h"
+#include "TextureLoader.h"
 
-Background background("assets/parallaxe/bg.png", - 50);
+//TextureLoader textureloader;
+
+Background background("assets/parallaxe/bg.png", -50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
-    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "Test") {
+    : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0") {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
-
+    night.setSize(sf::Vector2f(2000, 2000));
+    night.setFillColor(sf::Color(0, 0, 0, 200));
 }
 
 Game::~Game() {
@@ -17,19 +21,25 @@ void Game::run() {
     Clock clock;
 
     vector<shared_ptr<Entity>> vec;
+    string image = "assets/map/map_tileset";
+    loadertest.loadTexture(image, textureListTest);
+    View view;
+    view.zoom(0.65f);
 
-    vec.push_back(make_shared<Plateforme>(100, 800, Vector2f(10, 1), true,true));
-    vec.push_back(make_shared<Plateforme>(300, 400, Vector2f(5, 5), true,true));
-    vec.push_back(make_shared<Bounce>(700, 700, Vector2f(1, 1), true,true));
-    vec.push_back(make_shared<MovePlat>(100, 400, Vector2f(1, 1), true,true));
 
-    //vec.push_back(make_shared<GolemEnemy>(500, 700, false, false));
+    string mapFile = "../NovaTerra/assets/map/lobby.txt";
 
-    vec.push_back(make_shared<Player>(vec, 100, 600, false, true));
+    Map map(mapFile, window);
 
-    vec.push_back(make_shared<KillerEnemy>(200, 500, false, true));
+    vec = map.generateTiles(textureListTest, vec);
 
-    Map* map = new Map("assets/map/lobby.txt", "assets/map/map_tileset/Tileset_Grass.png", 32, { 65 });
+    Cycle* cycle = new Cycle();
+
+    shared_ptr<Player> playerPtr = nullptr;
+    for (auto& entity : vec) {
+        playerPtr = dynamic_pointer_cast<Player>(entity);
+        if (playerPtr) break;
+    }
 
     Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
@@ -39,20 +49,34 @@ void Game::run() {
                 window.close();
         }
         //scroll->move(1.f, 0.f);
-        scroll->applyView(window);
+        //scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
 
-
         window.clear();
-		background.update(deltatime);
+       
         //player.update(deltatime, vec);
         background.draw(window);
-        map->draw(window);
+        if (cycle->getState() == Cycle::State::Night) {
+            window.draw(night);
+        }
+        for (auto& entity : vec) {
+            playerPtr = dynamic_pointer_cast<Player>(entity);
+            if (playerPtr) break;
+        }
         for (auto entityvec : vec) {
             entityvec->update(deltatime, vec);
+            if (Keyboard::isKeyPressed(Keyboard::O)) {
+                entityvec->interact(*cycle, *playerPtr);
+            }
+
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
+            if (entityvec->getID() == 1) {
+                //background.update(deltatime, entityvec->getSprite().getPosition());
+                view.setCenter(entityvec->getSprite().getPosition().x +200,entityvec->getSprite().getPosition().y);
+            }
         }
+        window.setView(view);
         window.display();
     }
 }

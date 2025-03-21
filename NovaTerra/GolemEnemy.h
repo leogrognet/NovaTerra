@@ -6,7 +6,7 @@
 #include "RigidBody.h"
 
 using namespace sf; 
-using namespace std;
+using namespace std; 
 
 class GolemEnemy : public Entity {
 public:
@@ -17,6 +17,7 @@ public:
     void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)override;
     void draw(RenderWindow& window) override;
     int getID()override;
+    Animation animation;
 
 private:
 
@@ -30,7 +31,7 @@ private:
     Texture golemTexture;
 
     Clock m_golemCooldownClock;
-    float m_golemJumpForce = -600.f;
-    float m_golemJumpSpeedX = 300.f;
+    float m_golemJumpForce = -300.f;
+    float m_golemJumpSpeedX = 200.f;
     float m_golemDetectionRange = 500.f;
 };

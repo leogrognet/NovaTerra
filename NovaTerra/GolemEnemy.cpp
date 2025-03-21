@@ -1,16 +1,31 @@
 #include "GolemEnemy.h"
 
-GolemEnemy::GolemEnemy(float posX, float posY, bool isStatic, bool asCollision): Entity(posX, posY, isStatic, asCollision),m_golemState(State::IDLE) {
-    golemTexture.loadFromFile("../assets/fries.png");
+GolemEnemy::GolemEnemy(float posX, float posY, bool isStatic, bool asCollision): Entity(posX, posY, isStatic, asCollision),m_golemState(State::IDLE), animation(m_shape, { 340,534 }, 2, 0.2f) {
+    golemTexture.loadFromFile("../NovaTerra/assets/Image/GOLEM/sprite_sheet_golem.png");
     m_shape.setTexture(golemTexture);
     m_shape.setPosition(posX, posY);
-    m_shape.setScale(1.f,1.f);
+    float scaleFactorX = 160 / m_shape.getGlobalBounds().width;
+    float scaleFactorY = 160/ m_shape.getGlobalBounds().height;
+    
+    m_shape.setScale({ scaleFactorX,scaleFactorY });
 }
 
 void GolemEnemy::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) {
     updateFSM(colliders);
 
+    if (m_rigidBody.getVelocity().x > 0) {
+        animation.animationSwitch(m_shape, deltaTime, { 340,534 });
+    }
+    else {
+        animation.animationSwitch(m_shape, deltaTime, { -340,534 });
+    }
+
     Entity::update(deltaTime, colliders);
+    for (auto entity : colliders) {
+        if (entity->getID() == 1 && m_shape.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
+            entity->takeDamage();
+        }
+    }
 }
 
 void GolemEnemy::draw(RenderWindow& window) {
@@ -32,12 +47,10 @@ void GolemEnemy::updateFSM(const vector<shared_ptr<Entity>>& colliders) {
         }
     }
 
-    //cout << distance << endl;
 
     switch (m_golemState) {
     case State::IDLE:
         if (distance <= m_golemDetectionRange) {
-			cout << "Golem detected player\n";
             jumpToPlayer(colliders);
             m_golemState = State::JUMPING;
         }
@@ -67,12 +80,10 @@ void GolemEnemy::jumpToPlayer(const vector<shared_ptr<Entity>>& colliders) {
     }
     m_rigidBody.getVelocity().y = m_golemJumpForce;
     m_rigidBody.getVelocity().x = (dir.x > 0) ? m_golemJumpSpeedX : -m_golemJumpSpeedX;
-    cout << "Golem jumped to player\n";
 }
 
 void GolemEnemy::landAndCooldown() {
     m_golemCooldownClock.restart();
     m_rigidBody.getVelocity().x = 0;
     m_golemState = State::COOLDOWN;
-    cout << "Golem landed and is on cooldown\n";
 }

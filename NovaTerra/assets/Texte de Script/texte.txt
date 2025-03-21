@@ -1,0 +1,5 @@
+Ce fichier est destiné à tester le bon fonctionnement du code. Il contient quelques lignes de texte afin de vérifier si les données peuvent être lues et écrites correctement dans un fichier texte. N'hésite pas à modifier ce contenu pour l'adapter à tes besoins ou pour effectuer d'autres tests.
+ 
+effectivemen ca doit fonctionner
+Teste 
+Teste

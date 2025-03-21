@@ -11,11 +11,10 @@ using namespace std;
 
 class TextureLoader {
 private:
-	vector<shared_ptr<Texture>> textureList;
-
 	vector<string> imagesPath;
-	void loadTexture(string& imagePathType);
+
 
 public:
-	TextureLoader(string imagePathType);
+	void loadTexture(string& imagePathType, vector<shared_ptr<Texture>>& textureList);
+	TextureLoader();
 };
