@@ -141,11 +141,18 @@ void Game::run() {
             }
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
+
             if (entityvec->getID() == 1) {
-                view.setCenter(entityvec->getSprite().getPosition().x +200,entityvec->getSprite().getPosition().y);
+                view.setCenter(entityvec->getSprite().getPosition().x + 200, entityvec->getSprite().getPosition().y);
             }
         }
+
+        Vector2f viewCenter = view.getCenter();
+        viewCenter.y = max(200.f, min(400.f, viewCenter.y));
+        view.setCenter(viewCenter);
+
         window.setView(view);
+
         window.display();
     }
 }

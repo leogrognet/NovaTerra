@@ -7,21 +7,19 @@ Background::Background(const string& texturePath, float speed) : scrollSpeed(spe
         throw runtime_error("Failed to load texture");
     }
 
-    float scaleX = (1920.f / texture.getSize().x) * 0.65f;
-    float scaleY = (1080.f / texture.getSize().y) * 0.65f;
-
-
+    float scaleX = (1920.f / texture.getSize().x) * 0.85f;
+    float scaleY = (1080.f / texture.getSize().y) * 0.85f;
 
 
     auto sprite = make_shared<Sprite>();
     sprite->setTexture(texture);
-    sprite->setPosition(0, 0);
+    sprite->setPosition(0, -200.f);
     sprite->setScale(scaleX, scaleY);
     sprites.push_back(sprite);
     for (int i = 0; i < 5; i++) {
         auto sprite_t = make_shared<Sprite>();
         sprite_t->setTexture(texture);
-        sprite_t->setPosition(sprites.back()->getGlobalBounds().width + sprites.back()->getPosition().x, 0);
+        sprite_t->setPosition(sprites.back()->getGlobalBounds().width + sprites.back()->getPosition().x, -200.f);
         sprite_t->setScale(scaleX, scaleY);
         sprites.push_back(sprite_t);
     }

@@ -230,7 +230,7 @@ RectangleShape Player::getHitBox()
 
 bool Player::isDead()
 {
-	if (m_hp <= 0 || m_shape.getPosition().y >= 1080) {
+	if (m_hp <= 0 || m_shape.getPosition().y >= 800) {
 		m_stockedPos = m_shape.getPosition();
 		m_shape.setColor(Color(255, 255, 255, 128));
 		initializeBlackScreen();
