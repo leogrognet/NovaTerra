@@ -20,7 +20,6 @@ Player::Player(float posX, float posY, bool isStatic, bool asCollision) : Entity
 
 void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders)
 {
-	cout << "Player Pos : " << m_shape.getPosition().x << " " << m_shape.getPosition().y << endl;
 	m_deltatime = deltatime;
 
 	if (m_state != State::DEAD) {
@@ -40,6 +39,7 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 
 		m_hook.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
 		m_hitbox.setPosition(m_shape.getPosition().x - 5, m_shape.getPosition().y - 5);
+		m_blackscreen.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + 10);
 	}
 	else {
 		deathAnim();
@@ -49,7 +49,6 @@ void Player::update(float deltatime, const vector<shared_ptr<Entity>>& colliders
 void Player::draw(RenderWindow& window) 
 { 
 	window.draw(m_shape); 
-	window.draw(m_hook);
 	if (m_action == Action::HOOK || m_action == Action::REVERSEHOOK){ 
 		window.draw(m_hook); 
 	} 
@@ -145,7 +144,6 @@ void Player::grapplinshoot(const vector<shared_ptr<Entity>>& colliders)
 		m_hookSize += m_deltatime * 110;
 		for (auto& vec : colliders) {
 			if (m_hook.getGlobalBounds().intersects(vec->getSprite().getGlobalBounds(), m_intersection) && vec->getasCollision() && vec->getID() != 1) {
-				cout << "COLLIDE" << endl;
 				m_hookCd.restart();
 				m_action = Action::REVERSEHOOK;
 				m_rigidBody.getVelocity() = { 0,0 };
@@ -186,7 +184,6 @@ void Player::grabing(const vector<shared_ptr<Entity>>& colliders)
 				&& grabLiane && m_hitbox.getGlobalBounds().intersects(entity->getSprite().getGlobalBounds())) {
 				m_rigidBody.getVelocity().y = 100.f;
 			}
-
 		}		
 	}
 }
@@ -246,7 +243,8 @@ void Player::takeDamage()
 void Player::initializeBlackScreen()
 {
 	m_blackscreen.setFillColor(Color(0, 0, 0, 0));
-	m_blackscreen.setSize({ 2000,2000 });
+	m_blackscreen.setSize({ 3000,3000 });
+	m_blackscreen.setOrigin(1500, 1500);
 	m_blackscreen.setPosition(0,0);
 }
 
