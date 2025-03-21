@@ -3,7 +3,7 @@
 
 //TextureLoader textureloader;
 
-Background background("assets/parallaxe/bg.png", - 50);
+Background background("assets/parallaxe/bg.png", -50);
 
 Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0") {
@@ -22,27 +22,8 @@ void Game::run() {
 
     vector<shared_ptr<Entity>> vec;
 
-    string image =  "assets/map/map_tileset";
-    loadertest.loadTexture(image, textureListTest);
-    while (true) {
-        vec.push_back(make_shared<Plateform>(100, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(200, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(300, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(400, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(500, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(600, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(700, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(800, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(900, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(1000, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(1100, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(1200, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(1300, 800, Vector2f(10, 1), true, true, textureListTest));
-        vec.push_back(make_shared<Plateform>(1400, 800, Vector2f(10, 1), true, true, textureListTest));
-        break;
-    }
 
-    vec.push_back(make_shared<Player>(vec, 100, 600, false, true));
+    string mapFile = "../NovaTerra/assets/map/lobby.txt";
 
     Cycle* cycle = new Cycle();
     vec.push_back(make_shared<Firecamp>(800, 700, true, true));
@@ -63,13 +44,14 @@ void Game::run() {
                 window.close();
         }
         //scroll->move(1.f, 0.f);
-        scroll->applyView(window);
+        //scroll->applyView(window);
         float deltatime = clock.restart().asSeconds();
 
         window.clear();
-		background.update(deltatime);
+        background.update(deltatime);
         //player.update(deltatime, vec);
         background.draw(window);
+
         if (cycle->getState() == Cycle::State::Night) {
             window.draw(night);
         }
@@ -85,8 +67,10 @@ void Game::run() {
             }
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
+            if (entityvec->getID() == 1) {
+                view.setCenter(entityvec->getSprite().getPosition());
+            }
         }
-
         window.display();
     }
 }

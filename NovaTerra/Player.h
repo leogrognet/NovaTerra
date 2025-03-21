@@ -17,7 +17,7 @@ public:
 	enum class Action { DASHING, HOOK, REVERSEHOOK, GRABING, NONE };
 	enum class Direction { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT };
 
-    Player(vector<shared_ptr<Entity>>& shape, float posX, float posY, bool isStatic, bool asCollision);
+    Player(float posX, float posY, bool isStatic, bool asCollision);
 
 	void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) override;
 	void updateDirection();
@@ -26,8 +26,8 @@ public:
 	void handleInput();
 
 	void dash();
-	void grapplinshoot();
-	void grabing();
+	void grapplinshoot(const vector<shared_ptr<Entity>>& colliders);
+	void grabing(const vector<shared_ptr<Entity>>& colliders);
 
 	void setGrabLiane(bool value);
 

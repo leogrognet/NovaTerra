@@ -54,10 +54,9 @@ void Entity::setVelocity(Vector2f velocity)
     m_rigidBody.getVelocity() = velocity;
 }
 
-Entity::Entity(float posX, float posY, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) : m_rigidBody({ posX,posY }, isStatic, asCollision)
+Entity::Entity(float posX, float posY, bool isStatic, bool asCollision) : m_rigidBody({ posX,posY }, isStatic, asCollision)
 {
     m_asCollision = asCollision;
-    textureList = texture;
     m_shape.setPosition(posX, posY);
 }
 

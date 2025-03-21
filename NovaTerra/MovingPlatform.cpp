@@ -1,9 +1,11 @@
 #include "MovingPlatform.h"
 
-MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision, textureList)
+MovePlat::MovePlat(float posX, float posY, Vector2f size, bool isStatic, bool asCollision) :Entity(posX, posY, isStatic, asCollision)
 {
-	plateformetexture.loadFromFile("C:/Users/leoam/source/repos/NovaTerra/NovaTerra/assets/map/map_tileset/test.png");
-	m_shape.setTexture(plateformetexture);
+	m_shape.setPosition(posX, posY);
+	m_shapeTexture.loadFromFile("../assets/cat1.jpg");
+	m_shape.setTexture(m_shapeTexture);
+
 	m_shape.setScale(size);
 
 	m_stockedPos = { m_shape.getPosition() };
@@ -16,7 +18,7 @@ void MovePlat::draw(RenderWindow& window)
 
 void MovePlat::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)
 {
-	Entity::update(deltaTime, colliders);
+	Entity::update(deltaTime, colliders); 
 	move(deltaTime,colliders);
 }
 

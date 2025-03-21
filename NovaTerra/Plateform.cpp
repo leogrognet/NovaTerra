@@ -1,16 +1,10 @@
 #include "Plateform.h"
 
-Plateform::Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture) :Entity(posX, posY, isStatic, asCollision, texture)
+Plateform::Plateform(float posX, float posY, Vector2f size, bool isStatic, bool asCollision, shared_ptr<Texture>& texture) :Entity(posX, posY, isStatic, asCollision)
 {
-    if (!textureList.empty()) {
-
-       m_shape.setTexture(*textureList.at(0).get());
-       IntRect m_textureRect(128, 384, 128, 128);
-
-       m_shape.setTextureRect(m_textureRect);
-       m_shape.setScale(1.f, 1.f);
-       m_shape.setPosition(posX, posY);
-    }
+	m_shape.setTexture(*texture);
+	m_shape.setScale(size);
+	m_shape.setPosition(posX, posY);
 }
 
 void Plateform::draw(RenderWindow& window) {

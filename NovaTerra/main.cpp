@@ -1,3 +1,5 @@
+#include <SFML/Graphics.hpp>
+#include "LevelEditor.h"
 #include "Game.h"
 
 int main() {

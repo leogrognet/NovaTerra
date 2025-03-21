@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "Scroll.h"
 #include "Background.h"
+
 #include "GolemEnemy.h"
 #include "Plateform.h"
 #include "MovingPlatform.h"
@@ -14,6 +15,8 @@
 #include "VineLadder.h"
 #include "Firecamp.h"
 #include "Cycle.h"
+=======
+
 
 class Game {
 private:

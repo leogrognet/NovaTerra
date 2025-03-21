@@ -6,7 +6,7 @@
 #include "RigidBody.h"
 
 using namespace sf; 
-using namespace std;
+using namespace std; 
 
 class GolemEnemy : public Entity {
 public:

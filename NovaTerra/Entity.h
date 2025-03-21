@@ -8,11 +8,20 @@ using namespace std;
 
 
 enum entityType
-{
-	GOLEM,
-	PLAYER,
-	TILE,
+{	
 	NOTYPE,
+	BIOME_1_PLAT,
+	BIOME_2_PLAT,
+	BIOME_3_PLAT,
+	GOLEM,
+	PUNGUS = 420,
+	PLAYER = 8,
+	CROC = 60,
+	MOVE_PLAT = 9,
+	BOUNCE_PLAT = 10,
+	GRIND_VINE = 7,
+	DOOR = 50,
+	
 };
 
 class Player;
@@ -44,7 +53,8 @@ public:
 	virtual Vector2f getVelocity();
 	virtual void setVelocity(Vector2f velocity);
 
-	Entity(float posX, float posY, bool isStatic, bool asCollision, vector<shared_ptr<Texture>>& texture);
+	Entity(float posX, float posY, bool isStatic, bool asCollision);
+
 
 	virtual void takeDamage();
 	virtual bool isDead();
