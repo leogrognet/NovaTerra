@@ -9,13 +9,7 @@ using namespace std;
 using namespace sf;
 
 
-enum class MenuState {
-	MENU,
-	PLAY,
-	SETTINGS,
-	EXIT,
-	CREDITS
-};
+
 
 class Menu {
 private:
@@ -41,6 +35,17 @@ public:
 	int handleMouseClick(Vector2i mousePos);
 };
 
+class MenuPlay {
+private:
+	Texture backgroundTexture, backTexture, lvl1Texture, editTexture;
+	Sprite backgroundSprite, backSprite, lvl1Sprite, editSprite;
+	RenderWindow& window;
+	int selectedItemIndex;
+public:
+	MenuPlay(RenderWindow& win);
+	void draw();
+	int handleMouseClick(Vector2i mousePos);
+};
 
 
 

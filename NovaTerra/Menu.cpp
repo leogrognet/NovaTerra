@@ -31,9 +31,9 @@ Menu::Menu(RenderWindow& win) : window(win), selectedItemIndex(0) {
 
 	backgroundSprite.setPosition(0, 0);
 
-	playSprite.setPosition(450, 175);
-	settingsSprite.setPosition(450, 300);
-	exitSprite.setPosition(450, 450);
+	playSprite.setPosition(450, 275);
+	settingsSprite.setPosition(450, 450);
+	exitSprite.setPosition(450, 600);
 }
 
 void Menu::draw() {
@@ -73,7 +73,7 @@ MenuSettings::MenuSettings(RenderWindow& win) : window(win), selectedItemIndex(0
 	if (!backTexture.loadFromFile("assets/menu/exit.png")) {
 		cerr << "Erreur de chargement de la texture du bouton back" << endl;
 	}
-	if (!keyTexture.loadFromFile("assets/menu/keys.png")) {
+	if (!keyTexture.loadFromFile("assets/menu/OPTIONS.png")) {
 		cerr << "Erreur de chargement de la texture du bouton keys" << endl;
 	}
 	if (!soundTexture.loadFromFile("assets/menu/sound.png")) {
@@ -116,3 +116,54 @@ int MenuSettings::handleMouseClick(Vector2i mousePos) {
 
 }
 
+MenuPlay::MenuPlay(RenderWindow& win) : window(win), selectedItemIndex(0) {
+	if (!backgroundTexture.loadFromFile("assets/menu/background.png")) {
+		cerr << "Erreur de chargement du background" << endl;
+	}
+	if (!backTexture.loadFromFile("assets/menu/exit.png")) {
+		cerr << "Erreur de chargement de la texture du bouton back" << endl;
+	}
+	if (!lvl1Texture.loadFromFile("assets/menu/play.png")) {
+		cerr << "Erreur de chargement de la texture du bouton lvl1" << endl;
+	}
+	if (!editTexture.loadFromFile("assets/menu/options.png")) {
+		cerr << "Erreur de chargement de la texture du bouton edit" << endl;
+	}
+
+	backgroundSprite.setTexture(backgroundTexture);
+	backSprite.setTexture(backTexture);
+	lvl1Sprite.setTexture(lvl1Texture);
+	editSprite.setTexture(editTexture);
+
+	backSprite.setScale(0.3, 0.3);
+
+	backgroundSprite.setPosition(0, 0);
+	backSprite.setPosition(450, 450);
+	lvl1Sprite.setPosition(450, 275);
+	editSprite.setPosition(450, 600);
+
+}
+
+void MenuPlay::draw() {
+
+	window.draw(backgroundSprite);
+	window.draw(backSprite);
+	window.draw(lvl1Sprite);
+	window.draw(editSprite);
+
+}
+
+int MenuPlay::handleMouseClick(Vector2i mousePos) {
+
+	if (lvl1Sprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
+		return 0; // Lvl1
+	}
+	if (editSprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
+		return 1; // Edit
+	}
+	if (backSprite.getGlobalBounds().contains(static_cast<Vector2f>(mousePos))) {
+		return 2; // Back
+	}
+	return -1;
+
+}

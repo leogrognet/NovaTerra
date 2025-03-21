@@ -14,12 +14,22 @@
 #include "VineLadder.h"
 #include "Menu.h"
 
+enum class MenuState {
+    MENU,
+    MENU_PLAY,
+    PLAY,
+    SETTINGS,
+    EXIT,
+    CREDITS
+};
+
 class Game {
 private:
     const int WIDTH;
     const int HEIGHT;
 	MenuState menuState;
 	MenuSettings settingsMenu;
+    MenuPlay menuPlay;
     Menu menu;
     RenderWindow window;
     vector<shared_ptr<Texture>> textureListTest;
@@ -32,5 +42,6 @@ public:
     void run();
 	void processMenu();
 	void processSettingsMenu();
+	void processPlayMenu();    
 };
 #endif
