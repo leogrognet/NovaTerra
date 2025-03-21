@@ -21,7 +21,6 @@ enum entityType
 	PLAYER = 8,
 	MOVE_PLAT = 9,
 	BOUNCE_PLAT = 10,
-	GRIND_VINE = 7,
 	DOOR = 50,
 	FALLING_PLAT = 11,
 };

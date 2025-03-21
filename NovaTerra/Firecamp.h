@@ -16,5 +16,5 @@ public:
 
     void update(float deltaTime, const vector<shared_ptr<Entity>>& colliders)override;
     void draw(RenderWindow& window) override;
-    //void interact(Cycle& cycle, Player& player) override;
+    void interact(Cycle& cycle, Player& player) override;
 };

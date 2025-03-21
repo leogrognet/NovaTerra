@@ -1,54 +1,64 @@
 ï»¿#include <SFML/Graphics.hpp>
 #include "LevelEditor.h"
+#include "Game.h"
 
-int main()
-{
-    // Créer une fenêtre SFML
-    RenderWindow window(VideoMode(800, 600), "Level Editor");
+//int main()
+//{
+//    // Crï¿½er une fenï¿½tre SFML
+//    RenderWindow window(VideoMode(800, 600), "Level Editor");
+//
+//    // Crï¿½er un objet LevelEditor
+//    LevelEditor editor(window);
+//
+//    // Dï¿½finir le deltaTime
+//    Clock clock;
+//
+//    View tileView = window.getView();
+//    View Ui_View = window.getView();
+//
+//
+//
+//    // Boucle principale du jeu
+//
+//    while (window.isOpen())
+//    {
+//        // Calculer le deltaTime
+//        float deltaTime = clock.restart().asSeconds();
+//
+//        // Gï¿½rer les ï¿½vï¿½nements
+//        Event event;
+//        while (window.pollEvent(event))
+//        {
+//            if (event.type == Event::Closed)
+//                window.close();
+//        }
+//
+//        // Appeler la fonction de gestion des entrï¿½es (gï¿½re aussi la molette de la souris)
+//        //editor.handleInput(window, tileView, event, deltaTime);
+//
+//        // Mise ï¿½ jour du jeu (si nï¿½cessaire)
+//        editor.update(window, tileView, Ui_View, event, deltaTime);
+//
+//        // Effacer l'ï¿½cran
+//        //window.clear();
+//
+//        // Dessiner les ï¿½lï¿½ments
+//        //editor.draw(window,tileView, Ui_View);
+//
+//        // Dessiner le menu dï¿½roulant
+//
+//        // Afficher la fenï¿½tre
+//        //window.display();
+//    }
+//
+//    return 0;
+//
+// }
 
-    // Créer un objet LevelEditor
-    LevelEditor editor(window);
+int main() {
+	Game* game = new Game(1920, 1080);
+	game->run();
+	delete game;
+	return 0;
 
-    // Définir le deltaTime
-    Clock clock;
-
-    View tileView = window.getView();
-    View Ui_View = window.getView();
-
-
-
-    // Boucle principale du jeu
-
-    while (window.isOpen())
-    {
-        // Calculer le deltaTime
-        float deltaTime = clock.restart().asSeconds();
-
-        // Gérer les événements
-        Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == Event::Closed)
-                window.close();
-        }
-
-        // Appeler la fonction de gestion des entrées (gère aussi la molette de la souris)
-        //editor.handleInput(window, tileView, event, deltaTime);
-
-        // Mise à jour du jeu (si nécessaire)
-        editor.update(window, tileView, Ui_View, event, deltaTime);
-
-        // Effacer l'écran
-        //window.clear();
-
-        // Dessiner les éléments
-        //editor.draw(window,tileView, Ui_View);
-
-        // Dessiner le menu déroulant
-
-        // Afficher la fenêtre
-        //window.display();
-    }
-
-    return 0;
 }
