@@ -11,20 +11,16 @@ Firecamp::Firecamp(float posX, float posY, bool isStatic, bool asCollision) : En
 }
 
 void Firecamp::update(float deltaTime, const vector<shared_ptr<Entity>>& colliders) {
-	//if (Keyboard::isKeyPressed(Keyboard::O)) {
-	//	std::cout << "Test\n";
-	//}
 	Entity::update(deltaTime, colliders);
 }
 
-//void Firecamp::interact(Cycle& cycle, Player& player) {
-//	if (CD.getElapsedTime().asSeconds() > 1.0f && player.getSprite().getGlobalBounds().intersects(detectionRange.getGlobalBounds())) {
-//		cycle.changeState();
-//		CD.restart();
-//	}
-//}
+void Firecamp::interact(Cycle& cycle, Player& player) {
+	if (CD.getElapsedTime().asSeconds() > 1.0f && player.getSprite().getGlobalBounds().intersects(detectionRange.getGlobalBounds())) {
+		cycle.changeState();
+		CD.restart();
+	}
+}
 
 void Firecamp::draw(sf::RenderWindow& window) {
 	window.draw(m_shape);
-	window.draw(detectionRange);
 }

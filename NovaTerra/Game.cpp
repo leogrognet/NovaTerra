@@ -9,6 +9,8 @@ Game::Game(const int _WIDTH, const int _HEIGHT)
     : WIDTH(_WIDTH), HEIGHT(_HEIGHT), window(VideoMode(WIDTH, HEIGHT), "NovaTerra 1.0") {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
+    night.setSize(sf::Vector2f(2000, 2000));
+    night.setFillColor(sf::Color(0, 0, 0, 200));
 }
 
 Game::~Game() {
@@ -29,8 +31,15 @@ void Game::run() {
 
     Map map(mapFile, window);
 
-
     vec = map.generateTiles(textureListTest, vec);
+
+    Cycle* cycle = new Cycle();
+
+    shared_ptr<Player> playerPtr = nullptr;
+    for (auto& entity : vec) {
+        playerPtr = dynamic_pointer_cast<Player>(entity);
+        if (playerPtr) break;
+    }
 
     Scroll* scroll = new Scroll(WIDTH, HEIGHT);
     while (window.isOpen()) {
@@ -47,12 +56,23 @@ void Game::run() {
        
         //player.update(deltatime, vec);
         background.draw(window);
+        if (cycle->getState() == Cycle::State::Night) {
+            window.draw(night);
+        }
+        for (auto& entity : vec) {
+            playerPtr = dynamic_pointer_cast<Player>(entity);
+            if (playerPtr) break;
+        }
         for (auto entityvec : vec) {
             entityvec->update(deltatime, vec);
+            if (Keyboard::isKeyPressed(Keyboard::O)) {
+                entityvec->interact(*cycle, *playerPtr);
+            }
+
             entityvec->draw(window);
             entityvec->update(deltatime, vec);
             if (entityvec->getID() == 1) {
-                background.update(deltatime, entityvec->getSprite().getPosition());
+                //background.update(deltatime, entityvec->getSprite().getPosition());
                 view.setCenter(entityvec->getSprite().getPosition().x +200,entityvec->getSprite().getPosition().y);
             }
         }
