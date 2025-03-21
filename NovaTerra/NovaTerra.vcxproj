@@ -26,6 +26,7 @@
     <ClCompile Include="Cycle.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="FallingPlatform.cpp" />
     <ClCompile Include="Firecamp.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GolemEnemy.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="Cycle.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="FallingPlatform.h" />
     <ClInclude Include="Firecamp.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GolemEnemy.h" />

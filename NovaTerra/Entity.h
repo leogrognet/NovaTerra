@@ -20,7 +20,7 @@ enum entityType
 	BOUNCE_PLAT = 10,
 	GRIND_VINE = 7,
 	DOOR = 50,
-
+	FALLING_PLAT = 11,
 };
 
 
